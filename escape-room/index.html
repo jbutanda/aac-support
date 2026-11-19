@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAC Escape Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA a vault with six locks. The only way out is to talk your way out on the AAC device
+   LAYOUT dark vault: lock row with code letters, clue card, device; escape screen with team name and time */
+:root{--band:#1a1b1e;--maxw:1180px;--decol:70%;--gold:#fcc419}
+body{background:radial-gradient(circle at 50% 0,#2b2d33,#111214 70%)}
+.wrap .card.vault{background:#1f2125;color:#f1f3f5;box-shadow:0 0 0 1px #3a3d44,0 30px 60px rgba(0,0,0,.5)}
+.vault h2{color:#fff}
+.vault .muted{color:#adb5bd}
+.locks{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.lk{border-radius:18px;background:#2a2d33;padding:12px 6px 10px;text-align:center;position:relative;border:2px solid transparent;transition:border-color .3s,background .3s}
+.lk img{width:46px;filter:grayscale(1) brightness(.85);transition:filter .4s,transform .4s}
+.lk .let{display:block;font-size:26px;font-weight:700;letter-spacing:.1em;color:#495057;margin-top:4px;min-height:1.2em}
+.lk.cur{border-color:var(--gold)}
+.lk.cur img{filter:none;animation:bob 2.4s ease-in-out infinite}
+.lk.open{background:#2b2a1a}
+.lk.open img{filter:drop-shadow(0 0 10px rgba(252,196,25,.7));transform:rotate(-8deg)}
+.lk.open .let{color:var(--gold)}
+.lk.pop img{animation:pop .6s cubic-bezier(.2,1.8,.4,1)}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.clock{font-variant-numeric:tabular-nums;font-size:34px;font-weight:700;color:var(--gold);letter-spacing:.04em}
+.team{font-weight:700;color:#ced4da}
+.clue{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:linear-gradient(135deg,#343a40,#25272c);border-radius:22px;padding:18px 20px;margin-bottom:14px;border-left:6px solid var(--gold)}
+.clue .ic{width:84px;height:84px;border-radius:22px;background:#fff8db;display:grid;place-items:center}
+.clue .ic img{width:60px}
+.clue .n{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0;font-weight:700}
+.clue h2{margin:2px 0 6px;font-size:clamp(20px,2.8vw,28px)}
+.clue p{margin:0;font-size:18px;color:#dee2e6}
+.code{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.code .k{width:76px;aspect-ratio:1/1;pointer-events:none}
+.code .k img{width:60%}
+.code .k .w{visibility:hidden}
+.msg{display:flex;gap:8px;margin-bottom:10px}
+.say{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:62px;padding:8px 12px;border-radius:14px;background:#f7f7f2;color:#16181d}
+.say .ph{color:#7a7f8a}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:9px;font-weight:700;font-size:17px}
+.chip img{width:24px}
+.ctl{width:60px;border-radius:14px;border:0;background:#2a2e37;color:#eceef2;cursor:pointer;display:grid;place-items:center}
+.ctl svg{width:24px;height:24px}
+.try{background:var(--gold);color:#2b2200;font-weight:700;width:auto;padding:0 20px;font-size:17px}
+.gw{overflow-x:auto}
+.fb{min-height:1.6em;margin:10px 0 0;font-weight:700;font-size:17px}
+.fb.no{color:#ffa8a8}.fb.yes{color:#8ce99a}
+.hintb{background:none;border:1.5px solid #495057;color:#dee2e6;box-shadow:none}
+.hinttxt{background:#2b2a1a;color:#ffe066;border-radius:14px;padding:10px 14px;margin-top:10px}
+.setup{text-align:center;padding:10px 0}
+.setup img{width:120px;background:var(--gold);border-radius:50%;padding:16px}
+.setup h2{font-size:clamp(28px,4vw,40px)}
+.setup input{max-width:360px;width:100%;margin:8px auto 16px;display:block;text-align:center;font-size:20px}
+.setup .rules{max-width:640px;margin:0 auto 18px;color:#ced4da;text-align:left;background:#2a2d33;border-radius:18px;padding:16px 18px}
+.setup .rules p{margin:0 0 8px}
+.out{text-align:center;padding:14px 0}
+.out .big{font-size:clamp(44px,8vw,76px);font-weight:700;color:var(--gold);margin:0;line-height:1}
+.out .t{font-size:24px;margin:10px 0}
+.cert{max-width:560px;margin:18px auto;border:3px solid var(--gold);border-radius:22px;padding:22px;background:#25272c}
+.cert b{font-size:28px;display:block;color:#fff}
+.btn.gold{background:var(--gold);color:#2b2200}
+@media(max-width:700px){.locks{grid-template-columns:repeat(3,minmax(0,1fr))}.clue{grid-template-columns:1fr}.clue .ic{width:64px;height:64px}}
+@media print{body{background:#fff}.wrap .card.vault{background:#fff;color:#000;box-shadow:none}.cert{background:#fff}.cert b{color:#000}.out .big{color:#000}.noprint{display:none!important}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card vault" id="room"></section>
+  <p class="foot" id="foot" style="color:#adb5bd"></p>
+</main>
+<script src="../shared/core.js"></script><script src="../shared/vocab.js"></script><script src="../shared/device.js"></script>
+<script>
+const {esc,sym,byId,speak,confetti}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),stage='setup',lock=0,msg=[],team='',t0=0,pen=0,tick=0,hint=false,fbm=null,elapsed=0;
+const T={en:{h1:'AAC Escape Room',sub:'A team game for trainings. Six locks stand between you and the door. The only way out is to talk your way out.',vlab:'Voice',
+ seth:'You’re locked in the vault',rules:['Work as a team. Pass the device around, or take turns tapping on the projector screen.','Each lock is solved by saying something on the AAC device. Open a lock and you earn a letter of the final code.','Stuck? Take a hint, but it adds 30 seconds to your time.','Goal: escape in under 15 minutes.'],
+ teamph:'Team name',start:'Start the clock',lock:'Lock {n}',try:'Try it',ph:'Build your answer on the device',hint:'Hint (+30 s)',no:['Not quite. Read the clue again.','The lock didn’t budge.','Close, but no click.'],yes:'Click! Lock {n} is open.',
+ final:'Spell the code with ABC, then tap Add and Try it.',
+ outh:'You escaped!',cert:'Escaped in {time}',outt:'{team} got out in {time}.',goal:'Goal: 15:00',plays:'What you just practiced: finding core words fast, digging into folders, building a full message and spelling. That’s a day in the life of an AAC user.',again:'Play again',print:'Print our certificate',
+ foot:'Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.',swipe:'Swipe the device sideways to see all the words.'},
+es:{h1:'Escape de CAA',sub:'Un juego en equipo para capacitaciones. Seis candados los separan de la puerta. La única salida es comunicarse para salir.',vlab:'Voz',
+ seth:'Están encerrados en la bóveda',rules:['Trabajen en equipo. Pásense el dispositivo o tomen turnos en la pantalla del proyector.','Cada candado se abre diciendo algo en el dispositivo de CAA. Al abrirlo ganan una letra del código final.','¿Atorados? Pidan una pista, pero suma 30 segundos a su tiempo.','Meta: escapar en menos de 15 minutos.'],
+ teamph:'Nombre del equipo',start:'Iniciar el reloj',lock:'Candado {n}',try:'Probar',ph:'Construyan su respuesta en el dispositivo',hint:'Pista (+30 s)',no:['Todavía no. Lean la pista otra vez.','El candado no se movió.','Cerca, pero no abrió.'],yes:'¡Clic! El candado {n} está abierto.',
+ final:'Deletreen el código con ABC, toquen Agregar y luego Probar.',
+ outh:'¡Escaparon!',cert:'Escaparon en {time}',outt:'{team} salió en {time}.',goal:'Meta: 15:00',plays:'Lo que acaban de practicar: encontrar palabras clave rápido, buscar en carpetas, construir un mensaje completo y deletrear. Así es un día en la vida de un usuario de CAA.',again:'Jugar otra vez',print:'Imprimir nuestro certificado',
+ foot:'Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.',swipe:'Deslicen el dispositivo hacia los lados para ver todas las palabras.'}};
+const CODE={en:'VOICE',es:'VOCES'};
+const has=(m,id)=>m.some(x=>id.endsWith(':')?x.startsWith(id):x===id);
+const SAD=['sad','bad','f:feelings:sad','f:feelings:worried','f:feelings:mad','f:feelings:bored','f:feelings:okay','f:feelings:tired','f:feelings:scared'];
+const K=[
+{ic:'stop',en:{h:'The guard won’t move',c:'The guard is holding up a sign that says STOP. Tell the guard the opposite.',hint:'It’s a green core word on the home page, in the top row.'},es:{h:'El guardia no se mueve',c:'El guardia tiene un letrero que dice PARA. Díganle lo contrario.',hint:'Es una palabra verde en la página principal, en la fila de arriba.'},ok:m=>has(m,'go')},
+{ic:'tree',en:{h:'Where are the keys?',c:'The keys were dropped in a place with swings, slides and grass. Name the place.',hint:'Open the Places folder.'},es:{h:'¿Dónde están las llaves?',c:'Las llaves se cayeron en un lugar con columpios, resbaladeros y pasto. Digan el lugar.',hint:'Abran la carpeta Lugares.'},ok:m=>has(m,'f:places:park')},
+{ic:'door',en:{h:'The door is jammed',c:'Tell the custodian you need help opening the door. Use at least two words.',hint:'Try HELP and OPEN. Both are on the home page.'},es:{h:'La puerta está atorada',c:'Díganle al conserje que necesitan ayuda para abrir la puerta. Usen al menos dos palabras.',hint:'Prueben AYUDA y ABRIR. Las dos están en la página principal.'},ok:m=>has(m,'help')&&has(m,'open')},
+{ic:'puzzle',en:{h:'The symbol code',c:'Someone left a message in symbols only. Say it on the device, in order.',hint:'The first word is yellow. The last one is in the Food folder.'},es:{h:'El código de símbolos',c:'Alguien dejó un mensaje solo con símbolos. Díganlo en el dispositivo, en orden.',hint:'La primera palabra es amarilla. La última está en la carpeta Comida.'},code:['i','like','f:food:tacos'],ok:m=>m.join()===['i','like','f:food:tacos'].join()},
+{ic:'broken',en:{h:'A note on the wall',c:'The note says: “My best friend moved away today.” Tell the writer how they might feel.',hint:'Look on the home page, or open the Feelings folder.'},es:{h:'Una nota en la pared',c:'La nota dice: “Mi mejor amigo se mudó hoy.” Díganle a quien la escribió cómo podría sentirse.',hint:'Busquen en la página principal o abran la carpeta Emociones.'},ok:m=>m.some(x=>SAD.includes(x))},
+{ic:'key',en:{h:'The final lock',c:'Use the letters you earned. Spell the code word.',hint:'Tap ABC, spell the word, then tap Add.'},es:{h:'El último candado',c:'Usen las letras que ganaron. Deletreen la palabra del código.',hint:'Toquen ABC, deletreen la palabra y toquen Agregar.'},ok:m=>m.includes('t:'+CODE[L].toLowerCase())}];
+const t=k=>T[L][k];
+const lbl=w=>w[L]||w.en;
+const chip=id=>{const w=byId[id];return `<span class="chip ${w.c}">${w.img?`<img src="${w.img}" alt="">`:''}${esc(lbl(w))}</span>`};
+const mmss=s=>{s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+let dev=null;
+function locks(){const code=CODE[L];return `<div class="locks">${K.map((k,n)=>`<div class="lk ${n<lock?'open':n===lock?'cur':''}" id="lk${n}"><img src="${sym(n<lock?'unlock':'lock')}" alt="${t('lock').replace('{n}',n+1)}"><span class="let">${n<5&&n<lock?code[n]:n===5?(lock>5?'✓':'?'):'_'}</span></div>`).join('')}</div>`}
+function show(){
+ if(stage==='setup'){$('room').innerHTML=`<div class="setup"><img src="${sym('oldkey')}" alt=""><h2>${t('seth')}</h2><div class="rules">${t('rules').map(r=>`<p>${esc(r)}</p>`).join('')}</div><input class="in" id="team" placeholder="${t('teamph')}" value="${esc(team)}" maxlength="40"><button class="btn gold" data-a="start">${t('start')}</button></div>`;return}
+ if(stage==='out'){$('room').innerHTML=`<div class="out">${locks()}<p class="big">${t('outh')}</p><p class="t">${esc(t('outt').replace('{team}',team||'Team').replace('{time}',mmss(elapsed)))}</p><p class="muted">${t('goal')}</p>
+  <div class="cert"><img src="${sym('trophy')}" alt="" width="70"><b>${esc(team||'Team')}</b><p>${esc(t('cert').replace('{time}',mmss(elapsed)))}</p><p class="muted">${t('plays')}</p></div>
+  <div class="row noprint" style="justify-content:center"><button class="btn gold" data-a="print">${t('print')}</button><button class="btn ghost" data-a="again" style="color:#fff">${t('again')}</button></div></div>`;return}
+ const k=K[lock],d=k[L];
+ $('room').innerHTML=`<div class="hud"><span class="team">${esc(team)}</span><span class="clock" id="clock">${mmss(elapsed)}</span></div>${locks()}
+ <div class="clue"><div class="ic"><img src="${sym(k.ic)}" alt=""></div><div><p class="n">${t('lock').replace('{n}',lock+1)}</p><h2>${esc(d.h)}</h2><p>${esc(d.c)}</p>
+ ${k.code?`<div class="code">${k.code.map(id=>AAC.keyHtml(byId[id],L,'tabindex="-1" aria-hidden="true"')).join('')}</div>`:''}${lock===5?`<p class="muted" style="margin-top:6px">${t('final')}</p>`:''}</div></div>
+<div class="row noprint" style="justify-content:space-between;margin:-2px 0 10px"><p class="fb ${fbm?fbm[0]:''}" id="fb" aria-live="polite" style="margin:0">${fbm?esc(fbm[1]):''}</p><button class="btn hintb" data-a="hint">${t('hint')}</button></div>${hint?`<p class="hinttxt" style="margin:0 0 10px">${esc(d.hint)}</p>`:''}
+ <div class="device"><div class="msg"><div class="say" id="say"></div><button class="ctl" data-a="del" aria-label="Delete last word"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M17 9l-5 6M12 9l5 6"/></svg></button><button class="ctl try" data-a="try">${t('try')}</button></div><div class="gw"><div id="dv"></div></div><p class="swipe">${t('swipe')}</p></div>`;
+ dev=AAC.Device($('dv'),{lang:()=>L,onPick:w=>{msg.push(w.id);say();speak(lbl(w),L)}});say();
+}
+function say(){const s=$('say');if(s)s.innerHTML=msg.length?msg.map(chip).join(''):`<span class="ph">${t('ph')}</span>`}
+function clock(){elapsed=(performance.now()-t0)/1000+pen;const c=$('clock');if(c)c.textContent=mmss(elapsed)}
+function tryIt(){if(!msg.length)return;speak(msg.map(id=>lbl(byId[id])).join(' '),L);
+ if(K[lock].ok(msg)){const n=lock;lock++;msg=[];hint=false;fbm=['yes',t('yes').replace('{n}',n+1)];
+  if(lock>=K.length){clock();clearInterval(tick);stage='out';show();confetti($('room'),140);return}
+  show();const el=$('lk'+n);if(el){el.classList.add('pop')}confetti(el||$('room'),40)}
+ else{const f=$('fb');f.className='fb no';f.textContent=t('no')[Math.floor(Math.random()*3)];fbm=null}}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;const k=a.dataset.a;
+ if(k==='start'){team=($('team').value||'').trim();stage='play';lock=0;msg=[];pen=0;hint=false;fbm=null;t0=performance.now();clearInterval(tick);tick=setInterval(clock,250);show()}
+ if(k==='try')tryIt();
+ if(k==='del'){msg.pop();say()}
+ if(k==='hint'&&!hint){hint=true;pen+=30;clock();show()}
+ if(k==='print')print();
+ if(k==='again'){stage='setup';lock=0;show()}});
+function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');if(stage==='play'&&lock===5)msg=[];show()}
+AAC.deco($('deco'),[['key',8,12,60,-20],['lock',46,58,44,8],['door',80,10,56,0],['oldkey',28,60,46,14]]);
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voices of Rialto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA a wall of speech bubbles. Press play and you hear the message the way the student built it, word by word
+   LAYOUT example notice, featured voice, filter chips, bubble wall, then how staff can share a voice with consent */
+:root{--band:#e03131;--maxw:1100px;--decol:70%}
+.sample{display:flex;gap:12px;align-items:center;background:#fff4e6;color:#4a2300;border-radius:18px;padding:12px 16px;margin-bottom:18px}
+.sample img{width:36px}
+.sample p{margin:0}
+.feat{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;background:linear-gradient(135deg,#ff8787,#e03131);color:#fff;border-radius:28px;padding:clamp(18px,3vw,30px);margin-bottom:20px;position:relative;overflow:hidden}
+.feat::after{content:'';position:absolute;right:-60px;bottom:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.12)}
+.feat .lab{font-size:14px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;opacity:.9;margin:0}
+.feat q{display:block;font-size:clamp(34px,6vw,60px);font-weight:700;line-height:1.05;margin:6px 0 10px;quotes:"\201C" "\201D"}
+.feat .ctx{margin:0;opacity:.92;font-size:17px}
+.strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;position:relative;z-index:1}
+.strip .k{width:74px;aspect-ratio:1/1;pointer-events:none;transition:transform .2s,box-shadow .2s}
+.strip .k img{width:56%}
+.strip .k .w{font-size:12px;white-space:normal}
+.strip .k.lit{transform:scale(1.14) translateY(-4px);box-shadow:0 0 0 4px #fff,0 10px 20px rgba(0,0,0,.25)}
+.play{width:96px;height:96px;border-radius:50%;border:0;background:#fff;color:#e03131;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 0 rgba(0,0,0,.18);position:relative;z-index:1;transition:transform .1s}
+.play:active{transform:translateY(4px);box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.play svg{width:40px;height:40px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.wall{columns:3 280px;column-gap:16px}
+.vb{break-inside:avoid;margin:0 0 16px;background:var(--tint);border-radius:24px 24px 24px 6px;padding:16px 16px 14px;position:relative;border-top:6px solid var(--fc)}
+.vb .top2{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.vb .fn{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fc)}
+.vb q{display:block;font-size:26px;font-weight:700;line-height:1.1;margin:8px 0 6px;quotes:"\201C" "\201D"}
+.vb .ctx{margin:0;color:var(--soft);font-size:15px}
+.vb .who{margin:8px 0 0;font-size:14px;font-weight:700}
+.vb .strip .k{width:56px}
+.vb .strip .k .w{font-size:10px}
+.vb .play{width:52px;height:52px;flex:none;background:var(--fc);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.18)}
+.vb .play svg{width:24px;height:24px}
+.share{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:start}
+.share ol{margin:8px 0 0;padding-left:22px}
+.share li{margin:0 0 8px}
+.consent{background:var(--tint);border-radius:20px;padding:16px 18px}
+.consent label{display:flex;gap:10px;align-items:flex-start;margin:0 0 10px;cursor:pointer}
+.consent input{width:22px;height:22px;margin-top:2px;flex:none;accent-color:#2b8a3e}
+.ready{font-weight:700;color:var(--go);min-height:1.5em}
+@media(max-width:760px){.feat{grid-template-columns:1fr}.share{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card">
+    <div class="sample" id="sample"></div>
+    <div id="feat"></div>
+    <div class="chips" id="chips"></div>
+    <div class="wall" id="wall"></div>
+  </section>
+  <section class="card" id="share"></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script><script src="../shared/vocab.js"></script><script src="../shared/device.js"></script>
+<script>
+/* Real voices go in V below, only with written family permission. Keep "example:true" until then.
+   FORM_URL: link to a Google Form where staff submit a voice (optional). */
+const FORM_URL='';
+const {esc,sym,byId,speak,hush}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),filt='all',playing=null;
+const T={en:{h1:'Voices of Rialto',sub:'What our students are saying with AAC. Press play to hear each message the way the student built it.',vlab:'Voice',
+ sample:'These are examples that show how this page will work. Real student voices are added only with written family permission.',
+ feat:'Featured voice',all:'All',ex:'Example',play:'Play',
+ sh:'Share a voice',shp:'Heard something great? A joke, an opinion, a first question? Those moments change minds. Here’s how to share one.',
+ steps:['Write down exactly what the student said on the device, word for word.','Add a little context: where they were and what was happening.','Get written permission from the family first. No names or photos unless the family says yes to that too.','Send it to the District AAC Specialist.'],
+ ck:['I have written permission from the family','The student is okay with sharing it','There is no last name, photo or other identifying detail'],ready:'Ready to share. Thank you!',form:'Open the submission form',
+ fn:{joke:'Joking',comment:'Commenting',feel:'Feelings',tell:'Telling',ask:'Asking',advocate:'Speaking up',social:'Being social',opinion:'Opinion'},
+ foot:'Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+es:{h1:'Voces de Rialto',sub:'Lo que dicen nuestros estudiantes con CAA. Presione reproducir para escuchar cada mensaje como el estudiante lo construyó.',vlab:'Voz',
+ sample:'Estos son ejemplos que muestran cómo funcionará esta página. Las voces reales de estudiantes se agregan solo con permiso escrito de la familia.',
+ feat:'Voz destacada',all:'Todas',ex:'Ejemplo',play:'Reproducir',
+ sh:'Comparta una voz',shp:'¿Escuchó algo genial? ¿Un chiste, una opinión, una primera pregunta? Esos momentos cambian opiniones. Así puede compartir uno.',
+ steps:['Escriba exactamente lo que dijo el estudiante en el dispositivo, palabra por palabra.','Agregue un poco de contexto: dónde estaba y qué pasaba.','Primero obtenga permiso escrito de la familia. Sin nombres ni fotos a menos que la familia también lo autorice.','Envíelo a la especialista de CAA del distrito.'],
+ ck:['Tengo permiso escrito de la familia','El estudiante está de acuerdo en compartirlo','No hay apellido, foto ni otro dato que lo identifique'],ready:'Listo para compartir. ¡Gracias!',form:'Abrir el formulario',
+ fn:{joke:'Bromear',comment:'Comentar',feel:'Sentimientos',tell:'Contar',ask:'Preguntar',advocate:'Defenderse',social:'Socializar',opinion:'Opinión'},
+ foot:'Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+T.es.steps[3]='Envíelo al especialista de CAA del distrito.';
+const FC={joke:'#f08c00',comment:'#1971c2',feel:'#c2255c',tell:'#2b8a3e',ask:'#7048e8',advocate:'#e03131',social:'#d6336c',opinion:'#0c8599'};
+const V=[
+{example:true,fn:'joke',ids:['f:chat:just-kidding'],en:'Just kidding!',es:'¡Es broma!',cen:'After telling the teacher she had homework for HER. 2nd grade.',ces:'Después de decirle a la maestra que ELLA tenía tarea. 2.º grado.'},
+{example:true,fn:'advocate',ids:['f:chat:i-disagree'],en:'I disagree.',es:'No estoy de acuerdo.',cen:'During a class vote on the field trip. 7th grade.',ces:'Durante una votación sobre la excursión. 7.º grado.'},
+{example:true,fn:'ask',ids:['f:questions:how-about-you'],en:'How about you?',es:'¿Y tú?',cen:'At lunch, the first time he asked a friend a question back. 4th grade.',ces:'En el almuerzo, la primera vez que le devolvió una pregunta a un amigo. 4.º grado.'},
+{example:true,fn:'feel',ids:['i','feel','f:feelings:proud'],en:'I feel proud.',es:'Me siento orgulloso.',cen:'After reading a whole book to the class. 3rd grade.',ces:'Después de leerle un libro entero a la clase. 3.er grado.'},
+{example:true,fn:'tell',ids:['i','f:actions:went','f:little:to','f:places:beach'],en:'I went to the beach.',es:'Fui a la playa.',cen:'Monday morning share. Kindergarten.',ces:'Al compartir el lunes en la mañana. Kínder.'},
+{example:true,fn:'comment',ids:['that','f:describe:awesome'],en:'That awesome!',es:'¡Eso, increíble!',cen:'Watching a volcano experiment in science. 5th grade.',ces:'Viendo un experimento de volcán en ciencias. 5.º grado.'},
+{example:true,fn:'opinion',ids:['f:food:pizza','f:describe:best'],en:'Pizza best!',es:'¡Pizza la mejor!',cen:'When the class argued about the best lunch. 1st grade.',ces:'Cuando la clase discutía sobre el mejor almuerzo. 1.er grado.'},
+{example:true,fn:'social',ids:['hi','f:people:friend','f:questions:whats-up'],en:'Hi friend, what’s up?',es:'Hola amigo, ¿qué onda?',cen:'Walking into class in the morning. 8th grade.',ces:'Al entrar a clase en la mañana. 8.º grado.'}];
+const t=k=>T[L][k];
+const pl='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg>';
+const strip=v=>`<div class="strip">${v.ids.map(id=>AAC.keyHtml(byId[id],L,'tabindex="-1" aria-hidden="true"')).join('')}</div>`;
+function draw(){const f=V[1];
+ $('sample').innerHTML=`<img src="${sym('bulb')}" alt=""><p>${t('sample')}</p>`;
+ $('feat').innerHTML=`<div class="feat" data-v="1"><div><p class="lab">${t('feat')}${f.example?' · '+t('ex'):''}</p><q>${esc(f[L])}</q><p class="ctx">${esc(L==='es'?f.ces:f.cen)}</p>${strip(f)}</div><button class="play" data-play="1" aria-label="${t('play')}">${pl}</button></div>`;
+ const fns=[...new Set(V.map(v=>v.fn))];
+ $('chips').innerHTML=`<button class="pill" data-f="all" aria-pressed="${filt==='all'}">${t('all')}</button>`+fns.map(k=>`<button class="pill" data-f="${k}" aria-pressed="${filt===k}">${t('fn')[k]}</button>`).join('');
+ $('wall').innerHTML=V.map((v,i)=>({v,i})).filter(({v})=>filt==='all'||v.fn===filt).map(({v,i})=>`<article class="vb" style="--fc:${FC[v.fn]}" data-v="${i}"><div class="top2"><span class="fn">${t('fn')[v.fn]}</span><button class="play" data-play="${i}" aria-label="${t('play')}: ${esc(v[L])}">${pl}</button></div><q>${esc(v[L])}</q><p class="ctx">${esc(L==='es'?v.ces:v.cen)}</p>${strip(v)}${v.example?`<p class="who muted">${t('ex')}</p>`:''}</article>`).join('');
+ $('share').innerHTML=`<h2>${t('sh')}</h2><div class="share"><div><p>${t('shp')}</p><ol>${t('steps').map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div><div class="consent">${t('ck').map((c,i)=>`<label><input type="checkbox" data-ck="${i}">${esc(c)}</label>`).join('')}<p class="ready" id="ready" aria-live="polite"></p>${FORM_URL?`<a class="btn go" id="formb" href="${esc(FORM_URL)}" target="_blank" rel="noopener" style="text-decoration:none;display:none">${t('form')}</a>`:''}</div></div>`}
+async function play(i){hush();const me=Symbol();playing=me;const v=V[i];
+ const roots=document.querySelectorAll(`[data-v="${i}"] .strip`);
+ const say=s=>new Promise(r=>{let done=false;const fin=()=>{if(!done){done=true;r()}};speak(s,L,fin);setTimeout(fin,600+s.length*90)});
+ for(let k=0;k<v.ids.length;k++){if(playing!==me)return;roots.forEach(r=>{r.querySelectorAll('.k').forEach((el,j)=>el.classList.toggle('lit',j===k))});await say(byId[v.ids[k]][L]);await new Promise(r=>setTimeout(r,180))}
+ if(playing!==me)return;roots.forEach(r=>r.querySelectorAll('.k').forEach(el=>el.classList.add('lit')));await say(v[L]);
+ roots.forEach(r=>r.querySelectorAll('.k').forEach(el=>el.classList.remove('lit')))}
+document.addEventListener('click',e=>{const p=e.target.closest('[data-play]');if(p){play(+p.dataset.play);return}const f=e.target.closest('[data-f]');if(f){filt=f.dataset.f;draw()}});
+document.addEventListener('change',e=>{if(!e.target.matches('[data-ck]'))return;const all=[...document.querySelectorAll('[data-ck]')].every(c=>c.checked);$('ready').textContent=all?t('ready'):'';const fb=$('formb');if(fb)fb.style.display=all?'inline-flex':'none'});
+function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');draw()}
+AAC.deco($('deco'),[['mic',8,10,62,-8],['speech',46,58,44,6],['star',80,14,50,10],['heart',28,60,40,-6]]);
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+</body>
+</html>

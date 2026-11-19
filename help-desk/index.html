@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Device Help Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA a friendly repair counter: pick what's wrong, try one fix at a time, celebrate when it works
+   LAYOUT symptom tiles -> one-step-at-a-time fixer -> "still stuck" note for the team */
+:root{--band:#1c7ed6;--maxw:980px;--decol:70%}
+.lead{font-size:19px;margin:0 0 16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tile{font:inherit;text-align:left;border:0;border-radius:20px;padding:16px;cursor:pointer;display:flex;gap:12px;align-items:center;background:var(--tint);color:var(--ink);min-height:84px;transition:transform .15s,box-shadow .15s;box-shadow:inset 0 0 0 2px transparent}
+.tile:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(16,20,30,.12),inset 0 0 0 2px var(--a)}
+.tile .ic{width:56px;height:56px;flex:none;border-radius:16px;display:grid;place-items:center;background:var(--c)}
+.tile .ic img{width:40px}
+.tile b{font-size:17px;line-height:1.2;display:block}
+.tile .d{font-size:14px;color:var(--soft)}
+.fixer{display:none}
+.fixer.on{display:block;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.fhead{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.fhead .ic{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:var(--c);flex:none}
+.fhead .ic img{width:46px}
+.fhead h2{margin:0}
+.back{font:inherit;font-weight:700;background:none;border:0;color:var(--soft);cursor:pointer;min-height:44px;padding:0;margin-bottom:6px}
+.dots{display:flex;gap:6px;margin:0 0 16px}
+.dots i{height:8px;flex:1;border-radius:6px;background:var(--line)}
+.dots i.on{background:var(--c)}
+.step{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;background:var(--tint);border-radius:22px;padding:clamp(16px,3vw,26px)}
+.num{width:58px;height:58px;border-radius:50%;background:var(--c);color:#fff;font-size:28px;font-weight:700;display:grid;place-items:center;box-shadow:0 6px 0 rgba(0,0,0,.15)}
+.step h3{margin:4px 0 6px;font-size:clamp(20px,2.6vw,24px)}
+.step p{margin:0 0 6px;font-size:18px}
+.step .note{font-size:15px;color:var(--soft)}
+.acts{margin-top:16px}
+.won{text-align:center;padding:18px 0 6px}
+.won .big{font-size:clamp(34px,6vw,52px);font-weight:700;margin:0}
+.stuck{border-left:8px solid var(--c);padding-left:16px}
+textarea.in{width:100%;min-height:150px;margin:8px 0}
+.ipad{font-size:14px;color:var(--soft);margin:16px 0 0}
+@media(max-width:560px){.step{grid-template-columns:1fr}.num{width:48px;height:48px;font-size:22px}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card" id="pick"></section>
+  <section class="card fixer" id="fix"></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+const {esc,sym,confetti,store}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),cur=null,si=0;
+const T={en:{h1:'Device Help Desk',sub:'Something not working? Pick what is going on and try one fix at a time.',lead:'What is going on with the device?',back:'← All problems',of:'Step {a} of {b}',fixed:'That fixed it!',next:'Still not working',prev:'Back a step',won:'You fixed it!',wonp:'Nice work. The student has their voice back.',again:'Fix something else',stuckh:'Still stuck? Let the team know.',stuckp:'Copy this note and send it to the teacher, case manager or SLP. Add the student’s name. They can take it from here.',copy:'Copy note',copied:'Copied!',backup:'While you wait, keep a printed core board nearby so the student can still talk.',board:'Print a core board',ipad:'Most school AAC devices are iPads. If yours is different, the ideas are the same but buttons may be in other places.',note:'Hi, the AAC device is having a problem: {p}. We already tried: {s}. Can you help? Thank you!',foot:'Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+es:{h1:'Ayuda con el dispositivo',sub:'¿Algo no funciona? Elija lo que pasa y pruebe una solución a la vez.',lead:'¿Qué le pasa al dispositivo?',back:'← Todos los problemas',of:'Paso {a} de {b}',fixed:'¡Ya funciona!',next:'Sigue sin funcionar',prev:'Paso anterior',won:'¡Lo arregló!',wonp:'Buen trabajo. El estudiante tiene su voz otra vez.',again:'Arreglar otra cosa',stuckh:'¿Sigue sin funcionar? Avise al equipo.',stuckp:'Copie esta nota y envíela al maestro, al encargado del caso o al terapeuta del habla. Agregue el nombre del estudiante.',copy:'Copiar nota',copied:'¡Copiada!',backup:'Mientras tanto, tenga un tablero impreso cerca para que el estudiante pueda seguir comunicándose.',board:'Imprimir un tablero',ipad:'La mayoría de los dispositivos escolares son iPads. Si el suyo es diferente, las ideas son iguales pero los botones pueden estar en otro lugar.',note:'Hola, el dispositivo de CAA tiene un problema: {p}. Ya intentamos: {s}. ¿Nos puede ayudar? ¡Gracias!',foot:'Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const P=[
+{id:'sound',a:'#e03131',ic:'mute',c:'#ffc9c9',
+ en:{t:'No sound',d:'It lights up but does not talk',s:[
+  ['Turn the volume up','Press the volume up button on the edge of the iPad a few times. You can also swipe down from the top right corner and slide the speaker up.'],
+  ['Check for a bell with a line through it','Swipe down from the top right corner. If the bell has a line through it, tap it to turn sound back on. Some older iPads have a small switch on the side instead.'],
+  ['Unplug headphones and check Bluetooth','The voice may be going to headphones or a speaker somewhere else. Unplug any headphones. Then open Settings, tap Bluetooth, and turn it off to test.'],
+  ['Close the app and open it again','Swipe up from the bottom of the screen and pause. Swipe the AAC app up and away. Then tap the app to open it again.'],
+  ['Restart the iPad','Hold the top button and either volume button until you see the slider, then slide it. On iPads with a round Home button, just hold the top button. Wait 30 seconds and turn it back on.']]},
+ es:{t:'No tiene sonido',d:'Prende pero no habla',s:[
+  ['Suba el volumen','Presione varias veces el botón para subir el volumen en el borde del iPad. También puede deslizar el dedo hacia abajo desde la esquina superior derecha y subir la bocina.'],
+  ['Busque una campana con una línea','Deslice el dedo hacia abajo desde la esquina superior derecha. Si la campana tiene una línea, tóquela para activar el sonido. Algunos iPads viejos tienen un interruptor pequeño al lado.'],
+  ['Desconecte audífonos y revise Bluetooth','La voz puede estar saliendo por audífonos o una bocina. Desconecte los audífonos. Luego abra Configuración, toque Bluetooth y apáguelo para probar.'],
+  ['Cierre la aplicación y ábrala otra vez','Deslice el dedo hacia arriba desde abajo y espere. Deslice la aplicación de CAA hacia arriba para cerrarla. Luego ábrala otra vez.'],
+  ['Reinicie el iPad','Mantenga presionado el botón de arriba y un botón de volumen hasta ver el control para apagar, y deslícelo. En iPads con botón de inicio redondo, solo mantenga el botón de arriba. Espere 30 segundos y préndalo.']]}},
+{id:'stuck',a:'#e8590c',ic:'lock',c:'#ffd8a8',
+ en:{t:'Stuck in the app',d:'Can’t leave or switch apps',s:[
+  ['This may be on purpose','Many students use Guided Access, which keeps the iPad locked in the AAC app so they don’t wander into games. That is usually a good thing.'],
+  ['Unlock it with the code','Press the top button (or the Home button) three times fast. Type the Guided Access code. Ask the teacher or SLP for it. Please turn it back on when you are done.'],
+  ['Is the screen frozen instead?','If nothing responds to touch at all, go back and pick “Frozen or crashed.”']]},
+ es:{t:'Trabado en la aplicación',d:'No puede salir ni cambiar',s:[
+  ['Puede ser a propósito','Muchos estudiantes usan Acceso guiado, que deja el iPad en la aplicación de CAA para que no se distraigan con juegos. Normalmente eso es bueno.'],
+  ['Desbloquéelo con el código','Presione el botón de arriba (o el de inicio) tres veces rápido. Escriba el código de Acceso guiado. Pídalo al maestro o terapeuta. Vuelva a activarlo al terminar.'],
+  ['¿Más bien está congelada la pantalla?','Si la pantalla no responde nada, regrese y elija “Congelado o se cerró.”']]}},
+{id:'frozen',a:'#1971c2',ic:'frozen',c:'#a5d8ff',
+ en:{t:'Frozen or crashed',d:'Not responding or keeps closing',s:[
+  ['Give it 10 seconds','Sometimes the app is just busy. Wait a moment without tapping.'],
+  ['Close the app and open it again','Swipe up from the bottom and pause. Swipe the AAC app up and away, then open it again.'],
+  ['Restart the iPad','Hold the top button and a volume button until you see the slider, then slide it. Wait 30 seconds and turn it back on.'],
+  ['Leave updates to the school','If it keeps crashing, the app may need an update. On a school device, ask before updating. Updates can change how the vocabulary looks.']]},
+ es:{t:'Congelado o se cerró',d:'No responde o se cierra solo',s:[
+  ['Espere 10 segundos','A veces la aplicación está ocupada. Espere un momento sin tocar.'],
+  ['Cierre la aplicación y ábrala otra vez','Deslice desde abajo hacia arriba y espere. Deslice la aplicación hacia arriba para cerrarla y ábrala otra vez.'],
+  ['Reinicie el iPad','Mantenga presionado el botón de arriba y un botón de volumen hasta ver el control, y deslícelo. Espere 30 segundos y préndalo.'],
+  ['Las actualizaciones las hace la escuela','Si se sigue cerrando, puede necesitar una actualización. En un dispositivo escolar, pregunte antes de actualizar. Las actualizaciones pueden cambiar el vocabulario.']]}},
+{id:'moved',a:'#7048e8',ic:'puzzle',c:'#d0bfff',
+ en:{t:'Words moved or missing',d:'Things are not where they were',s:[
+  ['Go back to the home page','Look for a Home button in the app and tap it. The student may just be deep in a folder.'],
+  ['Don’t move things to fix it','Moving more buttons can make it harder to put back. Leave it as it is for now.'],
+  ['Take a screenshot','Press the top button and volume up together. Send the picture to the SLP so they can see what changed.'],
+  ['Ask about locking editing','AAC apps have a setting that locks editing so words can’t be moved by accident. Ask the SLP to turn it on. Some words may also be hidden on purpose while the student learns.']]},
+ es:{t:'Palabras movidas o perdidas',d:'Las cosas no están donde estaban',s:[
+  ['Regrese a la página principal','Busque el botón de inicio en la aplicación y tóquelo. El estudiante puede estar dentro de una carpeta.'],
+  ['No mueva cosas para arreglarlo','Mover más botones lo hace más difícil de arreglar. Déjelo así por ahora.'],
+  ['Tome una captura de pantalla','Presione el botón de arriba y el de subir volumen al mismo tiempo. Envíe la foto al terapeuta para que vea qué cambió.'],
+  ['Pregunte por el bloqueo de edición','Las aplicaciones de CAA pueden bloquear la edición para que nadie mueva palabras por accidente. Pida al terapeuta que lo active. Algunas palabras pueden estar escondidas a propósito.']]}},
+{id:'battery',a:'#2b8a3e',ic:'lowbattery',c:'#b2f2bb',
+ en:{t:'Battery dies fast',d:'Or won’t charge',s:[
+  ['Charge it every night','Plug it in at the same spot every night, somewhere you will see it in the morning. A full battery should last the school day.'],
+  ['Check the cable and outlet','Look for bends or frayed spots on the cable. Try a different outlet. Use the charger that came with the device if you can.'],
+  ['Turn on Low Power Mode','Open Settings, tap Battery, and turn on Low Power Mode. It helps the battery last longer.'],
+  ['Turn the brightness down a little','Swipe down from the top right corner and slide the sun down a bit.'],
+  ['Tell the school if it still drains','If a full charge lasts only a few hours, the battery may need service. Let the team know.']]},
+ es:{t:'La batería se acaba rápido',d:'O no carga',s:[
+  ['Cárguelo todas las noches','Conéctelo en el mismo lugar cada noche, donde lo vea en la mañana. Una batería llena debe durar el día escolar.'],
+  ['Revise el cable y el enchufe','Busque dobleces o partes rotas en el cable. Pruebe otro enchufe. Use el cargador original si puede.'],
+  ['Active el Modo de bajo consumo','Abra Configuración, toque Batería y active Modo de bajo consumo. Ayuda a que dure más.'],
+  ['Baje un poco el brillo','Deslice hacia abajo desde la esquina superior derecha y baje el sol un poco.'],
+  ['Avise a la escuela si sigue igual','Si una carga completa dura solo unas horas, la batería puede necesitar servicio. Avise al equipo.']]}},
+{id:'dark',a:'#e67700',ic:'brightness',c:'#ffec99',
+ en:{t:'Screen goes dark',d:'Locks too fast or too dim',s:[
+  ['Turn the brightness up','Swipe down from the top right corner and slide the sun up.'],
+  ['Check Auto-Lock','Open Settings, tap Display & Brightness, then Auto-Lock. A longer time keeps the screen on while the student is thinking. On school devices this may be set by the district.']]},
+ es:{t:'La pantalla se apaga',d:'Se bloquea rápido o está oscura',s:[
+  ['Suba el brillo','Deslice hacia abajo desde la esquina superior derecha y suba el sol.'],
+  ['Revise el Bloqueo automático','Abra Configuración, toque Pantalla y brillo y luego Bloqueo automático. Más tiempo deja la pantalla prendida mientras el estudiante piensa. En dispositivos escolares esto puede estar fijado por el distrito.']]}},
+{id:'voice',a:'#0c8599',ic:'globe',c:'#99e9f2',
+ en:{t:'Voice sounds wrong',d:'Wrong language, robot voice, too fast',s:[
+  ['Check the language','If the device is set up in two languages, it may have switched. Look for a language or flag button in the app.'],
+  ['Connect to Wi-Fi','Nicer voices sometimes need Wi-Fi to download again. Connect, close the app, and open it again.'],
+  ['Ask about speed and voice','Each app has its own voice and speed settings. Ask the SLP to set them so the voice fits the student.']]},
+ es:{t:'La voz suena rara',d:'Otro idioma, voz de robot, muy rápida',s:[
+  ['Revise el idioma','Si el dispositivo tiene dos idiomas, puede haber cambiado. Busque un botón de idioma o bandera en la aplicación.'],
+  ['Conéctese a Wi-Fi','Algunas voces necesitan Wi-Fi para descargarse otra vez. Conéctese, cierre la aplicación y ábrala.'],
+  ['Pregunte por la velocidad y la voz','Cada aplicación tiene su configuración de voz y velocidad. Pida al terapeuta que la ajuste para el estudiante.']]}},
+{id:'broken',a:'#c92a2a',ic:'broken',c:'#ffa8a8',
+ en:{t:'Broken, wet or lost',d:'Cracked screen, spill, missing',s:[
+  ['Stay safe with cracked glass','If the screen is badly cracked, stop using it so no one gets cut.'],
+  ['If it got wet','Turn it off, wipe it dry, and don’t charge it until it is completely dry. Skip the bag of rice.'],
+  ['Tell the school right away','The team needs to know as soon as possible so they can plan for repairs.'],
+  ['Keep a backup voice ready','A printed core board means the student can still talk while the device is out.']]},
+ es:{t:'Roto, mojado o perdido',d:'Pantalla rota, derrame, extraviado',s:[
+  ['Cuidado con el vidrio roto','Si la pantalla está muy rota, deje de usarla para que nadie se corte.'],
+  ['Si se mojó','Apáguelo, séquelo y no lo cargue hasta que esté completamente seco. No use arroz.'],
+  ['Avise a la escuela de inmediato','El equipo necesita saber lo antes posible para planear la reparación.'],
+  ['Tenga una voz de respaldo','Un tablero impreso permite que el estudiante siga comunicándose mientras el dispositivo no está.']]}},
+{id:'wontuse',a:'#c2255c',ic:'handsup',c:'#fcc2d7',
+ en:{t:'They won’t use it',d:'The device works, but it sits there',s:[
+  ['Keep it in reach','The device should be out, on, and close by all day. If it is in a backpack, it can’t help.'],
+  ['Use it yourself','Tap words on the device while you talk. This is called modeling. Kids learn to talk with AAC by seeing us use it, the same way babies learn speech by hearing it.'],
+  ['Skip the quiz','Instead of “What’s this?” or “Say want,” just talk about what is happening. Model, then wait.'],
+  ['Wait longer than feels normal','Count to ten in your head. Many AAC users need extra time to find the words.'],
+  ['Make it worth talking about','Start with things the student loves. Bubbles, a favorite show, a silly game. Fun gives them a reason to talk.']]},
+ es:{t:'No lo quiere usar',d:'Funciona, pero no lo usa',s:[
+  ['Téngalo al alcance','El dispositivo debe estar afuera, prendido y cerca todo el día. En la mochila no puede ayudar.'],
+  ['Úselo usted','Toque palabras en el dispositivo mientras habla. Esto se llama modelar. Los niños aprenden a comunicarse con CAA viéndonos usarla, como los bebés aprenden a hablar escuchando.'],
+  ['No haga preguntas de examen','En vez de “¿Qué es esto?” o “Di quiero,” hable de lo que está pasando. Modele y espere.'],
+  ['Espere más de lo normal','Cuente hasta diez en su mente. Muchos usuarios de CAA necesitan más tiempo para encontrar las palabras.'],
+  ['Hágalo divertido','Empiece con lo que le encanta. Burbujas, su programa favorito, un juego chistoso. La diversión le da razones para hablar.']]}}];
+const t=k=>T[L][k];
+const vis=()=>{const v=new URLSearchParams(location.search).get('p');return P.find(p=>p.id===v)};
+function pick(){
+  $('pick').innerHTML=`<p class="lead"><b>${t('lead')}</b></p><div class="tiles">${P.map(p=>`<button class="tile" data-p="${p.id}" style="--c:${p.c};--a:${p.a}"><span class="ic"><img src="${sym(p.ic)}" alt=""></span><span><b>${esc(p[L].t)}</b><span class="d">${esc(p[L].d)}</span></span></button>`).join('')}</div><p class="ipad">${t('ipad')}</p>`;
+}
+function fix(){
+  const f=$('fix');if(!cur){f.classList.remove('on');$('pick').style.display='';return}
+  $('pick').style.display='none';f.classList.add('on');f.style.setProperty('--c',cur.a);
+  const d=cur[L],n=d.s.length;
+  let body;
+  if(si>=n){body=`<div class="won"><p class="big">${t('won')}</p><p>${t('wonp')}</p><button class="btn go" data-a="home">${t('again')}</button></div>`}
+  else if(si<0){body=stuck()}
+  else{const [h,p]=d.s[si];body=`<div class="dots">${d.s.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('')}</div>
+  <p class="muted small" style="margin:0 0 8px">${t('of').replace('{a}',si+1).replace('{b}',n)}</p>
+  <div class="step"><div class="num">${si+1}</div><div><h3>${esc(h)}</h3><p>${esc(p)}</p></div></div>
+  <div class="row acts"><button class="btn go" data-a="fixed">${t('fixed')}</button><button class="btn ghost" data-a="next">${t('next')}</button>${si>0?`<button class="btn ghost" data-a="prev">${t('prev')}</button>`:''}</div>`}
+  f.innerHTML=`<button class="back" data-a="home">${t('back')}</button><div class="fhead"><span class="ic" style="background:${cur.c}"><img src="${sym(cur.ic)}" alt=""></span><h2>${esc(d.t)}</h2></div>${body}`;
+}
+function stuck(){const d=cur[L];const note=t('note').replace('{p}',d.t.toLowerCase()).replace('{s}',d.s.map(x=>x[0].toLowerCase()).join('; '));
+ return `<div class="stuck"><h3 style="margin:0 0 6px;font-size:22px">${t('stuckh')}</h3><p>${t('stuckp')}</p><textarea class="in" id="note">${esc(note)}</textarea><div class="row"><button class="btn go" data-a="copy">${t('copy')}</button></div><p>${t('backup')} <a href="../core-board-maker/">${t('board')}</a></p></div>`}
+document.addEventListener('click',async e=>{
+  const tl=e.target.closest('[data-p]');if(tl){cur=P.find(p=>p.id===tl.dataset.p);si=0;fix();$('fix').scrollIntoView({behavior:AAC.reduced()?'auto':'smooth',block:'start'});return}
+  const a=e.target.closest('[data-a]');if(!a)return;const k=a.dataset.a;
+  if(k==='home'){cur=null;fix();return}
+  if(k==='fixed'){si=cur[L].s.length;fix();confetti($('fix'));return}
+  if(k==='next'){si=si+1>=cur[L].s.length?-1:si+1;fix();return}
+  if(k==='prev'){si=Math.max(0,si-1);fix();return}
+  if(k==='copy'){try{await navigator.clipboard.writeText($('note').value);a.textContent=t('copied')}catch(err){$('note').select()}}
+});
+function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('foot').textContent=t('foot');document.title=t('h1');pick();fix()}
+AAC.deco($('deco'),[['wrench',10,8,64,-10],['battery',46,52,46,8],['speaker',78,10,54,6],['gear',30,58,40,0]]);
+cur=vis()||null;
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+</body>
+</html>
