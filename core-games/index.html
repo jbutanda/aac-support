@@ -34,9 +34,11 @@
 </style>
 </head>
 <body>
-<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+<header class="band has-hero"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
   <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+
+  <img class="hero" id="hero" src="../shared/art/core-word-games.jpg" alt="Students on a classroom rug cheer at bubbles on the whiteboard while a classmate holds up his communication tablet." data-en="Students on a classroom rug cheer at bubbles on the whiteboard while a classmate holds up his communication tablet." data-es="Estudiantes en la alfombra celebran las burbujas en la pizarra mientras un compañero levanta su tableta de comunicación." width="960" height="540">
 </div></header>
 <main class="wrap">
   <section class="card">
@@ -114,6 +116,7 @@ document.addEventListener('click',e=>{const g=e.target.closest('[data-g]');if(g)
 $('fs').onclick=()=>{const a=$('arena');try{document.fullscreenElement?document.exitFullscreen():a.requestFullscreen()}catch(e){}};
 document.addEventListener('fullscreenchange',()=>{$('fs').textContent=document.fullscreenElement?t('exit'):t('fs');if(G==='bubbles')load()});
 AAC.deco($('deco'),[['bubbles',8,10,62,-6],['racecar',46,56,52,4],['monster',80,12,56,8],['balloon',30,60,44,-6]]);
+(function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);
 </script>
 <script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>

@@ -56,9 +56,11 @@
 </style>
 </head>
 <body>
-<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+<header class="band has-hero"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
   <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+
+  <img class="hero" id="hero" src="../shared/art/staff-training.jpg" alt="A teacher kneels at eye level and waits while a student taps his communication tablet." data-en="A teacher kneels at eye level and waits while a student taps his communication tablet." data-es="Una maestra se arrodilla a la altura del estudiante y espera mientras él toca su tableta de comunicación." width="960" height="540">
 </div></header>
 <main class="wrap">
   <section class="card" id="game">
@@ -155,6 +157,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-a]');const
  if(k==='restart'){i=0;stars=0;best=[];msg=[];checked=false;done=false;$('ask').style.display='';document.querySelector('.device').style.display='';$('coach').innerHTML='';dev.home();render()}
 });
 AAC.deco($('deco'),[['target',8,12,62,-8],['speech',46,58,46,6],['star',80,14,52,10],['bubbles',28,60,46,0]]);
+(function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);
 </script>
 <script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>

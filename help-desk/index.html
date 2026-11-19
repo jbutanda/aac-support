@@ -44,9 +44,11 @@ textarea.in{width:100%;min-height:150px;margin:8px 0}
 </style>
 </head>
 <body>
-<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+<header class="band has-hero"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
   <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
+
+  <img class="hero" id="hero" src="../shared/art/device-help.jpg" alt="A mother and her son look at his communication tablet together on the couch." data-en="A mother and her son look at his communication tablet together on the couch." data-es="Una madre y su hijo miran juntos la tableta de comunicación en el sofá." width="960" height="540">
 </div></header>
 <main class="wrap">
   <section class="card" id="pick"></section>
@@ -189,6 +191,7 @@ document.addEventListener('click',async e=>{
 function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('foot').textContent=t('foot');document.title=t('h1');pick();fix()}
 AAC.deco($('deco'),[['wrench',10,8,64,-10],['battery',46,52,46,8],['speaker',78,10,54,6],['gear',30,58,40,0]]);
 cur=vis()||null;
+(function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);
 </script>
 <script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>

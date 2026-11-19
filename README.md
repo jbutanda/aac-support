@@ -106,3 +106,7 @@ Ten more, on the same shared foundation, all English and Spanish.
 ### Save to My Tools
 
 Every tool now has a star button in its header (`shared/bookmark.js`, reading the list in `shared/catalog.js`). Saved tools appear on Start Here. They are kept in the visitor's browser only. When the tools are embedded in Google Sites, saves made on that site stay together. When you add a new tool, add one line for it to `shared/catalog.js`.
+
+### Header pictures (shared/art)
+
+Illustrations made with Gemini, cleaned up and sized for the web. Nine tools show one in the header: add `has-hero` to the band and an `img.hero` after `.top` (see any of those pages). The landing page uses `home-banner.jpg`. Full-size copies, a print flyer and alt text live outside the repo. Each tool keeps its alt text in English and Spanish on the image's `data-en` and `data-es`.

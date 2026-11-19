@@ -50,9 +50,11 @@
 </style>
 </head>
 <body>
-<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+<header class="band has-hero"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
   <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+
+  <img class="hero" id="hero" src="../shared/art/voices-banner.jpg" alt="Colorful speech bubbles burst out of a tablet." data-en="Colorful speech bubbles burst out of a tablet." data-es="Burbujas de diálogo de colores salen de una tableta." width="960" height="540">
 </div></header>
 <main class="wrap">
   <section class="card">
@@ -118,6 +120,7 @@ document.addEventListener('click',e=>{const p=e.target.closest('[data-play]');if
 document.addEventListener('change',e=>{if(!e.target.matches('[data-ck]'))return;const all=[...document.querySelectorAll('[data-ck]')].every(c=>c.checked);$('ready').textContent=all?t('ready'):'';const fb=$('formb');if(fb)fb.style.display=all?'inline-flex':'none'});
 function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');draw()}
 AAC.deco($('deco'),[['mic',8,10,62,-8],['speech',46,58,44,6],['star',80,14,50,10],['heart',28,60,40,-6]]);
+(function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);
 </script>
 <script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
