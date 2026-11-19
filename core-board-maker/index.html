@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Core Board Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE practical, a tool SLPs and teachers use every week
+   IDEA a print shop: choose the options, see the exact sheet, print it
+   PICTURE the printable board itself, full width, updating live as options change
+   COLOUR amber band; the board keeps Fitzgerald colours unless switched off
+   TYPE Atkinson Hyperlegible
+   LAYOUT options card, then the sheet; print shows only the sheet in landscape */
+:root{--band:#e67700;--maxw:1100px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.opts label,.opts fieldset{display:grid;gap:6px;font-weight:700;font-size:15px;border:0;padding:0;margin:0}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.opts label.tg{display:flex;align-items:center;gap:8px;font-weight:700;min-height:44px}
+.tg input{width:22px;height:22px}
+.sheet{background:#fff;color:#16181d;border-radius:16px;padding:16px}
+.sheet h2{color:#16181d;text-align:center;margin:0 0 10px;font-size:26px}
+.sb{display:grid;gap:6px}
+.sb .k{aspect-ratio:1/.95;cursor:default;border-radius:10px}
+.sb .k img{width:56%;max-width:80px}
+.sb .k .w{font-size:clamp(11px,1.5vw,18px);white-space:normal}
+.sb .k .w2{font-size:clamp(9px,1.1vw,13px);font-weight:400;opacity:.85;line-height:1}
+.sb.mono .k{background:#fff!important;color:#16181d!important;box-shadow:inset 0 0 0 2px #adb5bd}
+.sb .k.fr{background:#f1f3f5;color:#16181d;box-shadow:inset 0 0 0 2px #ced4da}
+.sb.nosym .k img{display:none}
+.sb.nosym .k .w{font-size:clamp(14px,2vw,24px)}
+.sheet .cred{font-size:11px;color:#868e96;text-align:right;margin:8px 0 0}
+@page{size:landscape;margin:10mm}
+@media print{.optscard{display:none!important}.sheet{padding:0}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card optscard noprint"><div class="opts" id="opts"></div><div class="row" style="margin-top:16px"><button class="btn go" id="print"></button><span class="muted small" id="tip"></span></div></section>
+  <section class="card"><div class="sheet" id="sheet"></div></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+const {W,byId,sym,esc,langToggle,store}=AAC;
+const PRI=['i','you','want','go','stop','help','more','look','like','no','yes','alldone','what','where','play','eat','drink','open','turn','in','on','up','big','little','good','bad','again','that','this','here','feel','happy','sad','wait','get','make'];
+const COLS={12:6,24:8,36:9,60:10};
+const T={
+ en:{h1:'Core Board Maker',sub:'Build a printable, color-coded core board in English, Spanish or both. Great as a backup when a device is charging.',size:'Board size',words:'words',lab:'Labels',en:'English',es:'Spanish',both:'Both',title:'Title on the board',titleph:'e.g., Mia’s core board',fr:'Extra words (comma separated)',frph:'e.g., swing, Grandma, pizza',sym:'Show symbols',col:'Color-coded',print:'Print board',tip:'Prints in landscape. Laminate it and keep one where the device can’t go.',
+  foot:'Words and colors match the RUSD demo board. Extra words print as text only. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Creador de tableros',sub:'Cree un tablero de palabras clave, con colores, para imprimir en inglés, español o ambos. Ideal como respaldo mientras el aparato se carga.',size:'Tamaño',words:'palabras',lab:'Etiquetas',en:'Inglés',es:'Español',both:'Ambos',title:'Título del tablero',titleph:'ej., El tablero de Mia',fr:'Palabras extra (separadas por comas)',frph:'ej., columpio, abuela, pizza',sym:'Mostrar símbolos',col:'Con colores',print:'Imprimir tablero',tip:'Se imprime horizontal. Enmíquelo y tenga uno donde el aparato no puede ir.',
+  foot:'Las palabras y los colores coinciden con el tablero de demostración de RUSD. Las palabras extra se imprimen solo con texto. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const S=Object.assign({lang:'en',size:24,lab:'en',sym:true,col:true,title:'',fr:''},store.get('cbm',{}));
+const $=id=>document.getElementById(id);
+const save=()=>store.set('cbm',S);
+const words=()=>{const ids=S.size===60?W.map(w=>w.id):PRI.slice(0,S.size);const idx=Object.fromEntries(W.map((w,i)=>[w.id,i]));return ids.slice().sort((a,b)=>idx[a]-idx[b]).map(id=>byId[id])};
+const drawOpts=()=>{const t=T[S.lang];
+ $('opts').innerHTML=`<fieldset><legend>${t.size}</legend><div class="seg">${[12,24,36,60].map(n=>`<button class="pill" data-s="${n}" aria-pressed="${S.size===n}">${n}</button>`).join('')}</div></fieldset>
+ <fieldset><legend>${t.lab}</legend><div class="seg">${['en','es','both'].map(l=>`<button class="pill" data-lab="${l}" aria-pressed="${S.lab===l}">${t[l]}</button>`).join('')}</div></fieldset>
+ <label>${t.title}<input class="in" id="ti" value="${esc(S.title)}" placeholder="${esc(t.titleph)}"></label>
+ <label>${t.fr}<input class="in" id="fr" value="${esc(S.fr)}" placeholder="${esc(t.frph)}"></label>
+ <label class="tg"><input type="checkbox" id="sy"${S.sym?' checked':''}>${t.sym}</label>
+ <label class="tg"><input type="checkbox" id="co"${S.col?' checked':''}>${t.col}</label>`;
+ $('print').textContent=t.print;$('tip').textContent=t.tip};
+const drawSheet=()=>{const ws=words(),cols=COLS[S.size],fr=S.fr.split(',').map(x=>x.trim()).filter(Boolean).slice(0,cols*2);
+ const lab=w=>S.lab==='both'?`<span class="w">${esc(w.en)}</span><span class="w2">${esc(w.es)}</span>`:`<span class="w">${esc(w[S.lab])}</span>`;
+ $('sheet').innerHTML=`${S.title.trim()?`<h2>${esc(S.title)}</h2>`:''}<div class="sb${S.col?'':' mono'}${S.sym?'':' nosym'}" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${ws.map(w=>`<div class="k ${w.c}"><img src="${w.img}" alt="">${lab(w)}</div>`).join('')}${fr.map(x=>`<div class="k fr"><span class="w">${esc(x)}</span></div>`).join('')}</div><p class="cred">Symbols: OpenMoji, CC BY-SA 4.0</p>`};
+const chrome=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot};
+$('opts').addEventListener('click',e=>{const s=e.target.closest('[data-s]'),l=e.target.closest('[data-lab]');if(s)S.size=+s.dataset.s;if(l)S.lab=l.dataset.lab;if(s||l){save();drawOpts();drawSheet()}});
+$('opts').addEventListener('input',e=>{if(e.target.id==='ti')S.title=e.target.value;if(e.target.id==='fr')S.fr=e.target.value;if(e.target.id==='sy')S.sym=e.target.checked;if(e.target.id==='co')S.col=e.target.checked;save();drawSheet()});
+$('print').addEventListener('click',()=>{try{window.print()}catch(e){}});
+langToggle($('langs'),()=>S.lang,l=>{S.lang=l;if(S.lab!=='both')S.lab=l;save();chrome();drawOpts();drawSheet()});
+$('deco').innerHTML=[['printer',12,12,60,-8],['star',48,58,44,8],['clipboard',80,14,52,-6]].map(([n,x,y,z,r],i)=>`<img src="${sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
+chrome();drawOpts();drawSheet();
+}
+</script>
+</body>
+</html>

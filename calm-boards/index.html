@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calm Boards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE calm, quiet, few colours, big targets for a student who is upset
+   IDEA a laminated calm-corner board, but it talks
+   PICTURE the board itself, large keys, with a message strip that shows what was said
+   COLOUR deep calm blue band; soft feeling colours on keys; nothing flashing
+   TYPE Atkinson Hyperlegible, large
+   LAYOUT grade-band tabs, message strip, 4-column board; same on phone */
+:root{--band:#1864ab;--maxw:900px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.said{display:flex;align-items:center;gap:14px;min-height:92px;border-radius:20px;background:#e7f5ff;color:#0b3a66;padding:12px 18px;margin-bottom:14px}
+:root[data-theme=dark] .said{background:#11283d;color:#d0ebff}
+.said img{width:62px;height:62px}
+.said b{font-size:clamp(24px,4vw,34px);line-height:1.1}
+.said .ph{color:#5b7ea3;font-size:18px}
+.cb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ck{border:0;border-radius:18px;font:inherit;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 6px;min-height:clamp(110px,18vw,150px);color:#16181d;transition:transform .1s}
+.ck img{width:clamp(44px,8vw,64px)}
+.ck span{font-size:clamp(14px,1.9vw,18px);line-height:1.15;text-align:center}
+.ck:active{transform:scale(.96)}
+.ck.on{box-shadow:0 0 0 4px #1864ab}
+.feel{background:#e5dbff}.need{background:#d3f9d8}.ask{background:#fff3bf}.stopk{background:#ffe3e3}.ok{background:#d0ebff}
+.breath{width:62px;height:62px;border-radius:50%;background:#74c0fc;flex:none;animation:breathe 8s ease-in-out 3}
+@keyframes breathe{0%,100%{transform:scale(.55)}50%{transform:scale(1)}}
+.opts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;font-size:14px;color:var(--soft);font-weight:700}
+@media(max-width:520px){.cb{gap:6px}.ck{border-radius:14px;min-height:100px}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card"><div class="tabs" id="tabs"></div><div class="said" id="said" aria-live="polite"></div><div class="cb" id="cb"></div><div class="opts" id="opts"></div></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+const {sym,speak,voiceSelect,langToggle,esc}=AAC;
+const TS='../talker/symbols/';
+const im=n=>n.startsWith('t:')?TS+n.slice(2)+'.svg':sym(n);
+/* [symbol, group, en, es]  {o} = Spanish ending (o/a) */
+const B={
+ k2:[['mad','feel','I’m mad','Estoy enojad{o}'],['sad','feel','I’m sad','Estoy triste'],['scared','feel','I’m scared','Tengo miedo'],['tired','feel','I’m tired','Estoy cansad{o}'],
+     ['loud','stopk','Too loud','Mucho ruido'],['t:help','ask','Help me','Ayúdame'],['break','need','I need a break','Necesito un descanso'],['water','need','Water, please','Agua, por favor'],
+     ['quiet','need','Quiet, please','Silencio, por favor'],['chair','ask','Sit with me','Siéntate conmigo'],['t:alldone','stopk','All done','Terminé'],['okay','ok','I’m okay','Estoy bien']],
+ g35:[['mad','feel','I’m mad','Estoy enojad{o}'],['frustrated','feel','I’m frustrated','Estoy frustrad{o}'],['worried','feel','I’m worried','Estoy preocupad{o}'],['sad','feel','I’m sad','Estoy triste'],
+      ['tired','feel','I’m tired','Estoy cansad{o}'],['loud','stopk','Too loud','Mucho ruido'],['t:help','ask','I need help','Necesito ayuda'],['t:stop','stopk','Stop','Para'],
+      ['break','need','I need a break','Necesito un descanso'],['headphones','need','Headphones, please','Audífonos, por favor'],['breathe','need','Deep breath','Respiro profundo'],['water','need','Water, please','Agua, por favor'],
+      ['walk','need','I need to move','Necesito moverme'],['space','need','I need space','Necesito espacio'],['talk','ask','I want to talk','Quiero hablar'],['okay','ok','I’m okay now','Ya estoy bien']],
+ g612:[['frustrated','feel','I’m frustrated','Estoy frustrad{o}'],['overwhelmed','feel','I’m overwhelmed','Estoy abrumad{o}'],['worried','feel','I’m anxious','Estoy ansios{o}'],['annoyed','feel','I’m annoyed','Estoy molest{o}'],
+       ['tired','feel','I’m exhausted','Estoy agotad{o}'],['loud','stopk','It’s too loud','Hay mucho ruido'],['space','need','I need space','Necesito espacio'],['t:wait','need','Give me a minute','Dame un minuto'],
+       ['headphones','need','Headphones, please','Audífonos, por favor'],['walk','ask','Can I take a walk?','¿Puedo dar una vuelta?'],['breathe','need','Deep breath','Respiro profundo'],['water','need','Water, please','Agua, por favor'],
+       ['talk','ask','Can we talk later?','¿Podemos hablar después?'],['t:help','ask','I need help','Necesito ayuda'],['t:stop','stopk','Stop','Para'],['okay','ok','I’m okay','Estoy bien']]};
+const T={
+ en:{h1:'Calm Boards',sub:'Tap-to-talk boards for big feelings, by grade band. Keep one open on a calm-corner iPad or Chromebook.',tabs:{k2:'TK–2',g35:'Grades 3–5',g612:'Grades 6–12'},ph:'Tap a word to say it.',
+  foot:'Sample boards. Swap in the words from your own regulation boards. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Tableros de calma',sub:'Tableros que hablan para sentimientos fuertes, por grado. Déjelo abierto en un iPad o Chromebook del rincón de calma.',tabs:{k2:'TK–2',g35:'3.º a 5.º',g612:'6.º a 12.º'},ph:'Toca una palabra para decirla.',gl:'Terminación en español:',
+  foot:'Tableros de muestra. Cambie las palabras por las de sus propios tableros de regulación. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const S={lang:'en',b:'k2',g:'o',last:null};
+const $=id=>document.getElementById(id);
+const txt=x=>S.lang==='es'?x[3].replace('{o}',S.g):x[2];
+const render=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=S.lang==='es'?'Voz':'Voice';
+ $('tabs').innerHTML=Object.keys(B).map(k=>`<button class="pill" data-b="${k}" aria-pressed="${S.b===k}">${t.tabs[k]}</button>`).join('');
+ $('cb').innerHTML=B[S.b].map((x,i)=>`<button class="ck ${x[1]}${S.last===i?' on':''}" data-i="${i}"><img src="${im(x[0])}" alt=""><span>${esc(txt(x))}</span></button>`).join('');
+ const x=S.last!=null?B[S.b][S.last]:null;
+ $('said').innerHTML=x?(x[0]==='breathe'?`<div class="breath"></div><b>${esc(txt(x))}</b>`:`<img src="${im(x[0])}" alt=""><b>${esc(txt(x))}</b>`):`<span class="ph">${t.ph}</span>`;
+ $('opts').innerHTML=S.lang==='es'?`${t.gl} <button class="pill" data-g="o" aria-pressed="${S.g==='o'}">-o</button><button class="pill" data-g="a" aria-pressed="${S.g==='a'}">-a</button>`:''};
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){S.b=b.dataset.b;S.last=null;render()}});
+$('cb').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;S.last=+b.dataset.i;render();speak(txt(B[S.b][S.last]),S.lang)});
+$('opts').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(b){S.g=b.dataset.g;render()}});
+langToggle($('langs'),()=>S.lang,l=>{S.lang=l;fill();render()});
+const fill=voiceSelect($('voice'),()=>S.lang);
+$('deco').innerHTML=[['calm',12,12,60,-8],['breathe',48,58,50,8],['headphones',80,14,52,-6]].map(([n,x,y,z,r],i)=>`<img src="${sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
+render();
+}
+</script>
+</body>
+</html>

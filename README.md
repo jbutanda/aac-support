@@ -64,3 +64,20 @@ Twelve real-life scenarios (classroom staff, families, behavior team, a transiti
 Family bingo card: 24 home routines, each paired with one core word and a modeling tip, plus a free square. Tap a square for the tip, stamp it when you model it, five in a row is bingo. New card, clear and print buttons; stamps are saved in the browser. English and Spanish. About 900 px tall when embedded.
 
     https://jbutanda.github.io/aac-support/modeling-bingo/
+
+## Prototype tools (shared foundation)
+
+These ten load `shared/core.js` and `shared/base.css`, so the board words, voices, colors and symbols stay consistent. Each lives at `https://jbutanda.github.io/aac-support/<folder>/`.
+
+| Folder | For | What it does |
+| --- | --- | --- |
+| `find-it-fast/` | Staff | Timed 10-word hunt on the 60-word board; best time saved |
+| `walk-in-their-shoes/` | Staff trainings | Partner answers questions using only the talker against a 60-second timer, then a debrief |
+| `pd-path/` | Staff | Five stops, a six-question check, printable certificate; set `FORM_URL` to log completions |
+| `modeling-tracker/` | Staff | "I modeled!" counter with a daily goal ring, quick word chips, week bars; data stays in the browser |
+| `core-word-of-the-week/` | Families, staff | Auto-rotating weekly word with home and school ideas and a printable poster; set `START` to the school calendar |
+| `all-about-me/` | Families, teams | One-page student communication profile that prints; nothing is saved |
+| `aac-buddy/` | Classmates | Six read-aloud pages, a three-question check and a printable buddy badge |
+| `calm-boards/` | Students | Tap-to-talk regulation boards for TK-2, 3-5 and 6-12, with Spanish -o/-a endings |
+| `core-board-maker/` | SLPs, teachers | Printable 12/24/36/60-word core boards in English, Spanish or both |
+| `program-at-a-glance/` | Admin | Program dashboard; shows sample numbers until `SHEET_CSV_URL` points to a published Google Sheet |
