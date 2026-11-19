@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Would You Do</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday and respectful, a staff-room scenario game, never a gotcha
+   IDEA a choose-your-response card: one real moment, three choices, coaching on every choice
+   PICTURE the scenario card, big, with the place icon and who it is for
+   COLOUR white page, charcoal ink, green best, amber close, rust try again
+   TYPE Atkinson Hyperlegible, same family as the other tools
+   LAYOUT filters row, card, choices stacked full width so long text reads well on a phone */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--best:#2b8a3e;--bestbg:light-dark(#ebfbee,#13301b);--close:#9a6700;--closebg:light-dark(#fff8e1,#30260b);--no:#c2410c;--nobg:light-dark(#fff1e8,#3a1d10);--focus:light-dark(#1f7a3a,#6fd68e)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:860px;margin:0 auto;padding:clamp(20px,3vw,40px) max(4vw,16px) 40px}
+.top{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:end;justify-content:space-between;margin-bottom:14px}
+h1{font-size:clamp(32px,5vw,46px);line-height:1.05;letter-spacing:-.02em;margin:0 0 4px}
+.sub{margin:0;color:var(--soft);max-width:52ch}
+.ctrls,.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters{margin-bottom:16px}
+.pill{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.pill[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.card{border-radius:24px;border:2px solid var(--line);background:var(--card);padding:clamp(20px,4vw,34px)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:14px;color:var(--soft);font-weight:700;margin-bottom:14px}
+.chip{background:var(--tint);border-radius:999px;padding:3px 10px}
+.srow{display:flex;gap:18px;align-items:flex-start}
+.sym{width:clamp(56px,10vw,80px);aspect-ratio:1/1;flex:none;background:var(--tint);border-radius:18px;display:grid;place-items:center}
+.sym img{width:72%}
+.sit{font-size:clamp(21px,3vw,27px);line-height:1.25;font-weight:700;margin:0}
+.ask{font-weight:700;color:var(--soft);margin:18px 0 10px}
+.opts{display:grid;gap:10px}
+.opt{font:inherit;text-align:left;border-radius:16px;border:2px solid var(--line);background:var(--bg);color:var(--ink);padding:14px 16px;cursor:pointer;min-height:56px;font-size:17px;display:block;width:100%}
+.opt:hover{border-color:var(--ink)}
+.opt[disabled]{cursor:default}
+.opt .t{display:block;font-weight:700}
+.opt .badge{display:inline-block;font-size:13px;font-weight:700;border-radius:999px;padding:2px 10px;margin:8px 0 4px;color:#fff}
+.opt .fb{display:block;font-size:16px}
+.opt.best{border-color:var(--best);background:var(--bestbg)}
+.opt.best .badge{background:var(--best)}
+.opt.close{border-color:color-mix(in srgb,var(--close) 50%,transparent);background:var(--closebg)}
+.opt.close .badge{background:var(--close)}
+.opt.no{border-color:color-mix(in srgb,var(--no) 45%,transparent);background:var(--nobg)}
+.opt.no .badge{background:var(--no)}
+.opt.picked{box-shadow:0 0 0 3px var(--ink)}
+.opt .you{font-size:13px;font-weight:700;color:var(--soft);margin-left:6px}
+details{font-size:14px;color:var(--soft);margin:14px 0 0}
+summary{cursor:pointer;font-weight:700;min-height:32px;display:flex;align-items:center;gap:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'+';display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;font-size:14px;line-height:1}
+details[open] summary::before{content:'\2212'}
+details[open]{color:var(--ink)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px}
+.prog{font-weight:700;color:var(--soft)}
+.next{font:inherit;font-weight:700;min-height:46px;padding:8px 20px;border-radius:999px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.next[disabled]{opacity:.35;cursor:default}
+.end{text-align:center}
+.big{font-size:clamp(52px,9vw,80px);font-weight:700;line-height:1}
+.end p{max-width:50ch;margin:8px auto}
+.foot{margin-top:22px;font-size:14px;color:var(--soft)}
+@media(max-width:560px){.srow{flex-direction:column;gap:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1 id="h1">What Would You Do?</h1><p class="sub" id="sub"></p></div>
+    <div class="ctrls"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="card" id="card" aria-live="polite"></div>
+  <p class="foot" id="foot"></p>
+</div>
+<script>
+{
+/* each option: [rating, en choice, en feedback, es choice, es feedback]  rating: b best, c close, n try again */
+const SC=[
+{s:'class',who:['staff'],
+ en:'During small group, Jayden presses COOKIE over and over, loudly.',es:'Durante el grupo pequeño, Jayden toca GALLETA una y otra vez, con volumen alto.',
+ o:[['n','Put the device away until group is over.','Removing the device removes his voice. Some state guidance says AAC should never be taken away, for any reason.','Guardar el aparato hasta que termine el grupo.','Quitar el aparato es quitarle la voz. Algunas guías estatales dicen que la CAA nunca se debe retirar, por ninguna razón.'],
+    ['c','Turn the volume all the way down.','It quiets the room but also silences him. If volume is a real issue, the team can agree on a lower setting together. Muting isn’t the answer.','Bajar el volumen por completo.','Calma el salón, pero también lo calla a él. Si el volumen es un problema real, el equipo puede acordar un nivel más bajo. Silenciarlo no es la solución.'],
+    ['b','Respond like it means something, then model a word for the group.','“Cookie! You’re thinking about cookies. Cookies after group.” Then model LOOK or TURN on his device. Repeating a word is often exploring, like babbling.','Responder como si tuviera significado y luego modelar una palabra del grupo.','“¡Galleta! Estás pensando en galletas. Galletas después del grupo.” Luego modele MIRA o TURNO en su aparato. Repetir una palabra muchas veces es explorar, como balbucear.']],
+ why:'Repeated pressing is often AAC babbling, and responding plus modeling teaches more than removing.',
+ whyes:'Tocar repetidamente suele ser balbuceo con la CAA; responder y modelar enseña más que quitar el aparato.',
+ r:'Vanderbilt TRIAD, AAC and Behavior; PrAACtical AAC, Stimming or Learning?; AbleNet, AAC Babbling.'},
+{s:'stop',who:['staff','bt'],
+ en:'Sofía taps STOP in the middle of a writing task.',es:'Sofía toca PARA a mitad de una tarea de escritura.',
+ o:[['b','Honor it: “You said stop.” Give a short break or a smaller piece of the task, then model HELP.','When a word works, she’ll use it again instead of behavior. You can’t always stop completely, and “Stop. Okay, two more, then a break” still honors her message.','Respetarlo: “Dijiste para.” Dar un descanso corto o una parte más pequeña de la tarea, y luego modelar AYUDA.','Cuando una palabra funciona, ella la volverá a usar en vez de una conducta. No siempre se puede parar del todo, y “Para. Bueno, dos más y descansamos” también respeta su mensaje.'],
+    ['n','Say, “We’re not stopping. Finish first.”','If STOP never works, she learns the device doesn’t get results and may switch to behavior that does.','Decir: “No vamos a parar. Termina primero.”','Si PARA nunca funciona, aprende que el aparato no sirve y puede cambiar a una conducta que sí funcione.'],
+    ['n','Gently guide her hand to keep writing.','Physical guidance overrides both her message and her body. Use words, modeling and changes to the task instead.','Guiar su mano con suavidad para que siga escribiendo.','Guiar físicamente pasa por encima de su mensaje y de su cuerpo. Mejor use palabras, modelado y cambios en la tarea.']],
+ why:'Functional communication training works by giving a word the same power the behavior had.',
+ whyes:'El entrenamiento en comunicación funcional da resultado cuando la palabra tiene el mismo poder que tenía la conducta.',
+ r:'ASHA National Joint Committee, Challenging Behavior as Communication; Heath et al. (2015), meta-analysis of functional communication training.'},
+{s:'loud',who:['bt','staff'],
+ en:'Marcus gets frustrated and throws his device across the table.',es:'Marcus se frustra y avienta su aparato al otro lado de la mesa.',
+ o:[['n','Put it on a high shelf until he’s calm.','He loses his words exactly when he needs them most. Some state guidance treats removing AAC as off-limits, even in a crisis.','Ponerlo en un estante alto hasta que se calme.','Pierde sus palabras justo cuando más las necesita. Algunas guías estatales prohíben retirar la CAA, incluso en una crisis.'],
+    ['b','Once everyone is safe, give it back right away and model calmly: “You feel mad. HELP. STOP.” Ask the team about a sturdy case or strap.','A case, strap or tether keeps the device in reach without making it easy to throw. Modeling feeling words gives him another way next time.','Cuando todos estén seguros, devolvérselo de inmediato y modelar con calma: “Te sientes enojado. AYUDA. PARA.” Preguntarle al equipo por un estuche resistente o una correa.','Un estuche, una correa o un cordón mantienen el aparato a su alcance sin que sea fácil aventarlo. Modelar palabras de sentimientos le da otra opción la próxima vez.'],
+    ['n','Have him say SORRY on the device before he gets it back.','That turns his voice into a privilege he has to earn. Repair can come later, once he’s calm.','Pedirle que diga PERDÓN en el aparato antes de devolvérselo.','Eso convierte su voz en un privilegio que tiene que ganarse. Reparar la situación puede venir después, cuando esté tranquilo.']],
+ why:'Behavior often carries a message. Keeping the device available lets the team teach a better way to send it.',
+ whyes:'La conducta muchas veces lleva un mensaje. Mantener el aparato disponible le permite al equipo enseñar una mejor forma de enviarlo.',
+ r:'Vanderbilt TRIAD, AAC and Behavior; ASHA National Joint Committee, Challenging Behavior as Communication.'},
+{s:'wait',who:['staff'],
+ en:'At morning circle you ask Ana, “How are you today?” Five seconds pass.',es:'En el círculo de la mañana le pregunta a Ana: “¿Cómo estás hoy?” Pasan cinco segundos.',
+ o:[['c','Offer two choices out loud: “Happy or sad?”','Choices can help, but they limit her to your two words. Try waiting first.','Darle dos opciones en voz alta: “¿Feliz o triste?”','Las opciones ayudan, pero la limitan a sus dos palabras. Primero intente esperar.'],
+    ['n','Answer for her so circle keeps moving: “She’s happy!”','Speaking for a student teaches everyone, including her, that her turn doesn’t matter.','Contestar por ella para que el círculo siga: “¡Está feliz!”','Hablar por una estudiante les enseña a todos, incluso a ella, que su turno no importa.'],
+    ['b','Keep waiting with an expectant look. Count to 10 or more in your head, then model if needed.','Building a message takes time. Waiting expectantly tells her it’s her turn, and modeling after the pause shows her a way to answer.','Seguir esperando con mirada de expectativa. Contar hasta 10 o más en su mente y luego modelar si hace falta.','Armar un mensaje toma tiempo. Esperar con expectativa le dice que es su turno, y modelar después de la pausa le muestra cómo responder.']],
+ why:'People using AAC communicate many times slower than speech, so wait time is one of the most powerful partner strategies.',
+ whyes:'Las personas que usan CAA se comunican mucho más lento que con el habla, así que esperar es una de las estrategias más poderosas.',
+ r:'Beukelman & Mirenda (2013); The Bridge School, Pacing and Expectant Delay.'},
+{s:'say',who:['staff'],
+ en:'A para keeps asking Leo, “Show me GO. Where’s GO?” to collect data.',es:'Un asistente le pregunta a Leo una y otra vez: “Enséñame IR. ¿Dónde está IR?” para tomar datos.',
+ o:[['n','Keep testing. The data matters.','Quizzing turns talking into a test, and many students avoid the device when they feel pressured.','Seguir evaluando. Los datos importan.','Examinar convierte hablar en una prueba, y muchos estudiantes evitan el aparato cuando se sienten presionados.'],
+    ['b','Model GO during something fun: “Ready, set... GO!” while touching GO, with no demand.','Leo learns what GO means and where it lives by seeing it used for real. Data can come from what he says on his own.','Modelar IR durante algo divertido: “Uno, dos, tres... ¡a IR!” tocando IR, sin exigirle nada.','Leo aprende qué significa IR y dónde está al verlo usado de verdad. Los datos pueden salir de lo que él dice por su cuenta.'],
+    ['n','Model GO once, then guide his finger to press it.','Hand-over-hand builds the adult’s movement, not his. Model, wait, and let every touch be his own.','Modelar IR una vez y luego guiar su dedo para tocarlo.','Guiar la mano construye el movimiento del adulto, no el de él. Modele, espere y deje que cada toque sea suyo.']],
+ why:'Modeling during real activities, without demands, is one of the best-supported ways to teach AAC.',
+ whyes:'Modelar durante actividades reales, sin exigencias, es una de las formas con más respaldo para enseñar la CAA.',
+ r:'O’Neill, Light & Pope (2018), JSLHR; AbleNet, Keeping Communication Accessible.'},
+{s:'battery',who:['staff','family'],
+ en:'Mia’s device is dead when she arrives. The charger is at home.',es:'El aparato de Mia llega sin batería. El cargador está en casa.',
+ o:[['b','Use her paper core board today, message the family, and add a classroom charger to the plan.','A backup keeps her talking right now. A charging routine keeps it from happening again.','Usar hoy su tablero de papel, avisarle a la familia y agregar un cargador del salón al plan.','El respaldo la mantiene hablando ahora mismo. Una rutina de carga evita que vuelva a pasar.'],
+    ['n','She can skip it today. She does fine with gestures.','Gestures are real communication, but they can’t ask a question or tell about her weekend. A paper board covers the gap.','Puede pasar el día sin él. Le va bien con gestos.','Los gestos son comunicación real, pero no sirven para hacer una pregunta ni contar su fin de semana. Un tablero de papel cubre ese hueco.'],
+    ['c','Load a different talking app on a classroom iPad.','Better than nothing for a day, but a different layout breaks her motor patterns. A printed copy of her own board is closer.','Abrir otra aplicación de comunicación en un iPad del salón.','Es mejor que nada por un día, pero otro diseño rompe sus patrones motores. Una copia impresa de su propio tablero se parece más.']],
+ why:'Daily charging routines and low-tech backups are two of the simplest fixes for the most common classroom barriers.',
+ whyes:'Las rutinas diarias de carga y los respaldos de papel son dos de las soluciones más sencillas para los obstáculos más comunes en el salón.',
+ r:'AbleNet, Kicking Down Barriers for AAC Use in the Classroom.'},
+{s:'recess',who:['staff'],
+ en:'The team keeps Diego’s device inside at recess so it won’t break.',es:'El equipo deja el aparato de Diego adentro durante el recreo para que no se rompa.',
+ o:[['n','Agree. Recess is for play, not talking.','Recess is where friendships happen, and friendships need words like MY TURN, GO and STOP.','Estar de acuerdo. El recreo es para jugar, no para hablar.','En el recreo nacen las amistades, y las amistades necesitan palabras como MI TURNO, IR y PARA.'],
+    ['b','Bring it in a sturdy case with a strap, and post a core board on the fence or wall.','Cases and straps protect the device. A posted board helps when it’s set aside for climbing.','Llevarlo en un estuche resistente con correa y poner un tablero de palabras en la cerca o la pared.','El estuche y la correa protegen el aparato. Un tablero fijo ayuda cuando se deja a un lado para trepar.'],
+    ['c','Send a yes/no card instead.','Yes and no are useful, but you can’t start a game or joke with a friend using two words.','Mandar una tarjeta de sí y no en su lugar.','El sí y el no son útiles, pero con dos palabras no se puede empezar un juego ni bromear con un amigo.']],
+ why:'Students who use AAC often interact mostly with adults. Peer time needs their words to be there.',
+ whyes:'Los estudiantes que usan CAA suelen interactuar casi solo con adultos. El tiempo con compañeros necesita que sus palabras estén ahí.',
+ r:'Chung, Carter & Sisco (2012); AbleNet, Kicking Down Barriers for AAC Use in the Classroom.'},
+{s:'peers',who:['staff'],
+ en:'Classmates ask the aide questions about Aaliyah instead of asking her.',es:'Los compañeros le hacen preguntas sobre Aaliyah a la asistente en vez de preguntarle a ella.',
+ o:[['n','Answer them. It’s quicker.','Every answer through an adult teaches peers to skip her.','Contestarles. Es más rápido.','Cada respuesta que da un adulto les enseña a los compañeros a pasarla por alto.'],
+    ['c','Let it go. Kids will figure it out.','Research shows peer interaction usually doesn’t happen on its own. It needs a little setup.','Dejarlo así. Los niños lo resolverán solos.','Las investigaciones muestran que la interacción entre compañeros casi nunca ocurre sola. Necesita un poco de preparación.'],
+    ['b','Redirect: “Ask her! She can tell you.” Then teach two classmates to wait and model on her device during a partner activity.','Brief peer training increases interactions and AAC use. Classmates become her conversation partners, not just the aide.','Redirigir: “¡Pregúntale a ella! Ella te puede decir.” Luego enseñarles a dos compañeros a esperar y modelar en su aparato durante una actividad en pareja.','Un entrenamiento breve a compañeros aumenta las interacciones y el uso de la CAA. Los compañeros se vuelven sus compañeros de conversación, no solo la asistente.']],
+ why:'Teaching peers to model on a student’s device increased symbolic communication with classmates.',
+ whyes:'Enseñarles a los compañeros a modelar en el aparato del estudiante aumentó su comunicación simbólica con ellos.',
+ r:'Biggs, Carter et al. (2018), Exceptional Children; Chung, Carter & Sisco (2012).'},
+{s:'home',who:['family'],
+ en:'At home, Ethan only uses his device to ask for snacks.',es:'En casa, Ethan solo usa su aparato para pedir algo de comer.',
+ o:[['b','Model other kinds of words during routines, like LOOK, LIKE, AGAIN and ALL DONE.','Kids learn to use words they see used. Modeling comments during play and bath shows the device is for more than snacks.','Modelar otro tipo de palabras durante las rutinas, como MIRA, ME GUSTA, OTRA VEZ y TERMINÉ.','Los niños aprenden a usar las palabras que ven usar. Modelar comentarios durante el juego y el baño muestra que el aparato sirve para más que pedir comida.'],
+    ['c','That’s fine. Asking for things is enough for now.','Asking is a great start. Kids also deserve words to comment, ask questions and joke, and they learn them from you.','Está bien. Pedir cosas es suficiente por ahora.','Pedir es un gran comienzo. Los niños también merecen palabras para comentar, preguntar y bromear, y las aprenden de usted.'],
+    ['n','Hide the snack buttons so he has to use other words.','Taking words away is like covering someone’s mouth. Add models instead of removing vocabulary.','Esconder los botones de comida para que use otras palabras.','Quitar palabras es como taparle la boca a alguien. Mejor agregue modelos en lugar de quitar vocabulario.']],
+ why:'Families who learn to model during everyday routines see children use their devices more.',
+ whyes:'Las familias que aprenden a modelar durante las rutinas diarias ven que sus hijos usan más el aparato.',
+ r:'Senner et al. (2019); research on family aided language modeling in home routines (PMC9014969).'},
+{s:'plan',who:['bt'],
+ en:'A behavior plan says the device comes out only during “communication sessions.”',es:'Un plan de conducta dice que el aparato solo se usa durante las “sesiones de comunicación.”',
+ o:[['c','Quietly give it to the student anyway.','Your instinct is right, but working around the plan sends mixed messages. Bring it to the team.','Dárselo al estudiante de todos modos, sin decir nada.','Su instinto es correcto, pero saltarse el plan manda mensajes confusos. Llévelo al equipo.'],
+    ['n','Follow the plan as written.','Students need their voice all day. Limiting access also limits what the plan can teach in place of behavior.','Seguir el plan tal como está escrito.','Los estudiantes necesitan su voz todo el día. Limitar el acceso también limita lo que el plan puede enseñar en lugar de la conducta.'],
+    ['b','Ask for a team meeting to align the plan so the device stays available all day and the replacement skills use it.','The Communication Bill of Rights includes a working AAC system at all times. Behavior and communication goals work best together.','Pedir una reunión del equipo para ajustar el plan, de modo que el aparato esté disponible todo el día y las habilidades de reemplazo lo usen.','La Carta de Derechos de la Comunicación incluye un sistema de CAA que funcione en todo momento. Las metas de conducta y de comunicación funcionan mejor juntas.']],
+ why:'Communication-based behavior plans work best when the communication tool is always there.',
+ whyes:'Los planes de conducta basados en la comunicación funcionan mejor cuando la herramienta de comunicación siempre está ahí.',
+ r:'National Joint Committee, Communication Bill of Rights (right 12); ASHA NJC, Challenging Behavior as Communication.'},
+{s:'cafe',who:['staff'],
+ en:'On a community trip, a 19-year-old student is ordering lunch. The cashier looks at you and asks what he wants.',es:'En una salida a la comunidad, un estudiante de 19 años va a pedir su almuerzo. El cajero lo mira a usted y le pregunta qué quiere él.',
+ o:[['b','Smile and redirect: “He’ll tell you.” Then wait. If the line is long, help him type his order before you get to the counter.','Adults deserve to be spoken to directly. Preparing a message ahead of time is a realistic way to keep the line moving.','Sonreír y redirigir: “Él le va a decir.” Luego esperar. Si la fila es larga, ayudarle a escribir su pedido antes de llegar a la caja.','Los adultos merecen que les hablen directamente. Preparar el mensaje con tiempo es una forma realista de que la fila avance.'],
+    ['n','Order for him to save time.','Faster today, but it teaches the cashier, and him, that he isn’t the speaker.','Pedir por él para ahorrar tiempo.','Es más rápido hoy, pero le enseña al cajero, y a él, que él no es quien habla.'],
+    ['c','Have him point to the menu instead.','Pointing works, but practicing with his own device in real places is how he builds independence.','Pedirle que señale el menú en su lugar.','Señalar funciona, pero practicar con su propio aparato en lugares reales es como gana independencia.']],
+ why:'Communication rights apply across the lifespan, including in the community and at work.',
+ whyes:'Los derechos de comunicación aplican en todas las edades, también en la comunidad y en el trabajo.',
+ r:'National Joint Committee, Communication Bill of Rights.'},
+{s:'class',who:['staff','family','bt'],
+ en:'Lucía says some words clearly. An adult tells her, “Use your words, not the device.”',es:'Lucía dice algunas palabras con claridad. Un adulto le dice: “Usa tus palabras, no el aparato.”',
+ o:[['n','Agree. Talking is the goal.','Speech is one goal. Using the device doesn’t take speech away, and some messages are easier on the device.','Estar de acuerdo. La meta es hablar.','El habla es una meta. Usar el aparato no le quita el habla, y algunos mensajes son más fáciles con el aparato.'],
+    ['b','Accept every way she communicates: speech, device, gestures. Model on the device while you talk.','All forms count. Kids switch to whatever works best in the moment, the same way adults switch between talking and texting.','Aceptar todas sus formas de comunicarse: habla, aparato y gestos. Modelar en el aparato mientras habla.','Todas las formas cuentan. Los niños usan lo que mejor les funciona en el momento, igual que los adultos cambian entre hablar y mandar mensajes.'],
+    ['c','Require the device every time so she practices.','Practice helps, but requiring it when speech already worked can feel like a correction. Let her choose.','Exigirle el aparato cada vez para que practique.','Practicar ayuda, pero exigirlo cuando el habla ya funcionó puede sentirse como una corrección. Déjela escoger.']],
+ why:'Research has not found AAC reducing speech, and communicating in more than one way is typical for everyone.',
+ whyes:'Las investigaciones no han encontrado que la CAA reduzca el habla, y comunicarse de varias maneras es normal para todos.',
+ r:'Millar, Light & Schlosser (2006), JSLHR.'}];
+const T={
+ en:{h1:'What Would You Do?',sub:'Real moments with students who use AAC. Pick a response and see the coaching on every choice.',f:{all:'Everyone',staff:'Classroom staff',family:'Families',bt:'Behavior team'},
+  who:{staff:'Classroom staff',family:'Families',bt:'Behavior team'},ask:'What would you do?',B:'Best choice',C:'Close, but...',N:'Try something else',you:'(you picked this)',why:'Why it matters',next:'Next',done:'See results',of:(i,n)=>`${i} of ${n}`,
+  endT:'Nice work!',endP:(a,n)=>`You picked the best choice ${a} of ${n} times. Every scenario has a real classroom behind it, so these are worth talking through as a team.`,again:'Start over',
+  foot:'Sample page. Names are made up. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0. Coaching reflects RUSD AAC practice: no physical prompting, behavior is communication, devices stay with students.'},
+ es:{h1:'¿Qué haría usted?',sub:'Momentos reales con estudiantes que usan CAA. Escoja una respuesta y vea la orientación de cada opción.',f:{all:'Todos',staff:'Personal del salón',family:'Familias',bt:'Equipo de conducta'},
+  who:{staff:'Personal del salón',family:'Familias',bt:'Equipo de conducta'},ask:'¿Qué haría usted?',B:'La mejor opción',C:'Casi, pero...',N:'Pruebe otra cosa',you:'(su respuesta)',why:'Por qué importa',next:'Siguiente',done:'Ver resultados',of:(i,n)=>`${i} de ${n}`,
+  endT:'¡Muy bien!',endP:(a,n)=>`Escogió la mejor opción ${a} de ${n} veces. Cada situación viene de un salón real, así que vale la pena conversarlas en equipo.`,again:'Empezar de nuevo',
+  foot:'Página de muestra. Los nombres son inventados. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. La orientación sigue la práctica de CAA de RUSD: sin guía física, la conducta es comunicación y el aparato se queda con el estudiante.'}};
+const S={lang:'en',f:'all',i:0,pick:{},done:false};
+const $=id=>document.getElementById(id);
+const list=()=>SC.map((s,k)=>({s,k})).filter(x=>S.f==='all'||x.s.who.includes(S.f));
+const render=()=>{const t=T[S.lang],L=list(),n=L.length;document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;
+ document.querySelectorAll('[data-l]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.lang));
+ $('filters').innerHTML=Object.keys(t.f).map(k=>`<button class="pill" data-f="${k}" aria-pressed="${S.f===k}">${t.f[k]}</button>`).join('');
+ if(S.done){const best=L.filter(x=>{const p=S.pick[x.k];return p!=null&&x.s.o[p][0]==='b'}).length;
+  $('card').innerHTML=`<div class="end"><div class="big">${best}/${n}</div><h2>${t.endT}</h2><p>${t.endP(best,n)}</p><button class="next" id="again">${t.again}</button></div>`;return}
+ const {s,k}=L[S.i],p=S.pick[k],es=S.lang==='es';
+ const opts=s.o.map((o,j)=>{const shown=p!=null,cls=shown?({b:'best',c:'close',n:'no'})[o[0]]:'';
+  return `<button class="opt ${cls}${shown&&p===j?' picked':''}" data-o="${j}"${shown?' disabled':''}><span class="t">${es?o[3]:o[1]}${shown&&p===j?`<span class="you">${t.you}</span>`:''}</span>${shown?`<span class="badge">${t[o[0].toUpperCase()]}</span><span class="fb">${es?o[4]:o[2]}</span>`:''}</button>`}).join('');
+ $('card').innerHTML=`<div class="meta"><span>${t.of(S.i+1,n)}</span>${s.who.map(w=>`<span class="chip">${t.who[w]}</span>`).join('')}</div>
+  <div class="srow"><div class="sym"><img src="symbols/${s.s}.svg" alt=""></div><p class="sit">${es?s.es:s.en}</p></div>
+  <p class="ask">${t.ask}</p><div class="opts">${opts}</div>
+  ${p!=null?`<details><summary>${t.why}</summary>${es?s.whyes:s.why} <em>${s.r}</em></details>`:''}
+  <div class="nav"><span class="prog"></span><button class="next" id="next"${p==null?' disabled':''}>${S.i===n-1?t.done:t.next}</button></div>`};
+$('card').addEventListener('click',e=>{const o=e.target.closest('[data-o]');const L=list();
+ if(o&&!o.disabled){S.pick[L[S.i].k]=+o.dataset.o;render();return}
+ if(e.target.closest('#next')){if(S.i<L.length-1)S.i++;else S.done=true;render();$('card').scrollIntoView({block:'nearest'});return}
+ if(e.target.closest('#again')){S.i=0;S.pick={};S.done=false;render()}});
+$('filters').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){S.f=b.dataset.f;S.i=0;S.done=false;render()}});
+document.querySelector('.ctrls').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(b){S.lang=b.dataset.l;render()}});
+render();
+}
+</script>
+</body>
+</html>

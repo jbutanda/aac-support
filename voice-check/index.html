@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VOICE Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday, quick, a 20-second routine at the start of class
+   IDEA a pre-flight checklist: five letters light up one by one as each check passes
+   PICTURE the word VOICE in five big tiles across the top, filling green as you go
+   COLOUR white page, charcoal ink, green for ready, amber for needs a fix
+   TYPE Atkinson Hyperlegible, same family as the other tools
+   LAYOUT tiles row, then one question card at a time, then a fix list; phone keeps the same order */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--go:#2b8a3e;--gobg:light-dark(#ebfbee,#13301b);--fix:#b25e00;--fixbg:light-dark(#fff4e0,#33230c);--focus:light-dark(#1f7a3a,#6fd68e)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:820px;margin:0 auto;padding:clamp(20px,3vw,40px) max(4vw,16px) 40px}
+.top{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:end;justify-content:space-between;margin-bottom:18px}
+h1{font-size:clamp(32px,5vw,46px);line-height:1.05;letter-spacing:-.02em;margin:0 0 4px}
+.sub{margin:0;color:var(--soft);max-width:50ch}
+.ctrls{display:flex;gap:8px}
+.pill{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.pill[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(6px,1.5vw,12px);margin-bottom:18px}
+.tile{border-radius:18px;border:2px solid var(--line);background:var(--tint);text-align:center;padding:10px 4px 8px;transition:background .3s,border-color .3s}
+.tile b{display:block;font-size:clamp(34px,7vw,58px);line-height:1}
+.tile span{display:block;font-size:clamp(11px,1.6vw,14px);font-weight:700;color:var(--soft);margin-top:4px}
+.tile.cur{border-color:var(--ink)}
+.tile.ok{background:var(--gobg);border-color:var(--go)}
+.tile.ok b{color:var(--go)}
+.tile.no{background:var(--fixbg);border-color:var(--fix)}
+.tile.no b{color:var(--fix)}
+.card{border-radius:24px;border:2px solid var(--line);background:var(--card);padding:clamp(20px,4vw,34px)}
+.step{font-size:14px;font-weight:700;color:var(--soft);margin:0 0 10px}
+.qrow{display:flex;gap:18px;align-items:center;margin-bottom:8px}
+.sym{width:clamp(64px,12vw,92px);aspect-ratio:1/1;flex:none;background:var(--tint);border-radius:18px;display:grid;place-items:center}
+.sym img{width:72%}
+h2{font-size:clamp(24px,4vw,32px);line-height:1.1;margin:0}
+.q{font-size:clamp(18px,2.4vw,21px);margin:6px 0 18px}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.yn button{font:inherit;font-size:21px;font-weight:700;min-height:62px;border-radius:16px;border:0;color:#fff;cursor:pointer}
+.yes{background:var(--go)}
+.no{background:var(--fix)}
+.why{font-size:14px;color:var(--soft);margin:14px 0 0}
+.back{font:inherit;font-weight:700;background:none;border:0;color:var(--soft);cursor:pointer;min-height:44px;padding:0;margin-top:6px}
+.done{text-align:center}
+.done img{width:84px}
+.done h2{margin:6px 0}
+.fixes{display:grid;gap:10px;margin:16px 0;text-align:left}
+.fx{display:flex;gap:14px;align-items:flex-start;background:var(--fixbg);border-radius:16px;padding:14px}
+.fx b.l{font-size:30px;line-height:1;color:var(--fix);width:28px;flex:none;text-align:center}
+.fx strong{display:block}
+.again{font:inherit;font-weight:700;min-height:48px;padding:8px 22px;border-radius:999px;border:0;background:var(--ink);color:var(--bg);cursor:pointer;margin-top:6px}
+.foot{margin-top:22px;font-size:14px;color:var(--soft)}
+@media(max-width:560px){.qrow{flex-direction:column;align-items:flex-start;gap:12px}}
+@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1 id="h1">VOICE Check</h1><p class="sub" id="sub"></p></div>
+    <div class="ctrls"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div>
+  </div>
+  <div class="tiles" id="tiles"></div>
+  <div class="card" id="card" aria-live="polite"></div>
+  <p class="foot" id="foot"></p>
+</div>
+<script>
+{
+const K=[
+ {l:'V',s:'v',
+  en:{w:'Visible',q:'Is the device out where the student can see it? Not in a backpack, cubby or case.',fix:'Take it out and set it where you and the student can both see it, on the desk, tray or mount. A device in a backpack can’t be used.'},
+  es:{w:'Visible',q:'¿El aparato está a la vista del estudiante? No en la mochila, el casillero ni el estuche.',fix:'Sáquelo y póngalo donde usted y el estudiante lo vean, en el escritorio, la bandeja o el soporte. Un aparato en la mochila no se puede usar.'}},
+ {l:'O',s:'o',
+  en:{w:'On',q:'Is it on, unlocked, open to the talking app, with the volume up?',fix:'Turn it on and open the app. Raise the volume so it can be heard across the table. Turning it down silences the student. If it keeps leaving the app, ask your SLP about locking it to the app.'},
+  es:{w:'Encendido',q:'¿Está encendido, desbloqueado, en la aplicación de comunicación y con el volumen alto?',fix:'Enciéndalo y abra la aplicación. Suba el volumen para que se escuche al otro lado de la mesa. Bajarlo es callar al estudiante. Si se sale de la aplicación, pregúntele al patólogo del habla cómo bloquearla.'}},
+ {l:'I',s:'i',
+  en:{w:'In reach',q:'Can the student reach it and touch it on their own, right now?',fix:'Move it within reach, on the side the student uses. Check that any mount, strap or keyguard is attached. If reaching or touching is hard, loop in your OT.'},
+  es:{w:'Al alcance',q:'¿El estudiante puede alcanzarlo y tocarlo solo, ahora mismo?',fix:'Acérquelo, del lado que el estudiante usa. Revise que el soporte, la correa o el protector de teclas estén puestos. Si alcanzarlo o tocarlo es difícil, consulte con el terapeuta ocupacional.'}},
+ {l:'C',s:'c',
+  en:{w:'Charged',q:'Is the battery at least half full?',fix:'Plug it in during a seated activity or lunch and use the paper core board for now. Add the device to the end-of-day charging routine so it starts every morning full.'},
+  es:{w:'Cargado',q:'¿La batería está al menos a la mitad?',fix:'Conéctelo durante una actividad sentada o el almuerzo y use el tablero de papel por ahora. Incluya el aparato en la rutina de carga al final del día para que empiece cada mañana con batería llena.'}},
+ {l:'E',s:'e',
+  en:{w:'Every setting',q:'Will it go with the student everywhere today: recess, lunch, specials, the bus?',fix:'Decide who carries it at each transition. Keep a paper core board for places the device can’t go, like water play or messy art.'},
+  es:{w:'En todo lugar',q:'¿Irá con el estudiante a todas partes hoy: recreo, almuerzo, clases especiales, el autobús?',fix:'Decida quién lo lleva en cada cambio de actividad. Tenga un tablero de papel para lugares donde el aparato no puede ir, como juegos con agua o arte con pintura.'}}];
+const T={
+ en:{h1:'VOICE Check',sub:'Five quick checks before the day starts. Every student deserves a VOICE.',step:(i)=>`Check ${i} of 5`,yes:'Yes',no:'Not yet',back:'Back',
+  why:'Why it matters: the Communication Bill of Rights includes the right to a working AAC system at all times.',
+  allT:'Ready to talk!',allP:'All five checks passed. The device is out, on, in reach, charged and going everywhere today.',someT:(n)=>`${n} quick fix${n>1?'es':''} and you’re ready`,someP:'Here’s what to do. Most take less than a minute.',again:'Check again',
+  foot:'Sample page. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0. VOICE check: Visible, On, In reach, Charged, Every setting.'},
+ es:{h1:'Revisión VOICE',sub:'Cinco revisiones rápidas antes de empezar el día. Cada estudiante merece su voz (VOICE).',step:(i)=>`Revisión ${i} de 5`,yes:'Sí',no:'Todavía no',back:'Atrás',
+  why:'Por qué importa: la Carta de Derechos de la Comunicación incluye el derecho a un sistema de CAA que funcione en todo momento.',
+  allT:'¡Listo para hablar!',allP:'Pasó las cinco revisiones. El aparato está a la vista, encendido, al alcance, cargado y va a todas partes hoy.',someT:(n)=>`${n} arreglo${n>1?'s':''} rápido${n>1?'s':''} y listo`,someP:'Esto es lo que hay que hacer. La mayoría toma menos de un minuto.',again:'Revisar otra vez',
+  foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. VOICE: Visible, On (encendido), In reach (al alcance), Charged (cargado), Every setting (en todo lugar).'}};
+const S={lang:'en',i:0,a:Array(5).fill(null)};
+const $=id=>document.getElementById(id);
+const render=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;
+ document.querySelectorAll('[data-l]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.lang));
+ $('tiles').innerHTML=K.map((k,j)=>`<div class="tile${S.a[j]===true?' ok':S.a[j]===false?' no':''}${j===S.i&&S.i<5?' cur':''}"><b>${k.l}</b><span>${k[S.lang].w}</span></div>`).join('');
+ if(S.i<5){const k=K[S.i],L=k[S.lang];
+  $('card').innerHTML=`<p class="step">${t.step(S.i+1)}</p><div class="qrow"><div class="sym"><img src="symbols/${k.s}.svg" alt=""></div><div><h2>${k.l}: ${L.w}</h2></div></div><p class="q">${L.q}</p><div class="yn"><button class="yes" data-a="1">${t.yes}</button><button class="no" data-a="0">${t.no}</button></div>${S.i>0?`<button class="back" id="back">← ${t.back}</button>`:''}<p class="why">${t.why}</p>`}
+ else{const miss=K.map((k,j)=>({k,j})).filter(x=>S.a[x.j]===false);
+  $('card').innerHTML=miss.length?`<div class="done"><h2>${t.someT(miss.length)}</h2><p>${t.someP}</p></div><div class="fixes">${miss.map(({k})=>`<div class="fx"><b class="l">${k.l}</b><div><strong>${k[S.lang].w}</strong>${k[S.lang].fix}</div></div>`).join('')}</div><div class="done"><button class="again" id="again">${t.again}</button></div>`
+  :`<div class="done"><img src="symbols/party.svg" alt=""><h2>${t.allT}</h2><p>${t.allP}</p><button class="again" id="again">${t.again}</button></div>`}};
+$('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){S.a[S.i]=b.dataset.a==='1';S.i++;render();return}
+ if(e.target.closest('#back')){S.i=Math.max(0,S.i-1);render();return}
+ if(e.target.closest('#again')){S.i=0;S.a=Array(5).fill(null);render()}});
+document.querySelector('.ctrls').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(b){S.lang=b.dataset.l;render()}});
+render();
+}
+</script>
+</body>
+</html>
