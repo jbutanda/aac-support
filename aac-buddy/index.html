@@ -55,20 +55,20 @@
 const {byId,sym,speak,hush,voiceSelect,langToggle,keyHtml,confetti,esc}=AAC;
 const TS='../talker/symbols/';
 const P=[
- {img:TS+'say.svg',en:['Meet the talker','Some kids talk with their mouths. Some kids talk with a talker. Tap a word, and the talker says it.'],es:['Conoce el comunicador','Algunos niños hablan con la boca. Otros hablan con un comunicador. Tocas una palabra y el comunicador la dice.']},
+ {img:TS+'say.svg',en:['Meet the AAC device','Some kids talk with their mouths. Some kids talk with an AAC device. Tap a word, and the AAC device says it.'],es:['Conoce el dispositivo de CAA','Algunos niños hablan con la boca. Otros hablan con un dispositivo de CAA. Tocas una palabra y el dispositivo de CAA la dice.']},
  {img:sym('wave'),en:['Say hi!','Say hi like you would to any friend. Look at them, not their helper, and ask them a question.'],es:['¡Saluda!','Saluda como saludarías a cualquier amigo. Míralo a él, no a quien lo ayuda, y hazle una pregunta.']},
  {img:TS+'wait.svg',en:['Wait','Finding words takes time. Count to 10 in your head. Don’t guess, and don’t finish for them.'],es:['Espera','Encontrar palabras toma tiempo. Cuenta hasta 10 en tu mente. No adivines ni termines por él.']},
- {board:true,img:TS+'look.svg',en:['Show them','You can use the talker too! Touch a word while you say it. Try it here:'],es:['Muéstrale','¡Tú también puedes usar el comunicador! Toca una palabra mientras la dices. Pruébalo aquí:']},
- {img:TS+'stop.svg',en:['It’s their voice','A talker is how your friend talks. Never take it away, and ask before you touch it.'],es:['Es su voz','El comunicador es la forma en que tu amigo habla. Nunca se lo quites y pregunta antes de tocarlo.']},
- {img:sym('play'),en:['Have fun together','Play, joke and hang out. Kids who use talkers want friends, just like you.'],es:['Diviértanse juntos','Jueguen, bromeen y pasen tiempo juntos. Los niños que usan comunicador quieren amigos, igual que tú.']}];
+ {board:true,img:TS+'look.svg',en:['Show them','You can use the AAC device too! Touch a word while you say it. Try it here:'],es:['Muéstrale','¡Tú también puedes usar el dispositivo de CAA! Toca una palabra mientras la dices. Pruébalo aquí:']},
+ {img:TS+'stop.svg',en:['It’s their voice','An AAC device is how your friend talks. Never take it away, and ask before you touch it.'],es:['Es su voz','El dispositivo de CAA es la forma en que tu amigo habla. Nunca se lo quites y pregunta antes de tocarlo.']},
+ {img:sym('play'),en:['Have fun together','Play, joke and hang out. Kids who use AAC devices want friends, just like you.'],es:['Diviértanse juntos','Jueguen, bromeen y pasen tiempo juntos. Los niños que usan un dispositivo de CAA quieren amigos, igual que tú.']}];
 const Q=[
  {en:'Your friend is finding a word. What do you do?',es:'Tu amigo está buscando una palabra. ¿Qué haces?',a:[{img:TS+'wait.svg',en:'Wait',es:'Espero',ok:1},{img:TS+'say.svg',en:'Say it for them',es:'La digo por él',ok:0}]},
- {en:'Can you take your friend’s talker?',es:'¿Puedes quitarle el comunicador a tu amigo?',a:[{img:TS+'get.svg',en:'Yes, if I want to',es:'Sí, si quiero',ok:0},{img:TS+'stop.svg',en:'No, it’s their voice',es:'No, es su voz',ok:1}]},
+ {en:'Can you take your friend’s AAC device?',es:'¿Puedes quitarle el dispositivo de CAA a tu amigo?',a:[{img:TS+'get.svg',en:'Yes, if I want to',es:'Sí, si quiero',ok:0},{img:TS+'stop.svg',en:'No, it’s their voice',es:'No, es su voz',ok:1}]},
  {en:'Who do you talk to?',es:'¿A quién le hablas?',a:[{img:TS+'you.svg',en:'My friend',es:'A mi amigo',ok:1},{img:TS+'he.svg',en:'The grown-up helping',es:'Al adulto que ayuda',ok:0}]}];
 const T={
- en:{h1:'AAC Buddy',sub:'Learn how to be a great friend to kids who talk with a talker. Then earn your badge!',back:'Back',next:'Next',read:'Read it to me',quiz:'Quick check',got:'You got it!',try:'Try the other one.',badge:'Get my badge',name:'Your first name',bb:'AAC BUDDY',print:'Print my badge',again:'Start over',
+ en:{h1:'AAC Buddy',sub:'Learn how to be a great friend to kids who talk with an AAC device. Then earn your badge!',back:'Back',next:'Next',read:'Read it to me',quiz:'Quick check',got:'You got it!',try:'Try the other one.',badge:'Get my badge',name:'Your first name',bb:'AAC BUDDY',print:'Print my badge',again:'Start over',
   foot:'For classmates in any grade. Read it together as a class or one-on-one. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
- es:{h1:'Amigo CAA',sub:'Aprende a ser un gran amigo de los niños que hablan con un comunicador. ¡Luego gana tu insignia!',back:'Atrás',next:'Siguiente',read:'Léemelo',quiz:'Repaso rápido',got:'¡Muy bien!',try:'Prueba la otra.',badge:'Ver mi insignia',name:'Tu nombre',bb:'AMIGO CAA',print:'Imprimir mi insignia',again:'Empezar de nuevo',
+ es:{h1:'Amigo CAA',sub:'Aprende a ser un gran amigo de los niños que hablan con un dispositivo de CAA. ¡Luego gana tu insignia!',back:'Atrás',next:'Siguiente',read:'Léemelo',quiz:'Repaso rápido',got:'¡Muy bien!',try:'Prueba la otra.',badge:'Ver mi insignia',name:'Tu nombre',bb:'AMIGO CAA',print:'Imprimir mi insignia',again:'Empezar de nuevo',
   foot:'Para compañeros de cualquier grado. Léanlo juntos en clase o uno a uno. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const S={lang:'en',i:0,qi:0,picked:null,name:''};
 const $=id=>document.getElementById(id);

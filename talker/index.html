@@ -3,210 +3,140 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Try a Talker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>Try an AAC Device</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
 <style>
 /* VOICE everyday, warm, for families, staff and admin at once
-   IDEA a real AAC tablet: dark housing, message bar on top, a colour-coded core grid
-   PICTURE the working talker itself, large, under a modest title
-   COLOUR white page, charcoal housing, modified Fitzgerald key colours on the keys
-   TYPE Atkinson Hyperlegible throughout (built for low-vision readers)
-   LAYOUT laptop: talker left, mode panel right; phone: title, tabs, prompt, talker */
-:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2a2d35);--panel:light-dark(#f5f6f8,#1b1d23);--accent:light-dark(#1f7a3a,#6fd68e);--house:#1d2026;--house2:#2a2e37}
-:root[data-theme=light]{color-scheme:light}
-:root[data-theme=dark]{color-scheme:dark}
-*{box-sizing:border-box;min-width:0}
-html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;overflow-x:clip}
-.wrap{max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,40px) max(4vw,16px) 40px}
-h1{font-size:clamp(32px,5vw,46px);line-height:1.05;letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
-.sub{margin:0 0 18px;color:var(--soft);max-width:62ch}
-.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:18px}
-.tabs,.lang{display:flex;flex-wrap:wrap;gap:6px}
-.right{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.vc{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--soft)}
-.vc select{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;min-height:44px;padding:6px 10px;max-width:240px}
-.tabs button,.lang button{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
-.tabs button[aria-selected=true],.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.main{display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
+   IDEA a real robust AAC device: message bar, folder row, 60-word core grid
+   PICTURE the working device itself, large, under the title band
+   COLOUR violet band, charcoal housing, modified Fitzgerald key colours, orange folders
+   TYPE Atkinson Hyperlegible
+   LAYOUT laptop: device left, mode panel right; phone: panel, then the device scrolling sideways */
+:root{--band:#5f3dc4;--maxw:1240px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.main{display:grid;gap:20px;grid-template-columns:minmax(0,1fr)}
 @media(min-width:1100px){.main{grid-template-columns:minmax(0,1fr) 300px;align-items:start}}
-.device{background:var(--house);border-radius:28px;padding:14px;box-shadow:inset 0 0 0 2px var(--house2)}
-.msg{display:flex;gap:8px;align-items:stretch;margin-bottom:12px}
-.say{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:64px;padding:8px 12px;border-radius:14px;background:#f7f7f2;color:#16181d;border:0;font:inherit;text-align:left;cursor:pointer}
+.msg{display:flex;gap:8px;margin-bottom:10px}
+.say{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:62px;padding:8px 12px;border-radius:14px;background:#f7f7f2;color:#16181d;border:0;font:inherit;text-align:left;cursor:pointer}
 .say .ph{color:#7a7f8a}
-.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;font-weight:700;font-size:17px}
-.ctl{width:64px;border-radius:14px;border:0;background:var(--house2);color:#eceef2;cursor:pointer;display:grid;place-items:center}
-.ctl svg{width:26px;height:26px}
-.grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
-.k{position:relative;aspect-ratio:1/.92;border:0;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;transition:transform .08s}
-.k img{width:62%;max-width:44px;aspect-ratio:1/1;display:block;pointer-events:none}
-.k .w{font-size:clamp(11px,1.25vw,14px);line-height:1.05;text-align:center;white-space:nowrap}
-.gw{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tip{display:none;margin:8px 2px 0;font-size:13px;color:#a7adbb}
-.k:active{transform:scale(.94)}
-.k.lit{outline:5px solid #fff;outline-offset:-5px;box-shadow:0 0 0 4px #ffd43b}
-.pro{background:#ffe066;color:#2b2200}
-.verb{background:#8ce99a;color:#0b3d16}
-.desc{background:#8fc7ff;color:#062a4d}
-.q{background:#d0b3ff;color:#2a0d5c}
-.soc{background:#ffb3d1;color:#4d0626}
-.neg{background:#ff9b9b;color:#4d0000}
-.det{background:#ffffff;color:#16181d}
-.panel{background:var(--panel);border-radius:20px;padding:20px}
-.panel h2{font-size:22px;line-height:1.15;margin:0 0 8px}
+.chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:8px;font-weight:700;font-size:17px}
+.ctl{width:60px;border-radius:14px;border:0;background:#2a2e37;color:#eceef2;cursor:pointer;display:grid;place-items:center}
+.ctl svg{width:24px;height:24px}
+.gw{overflow-x:auto}
+.k.lit,.fk.lit{outline:5px solid #fff;outline-offset:-5px;box-shadow:0 0 0 4px #ffd43b;transform:scale(1.06)}
+.panel{background:var(--card);border-radius:22px;padding:20px;box-shadow:0 20px 44px rgba(16,20,30,.16)}
+.panel h2{font-size:22px;margin:0 0 8px}
 .panel p{margin:0 0 12px}
-.panel .note{font-size:14px;color:var(--soft)}
-.card{background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
-.card .big{font-size:24px;font-weight:700;line-height:1.2}
-.stars{display:flex;gap:4px;margin:10px 0 4px}
-.stars svg{width:24px;height:24px}
-.ok{color:var(--accent);font-weight:700;min-height:1.5em}
-.act{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.note{font-size:14px;color:var(--soft)}
+.ccard{background:var(--tint);border-radius:14px;padding:16px;margin-bottom:12px}
+.ccard .big{font-size:22px;font-weight:700;line-height:1.2}
+.stars{display:flex;gap:4px;margin:10px 0 4px;flex-wrap:wrap}
+.stars img{width:22px;height:22px;opacity:.25}
+.stars img.on{opacity:1}
+.ok{color:var(--go);font-weight:700;min-height:1.5em}
 .phr{display:flex;flex-direction:column;gap:8px}
 .phr button{font:inherit;font-weight:700;min-height:44px;text-align:left;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
-.phr button[aria-pressed=true]{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}
-.key{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:16px;font-size:14px;color:var(--soft)}
-.key span{display:inline-flex;align-items:center;gap:6px}
-.key i{width:14px;height:14px;border-radius:4px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
-.foot{margin-top:22px;font-size:14px;color:var(--soft);max-width:80ch}
+.phr button[aria-pressed=true]{border-color:var(--go);box-shadow:inset 4px 0 0 var(--go)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:14px;font-size:14px;color:var(--soft)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:4px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
 @media(max-width:1099px){.panel{order:-1}}
-@media(max-width:640px){.device{border-radius:16px;padding:8px}.grid{gap:4px;min-width:600px}.k{border-radius:7px;padding:2px}.ctl{width:48px}.say{min-height:52px}.tip{display:block}}
-@media(prefers-reduced-motion:reduce){.k{transition:none}.k:active{transform:none}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Try a Talker</h1>
-  <p class="sub" id="sub">Tap a word and the talker says it. This is how many of our students talk every day.</p>
-  <div class="bar">
-    <div class="tabs" role="tablist" aria-label="Versions">
-      <button role="tab" id="t-free" data-m="free">1. Free talk</button>
-      <button role="tab" id="t-challenge" data-m="challenge">2. Challenge</button>
-      <button role="tab" id="t-model" data-m="model">3. Watch me model</button>
-    </div>
-    <div class="right">
-      <div class="lang" aria-label="Language">
-        <button id="l-en" data-l="en">English</button>
-        <button id="l-es" data-l="es">Español</button>
-      </div>
-      <label class="vc" for="voice"><span id="vlab">Voice</span><select id="voice"></select></label>
-    </div>
-  </div>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+  <div class="tabs" role="tablist"><button class="pill" data-m="free" id="t-free"></button><button class="pill" data-m="challenge" id="t-challenge"></button><button class="pill" data-m="model" id="t-model"></button></div>
+</div></header>
+<main class="wrap">
   <div class="main">
-    <section class="device" aria-label="Talker">
-      <div class="msg">
-        <button class="say" id="say" aria-label="Say the whole message"></button>
-        <button class="ctl" id="del" aria-label="Delete last word"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M17 9l-5 6M12 9l5 6"/></svg></button>
-        <button class="ctl" id="clr" aria-label="Clear message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-      </div>
-      <div class="gw"><div class="grid" id="grid"></div></div>
-      <p class="tip" id="tip"></p>
-    </section>
+    <section class="card" aria-label="AAC device"><div class="device"><div class="msg"><button class="say" id="say"></button><button class="ctl" id="del" aria-label="Delete last word"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M17 9l-5 6M12 9l5 6"/></svg></button><button class="ctl" id="clr" aria-label="Clear message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div><div class="gw"><div id="dv"></div></div><p class="swipe" id="swipe"></p></div></section>
     <aside class="panel" id="panel" aria-live="polite"></aside>
   </div>
   <p class="foot" id="foot"></p>
-</div>
+</main>
+<script src="../shared/core.js"></script>
+<script src="../shared/vocab.js"></script>
+<script src="../shared/device.js"></script>
 <script>
 {
-const R=[
-['i','I','yo','🙋','pro'],['me','me','a mí','☝️','pro'],['want','want','quiero','🤲','verb'],['go','go','ir','🏃','verb'],['help','help','ayuda','🤝','verb'],['look','look','mira','👀','verb'],['more','more','más','➕','desc'],['again','again','otra vez','🔁','desc'],['this','this','esto','👇','det'],['yes','yes','sí','✅','soc'],
-['you','you','tú','🧑','pro'],['mine','mine','mío','🧡','pro'],['like','like','me gusta','❤️','verb'],['come','come','ven','↩️','verb'],['make','make','hacer','🔨','verb'],['see','see','ver','👁️','verb'],['big','big','grande','🐘','desc'],['little','little','pequeño','🐭','desc'],['that','that','eso','↗️','det'],['no','no','no','❌','neg'],
-['he','he','él','👦','pro'],['your','your','tu','👉','pro'],['have','have','tengo','🎒','verb'],['stop','stop','para','🛑','verb'],['wait','wait','espera','⏳','verb'],['open','open','abrir','📦','verb'],['good','good','bien','👍','desc'],['bad','bad','mal','👎','desc'],['here','here','aquí','📍','det'],['please','please','por favor','🙏','soc'],
-['she','she','ella','👧','pro'],['what','what','qué','❓','q'],['need','need','necesito','❗','verb'],['turn','turn','turno','🔄','verb'],['play','play','jugar','🧸','verb'],['give','give','dar','🎁','verb'],['happy','happy','feliz','😀','desc'],['sad','sad','triste','😢','desc'],['in','in','dentro','📥','det'],['thanks','thanks','gracias','🙌','soc'],
-['we','we','nosotros','👥','pro'],['where','where','dónde','🧭','q'],['feel','feel','siento','💭','verb'],['put','put','pon','⬇️','verb'],['eat','eat','comer','🍎','verb'],['read','read','leer','📖','verb'],['hot','hot','caliente','🔥','desc'],['cold','cold','frío','🧊','desc'],['on','on','encima','🔛','det'],['alldone','all done','terminé','🏁','soc'],
-['they','they','ellos','👫','pro'],['who','who','quién','👤','q'],['know','know','sé','💡','verb'],['get','get','agarra','✊','verb'],['drink','drink','tomar','🥤','verb'],['say','say','decir','💬','verb'],['different','different','diferente','🔀','desc'],['same','same','igual','⚖️','desc'],['up','up','arriba','⬆️','det'],['hi','hi','hola','👋','soc']];
-const W=R.map(([id,en,es,e,c])=>({id,en,es,e,c}));
-const byId=Object.fromEntries(W.map(w=>[w.id,w]));
+const {byId,sym,speak,hush,voiceSelect,langToggle,confetti,esc}=AAC;
 const T={
- en:{sub:'Tap a word and the talker says it. This is how many of our students talk every day.',ph:'Tap words to build a message',
-  free:['Free talk','Tap any word. Your words line up in the bar on top; tap the bar to hear the whole message.','Try it the way a student would: "I want more," "stop, all done," "where go?" Short is normal. Every message counts.'],
+ en:{h1:'Try an AAC Device',sub:'Tap a word and the AAC device says it. Open a folder for more words, or spell anything with ABC. This is how many of our students talk every day.',ph:'Tap words to build a message',tabs:['1. Free talk','2. Challenge','3. Watch me model'],
+  free:['Free talk','Tap any word. Your words line up in the bar on top; tap the bar to hear the whole message.','The orange keys across the top are folders. Core words stay put on the home page, so students can find them by motor memory. Short messages are normal. Every message counts.'],
   ch:['Challenge','Build the message, then tap the bar to say it.','Skip','Nice! Next one...','Not quite. Try again or tap Skip.','You finished every challenge. That took real motor planning, which is what our students do all day.','Start over'],
-  mo:['Watch me model','Pick a phrase. Watch the keys light up while the talker speaks, the way an adult models on a student’s device.','Modeling means we touch the words while we talk. No quiz, no "now you say it." Students learn to talk on a device by seeing it used, the same way babies learn speech by hearing it.'],
-  key:[['pro','people'],['verb','actions'],['desc','describing'],['q','questions'],['soc','social'],['neg','no'],['det','pointing words']],
-  foot:'Sample page. This 60-word board is our own demo arrangement, not any app’s layout. Speech uses this device’s built-in voices; pick the most natural one in the Voice menu. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.',
-  novoice:'This device has no Spanish voice installed, so it will read in its default voice.'},
- es:{sub:'Toca una palabra y el comunicador la dice. Así es como muchos de nuestros estudiantes hablan todos los días.',ph:'Toca palabras para hacer un mensaje',
-  free:['Habla libre','Toca cualquier palabra. Tus palabras aparecen en la barra de arriba; toca la barra para escuchar el mensaje completo.','Pruébalo como lo haría un estudiante: "quiero más," "para, terminé," "¿dónde ir?" Los mensajes cortos son normales. Cada mensaje cuenta.'],
+  mo:['Watch me model','Pick a phrase. Watch the keys light up, including folder trips, while the AAC device speaks, the way an adult models on a student’s device.','Modeling means we touch the words while we talk. No quiz, no "now you say it." Students learn to talk on a device by seeing it used, the same way babies learn speech by hearing it.'],
+  key:[['pro','people'],['verb','actions'],['desc','describing'],['q','questions'],['soc','social'],['neg','no'],['noun','things and places'],['det','little words']],
+  foot:'Sample page. This board and its folders are our own demo arrangement, not any app’s layout. Speech uses this device’s built-in voices; pick the most natural one in the Voice menu. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Prueba un dispositivo de CAA',sub:'Toca una palabra y el dispositivo de CAA la dice. Abre una carpeta para más palabras o escribe lo que quieras con ABC. Así es como muchos de nuestros estudiantes hablan todos los días.',ph:'Toca palabras para hacer un mensaje',tabs:['1. Habla libre','2. Reto','3. Mira cómo modelo'],
+  free:['Habla libre','Toca cualquier palabra. Tus palabras aparecen en la barra de arriba; toca la barra para escuchar el mensaje completo.','Las teclas anaranjadas de arriba son carpetas. Las palabras clave siempre están en el mismo lugar de la página de inicio, para encontrarlas con la memoria motora. Los mensajes cortos son normales. Cada mensaje cuenta.'],
   ch:['Reto','Haz el mensaje y luego toca la barra para decirlo.','Saltar','¡Muy bien! Sigue...','Casi. Intenta otra vez o toca Saltar.','Terminaste todos los retos. Eso requiere planificación motora, igual que lo que hacen nuestros estudiantes todo el día.','Empezar de nuevo'],
-  mo:['Mira cómo modelo','Escoge una frase. Mira cómo se iluminan las teclas mientras habla el comunicador, como cuando un adulto modela en el aparato del estudiante.','Modelar significa tocar las palabras mientras hablamos. No es un examen ni pedimos "ahora dilo tú." Los estudiantes aprenden a hablar con un aparato al verlo usar, igual que los bebés aprenden a hablar al escuchar.'],
-  key:[['pro','personas'],['verb','acciones'],['desc','descripciones'],['q','preguntas'],['soc','social'],['neg','no'],['det','señalar']],
-  foot:'Página de muestra. Este tablero de 60 palabras es nuestra propia demostración, no el diseño de ninguna aplicación. La voz usa las voces del dispositivo; escoge la más natural en el menú Voz. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.',
-  novoice:'Este dispositivo no tiene una voz en español instalada, así que leerá con su voz predeterminada.'}};
+  mo:['Mira cómo modelo','Escoge una frase. Mira cómo se iluminan las teclas, incluso al abrir carpetas, mientras habla el dispositivo de CAA, como cuando un adulto modela en el dispositivo del estudiante.','Modelar significa tocar las palabras mientras hablamos. No es un examen ni pedimos "ahora dilo tú." Los estudiantes aprenden a hablar con un dispositivo al verlo usar, igual que los bebés aprenden a hablar al escuchar.'],
+  key:[['pro','personas'],['verb','acciones'],['desc','descripciones'],['q','preguntas'],['soc','social'],['neg','no'],['noun','cosas y lugares'],['det','palabritas']],
+  foot:'Página de muestra. Este tablero y sus carpetas son nuestra propia demostración, no el diseño de ninguna aplicación. La voz usa las voces del dispositivo; escoge la más natural en el menú Voz. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const has=(a,p)=>a.some(id=>id===p||id.startsWith(p));
 const CH=[
  {en:'Ask for more.',es:'Pide más.',t:a=>a.includes('more')},
  {en:'Tell someone to stop.',es:'Dile a alguien que pare.',t:a=>a.includes('stop')},
- {en:'Ask a question.',es:'Haz una pregunta.',t:a=>a.includes('what')||a.includes('where')},
- {en:'Tell us something you like.',es:'Dinos algo que te gusta.',t:a=>a.includes('like')},
- {en:'Say you are finished.',es:'Di que terminaste.',t:a=>a.includes('alldone')},
- {en:'Build a message with 3 words or more.',es:'Haz un mensaje con 3 palabras o más.',t:a=>a.length>=3},
- {en:'Invite a friend: "you play."',es:'Invita a un amigo: "tú jugar."',t:a=>a.includes('you')&&a.includes('play')},
- {en:'Comment on something you see.',es:'Comenta algo que ves.',t:a=>a.includes('look')||a.includes('big')||a.includes('that')},
- {en:'Tell us how you feel.',es:'Dinos cómo te sientes.',t:a=>a.includes('feel')||a.includes('happy')||a.includes('sad')},
+ {en:'Ask a question.',es:'Haz una pregunta.',t:a=>a.includes('what')||a.includes('where')||a.includes('who')||has(a,'f:questions:')},
+ {en:'Tell us your favorite food. (Try the Food folder.)',es:'Dinos tu comida favorita. (Prueba la carpeta Comida.)',t:a=>has(a,'f:food:')},
+ {en:'Say how you feel.',es:'Di cómo te sientes.',t:a=>a.includes('feel')||a.includes('happy')||a.includes('sad')||has(a,'f:feelings:')},
+ {en:'Build a message with 4 words or more.',es:'Haz un mensaje con 4 palabras o más.',t:a=>a.length>=4},
+ {en:'Tell us where you went. (Actions and Places folders.)',es:'Dinos a dónde fuiste. (Carpetas Acciones y Lugares.)',t:a=>has(a,'f:places:')},
+ {en:'Agree or disagree with a friend. (Chat folder.)',es:'Dale la razón o no a un amigo. (Carpeta Charla.)',t:a=>has(a,'f:chat:')||a.includes('yes')||a.includes('no')},
+ {en:'Spell your name with ABC.',es:'Escribe tu nombre con ABC.',t:a=>has(a,'t:')},
  {en:'Be polite: say please or thanks.',es:'Sé amable: di por favor o gracias.',t:a=>a.includes('please')||a.includes('thanks')}];
 const PH=[
- {ids:['like','that'],en:'Like that!',es:'¡Me gusta eso!'},
- {ids:['want','more'],en:'Want more?',es:'¿Quieres más?'},
- {ids:['where','go'],en:'Where go?',es:'¿Dónde vamos?'},
- {ids:['stop','alldone'],en:'Stop. All done.',es:'Para. Terminé.'},
+ {ids:['i','want','more'],en:'I want more.',es:'Yo quiero más.'},
+ {ids:['i','like','f:food:pizza'],en:'I like pizza!',es:'¡Me gusta la pizza!'},
+ {ids:['i','feel','f:feelings:tired'],en:'I feel tired.',es:'Me siento cansado.'},
+ {ids:['i','f:actions:went','f:little:to','f:little:the','f:places:park'],en:'I went to the park.',es:'Fui al parque.'},
+ {ids:['f:chat:me-too'],en:'Me too!',es:'¡Yo también!'},
+ {ids:['f:questions:what-happened'],en:'What happened?',es:'¿Qué pasó?'},
  {ids:['look','big'],en:'Look, big!',es:'¡Mira, grande!'},
- {ids:['you','play'],en:'You play.',es:'Tú juegas.'},
- {ids:['i','want','eat'],en:'I want eat.',es:'Yo quiero comer.'},
- {ids:['what','that'],en:'What that?',es:'¿Qué es eso?'},
  {ids:['your','turn'],en:'Your turn.',es:'Tu turno.'},
- {ids:['i','feel','happy'],en:'I feel happy.',es:'Me siento feliz.'},
- {ids:['help','please'],en:'Help, please.',es:'Ayuda, por favor.'},
- {ids:['put','in'],en:'Put in.',es:'Ponlo dentro.'}];
+ {ids:['stop','alldone'],en:'Stop. All done.',es:'Para. Terminé.'},
+ {ids:['help','please'],en:'Help, please.',es:'Ayuda, por favor.'}];
 const S={mode:'free',lang:'en',msg:[],ch:0,stars:0,fb:'',phr:-1,busy:false};
 const $=id=>document.getElementById(id);
-let voices=[];
-const loadV=()=>{try{voices=speechSynthesis.getVoices()}catch(e){voices=[]}};
-loadV();try{speechSynthesis.addEventListener('voiceschanged',()=>{loadV();fillVoices();renderPanel()})}catch(e){}
-const vl=v=>(v.lang||'').toLowerCase().replace('_','-');
-const score=(v,l)=>{const n=v.name.toLowerCase();let s=0;if(/natural|neural/.test(n))s+=60;if(/premium/.test(n))s+=45;if(/enhanced/.test(n))s+=40;if(/siri/.test(n))s+=35;if(/google/.test(n))s+=25;if(/compact|espeak/.test(n))s-=40;const g=vl(v);if(l==='en'&&g==='en-us')s+=8;if(l==='es'&&(g==='es-us'||g==='es-mx'))s+=8;return s};
-const voicesFor=l=>voices.filter(v=>vl(v).startsWith(l)).sort((a,b)=>score(b,l)-score(a,l));
-const saved={};try{Object.assign(saved,JSON.parse(localStorage.getItem('tat-voice')||'{}'))}catch(e){}
-const pickV=l=>{const list=voicesFor(l);return list.find(v=>v.name===saved[l])||list[0]||null};
-const fillVoices=()=>{const sel=$('voice');if(!sel)return;const list=voicesFor(S.lang);const cur=pickV(S.lang);
- sel.innerHTML=list.length?list.map(v=>`<option value="${v.name.replace(/"/g,'&quot;')}"${cur&&v.name===cur.name?' selected':''}>${v.name.replace(/</g,'&lt;')}</option>`).join(''):`<option value="">${S.lang==='es'?'Voz del dispositivo':'Device default'}</option>`;
- $('vlab').textContent=S.lang==='es'?'Voz':'Voice'};
-const speak=(txt,cb)=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang=S.lang==='es'?'es-US':'en-US';const v=pickV(S.lang);if(v)u.voice=v;u.rate=.95;if(cb){u.onend=cb;u.onerror=cb}speechSynthesis.speak(u)}catch(e){if(cb)setTimeout(cb,600)}};
 const lbl=w=>w[S.lang];
-const renderGrid=()=>{$('grid').innerHTML=W.map(w=>`<button class="k ${w.c}" data-id="${w.id}" aria-label="${lbl(w)}"><img src="symbols/${w.id}.svg" alt=""><span class="w">${lbl(w)}</span></button>`).join('')};
-const renderMsg=()=>{const t=T[S.lang];$('say').innerHTML=S.msg.length?S.msg.map(id=>{const w=byId[id];return`<span class="chip ${w.c}">${lbl(w)}</span>`}).join(''):`<span class="ph">${t.ph}</span>`};
-const star=on=>`<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6L2.5 9.3l6.6-.8z" fill="${on?'#f2b705':'none'}" stroke="${on?'#c48f00':'currentColor'}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
-const keyHtml=()=>`<div class="key">${T[S.lang].key.map(([c,n])=>`<span><i class="${c}"></i>${n}</span>`).join('')}</div>`;
+const dev=AAC.Device($('dv'),{lang:()=>S.lang,onPick:w=>{if(S.busy)return;S.msg.push(w.id);S.fb='';renderMsg();speak(lbl(w),S.lang)}});
+const renderMsg=()=>{const t=T[S.lang];$('say').innerHTML=S.msg.length?S.msg.map(id=>{const w=byId[id];return `<span class="chip ${w.c}">${esc(lbl(w))}</span>`}).join(''):`<span class="ph">${t.ph}</span>`};
+const legend=()=>`<div class="legend">${T[S.lang].key.map(([c,n])=>`<span><i class="${c}"></i>${n}</span>`).join('')}</div>`;
 const renderPanel=()=>{const t=T[S.lang];let h='';
- if(S.mode==='free'){h=`<h2>${t.free[0]}</h2><p>${t.free[1]}</p><p class="note">${t.free[2]}</p>`}
- else if(S.mode==='challenge'){const done=S.ch>=CH.length;
-  h=`<h2>${t.ch[0]}</h2><div class="card">${done?`<div class="big">${t.ch[5]}</div>`:`<div class="big">${CH[S.ch][S.lang]}</div><p class="note" style="margin:6px 0 0">${t.ch[1]}</p>`}<div class="stars" aria-label="${S.stars} of ${CH.length}">${CH.map((_,i)=>star(i<S.stars)).join('')}</div><div class="ok">${S.fb}</div></div>${done?`<button class="act" id="restart">${t.ch[6]}</button>`:`<button class="act" id="skip">${t.ch[2]}</button>`}`}
- else{h=`<h2>${t.mo[0]}</h2><p>${t.mo[1]}</p><div class="phr">${PH.map((p,i)=>`<button data-p="${i}" aria-pressed="${i===S.phr}">${p[S.lang]}</button>`).join('')}</div><p class="note" style="margin-top:12px">${t.mo[2]}</p>`}
- if(S.lang==='es'&&voices.length&&!voices.some(v=>v.lang&&v.lang.toLowerCase().startsWith('es')))h+=`<p class="note">${t.novoice}</p>`;
- $('panel').innerHTML=h+keyHtml()};
-const renderChrome=()=>{const t=T[S.lang];$('tip').textContent=S.lang==='es'?'Desliza para ver todo el tablero, o gira el teléfono.':'Swipe to see the whole board, or turn your phone sideways.';document.documentElement.lang=S.lang;$('sub').textContent=t.sub;$('foot').textContent=t.foot;
- document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.m===S.mode));
- document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.lang))};
-const all=()=>{renderChrome();renderGrid();renderMsg();renderPanel();fillVoices()};
-const setMode=m=>{S.mode=m;S.msg=[];S.fb='';S.phr=-1;try{speechSynthesis.cancel()}catch(e){}S.busy=false;clearLit();if(location.hash!=='#'+m)history.replaceState(null,'','#'+m);all()};
-const clearLit=()=>document.querySelectorAll('.k.lit').forEach(k=>k.classList.remove('lit'));
-const model=i=>{if(S.busy)return;S.busy=true;S.phr=i;S.msg=[];renderMsg();renderPanel();const p=PH[i];let n=0;
- const step=()=>{if(S.mode!=='model'){S.busy=false;return}clearLit();if(n<p.ids.length){const id=p.ids[n++];const el=document.querySelector(`.k[data-id="${id}"]`);if(el)el.classList.add('lit');S.msg.push(id);renderMsg();speak(lbl(byId[id]),()=>setTimeout(step,350))}else{speak(p[S.lang],()=>{S.busy=false})}};step()};
-$('grid').addEventListener('click',e=>{const b=e.target.closest('.k');if(!b||S.busy)return;const w=byId[b.dataset.id];S.msg.push(w.id);S.fb='';renderMsg();speak(lbl(w))});
+ if(S.mode==='free')h=`<h2>${t.free[0]}</h2><p>${t.free[1]}</p><p class="note">${t.free[2]}</p>`;
+ else if(S.mode==='challenge'){const done=S.ch>=CH.length;h=`<h2>${t.ch[0]}</h2><div class="ccard">${done?`<div class="big">${t.ch[5]}</div>`:`<div class="big">${CH[S.ch][S.lang]}</div><p class="note" style="margin:6px 0 0">${t.ch[1]}</p>`}<div class="stars">${CH.map((_,i)=>`<img class="${i<S.stars?'on':''}" src="${sym('star')}" alt="">`).join('')}</div><div class="ok">${S.fb}</div></div>${done?`<button class="btn" id="restart">${t.ch[6]}</button>`:`<button class="btn ghost" id="skip">${t.ch[2]}</button>`}`}
+ else h=`<h2>${t.mo[0]}</h2><p>${t.mo[1]}</p><div class="phr">${PH.map((p,i)=>`<button data-p="${i}" aria-pressed="${i===S.phr}">${p[S.lang]}</button>`).join('')}</div><p class="note" style="margin-top:12px">${t.mo[2]}</p>`;
+ $('panel').innerHTML=h+legend()};
+const chrome=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('swipe').textContent=S.lang==='es'?'Desliza para ver todo el tablero, o gira el teléfono.':'Swipe to see the whole board, or turn your phone sideways.';$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=S.lang==='es'?'Voz':'Voice';
+ ['free','challenge','model'].forEach((m,i)=>{const b=$('t-'+m);b.textContent=t.tabs[i];b.setAttribute('aria-pressed',S.mode===m)})};
+const all=()=>{chrome();dev.render();renderMsg();renderPanel()};
+const setMode=m=>{S.mode=m;S.msg=[];S.fb='';S.phr=-1;hush();S.busy=false;dev.home();if(location.hash!=='#'+m)history.replaceState(null,'','#'+m);all()};
+const flash=(el,ms)=>new Promise(r=>{if(!el){r();return}el.classList.add('lit');setTimeout(()=>{el.classList.remove('lit');r()},ms)});
+const say=t=>new Promise(r=>speak(t,S.lang,r));
+const model=async i=>{if(S.busy)return;S.busy=true;S.phr=i;S.msg=[];renderMsg();renderPanel();const p=PH[i];dev.home();
+ for(const id of p.ids){if(S.mode!=='model')break;const f=dev.folderOf(id);
+  if(f!=='core'&&dev.page!==f){await flash(document.querySelector(`#dv .fk[data-f="${f}"]`),500);dev.go(f)}
+  else if(f==='core'&&dev.page!=='core'){await flash(document.querySelector('#dv .fk[data-f="core"]'),400);dev.home()}
+  const el=dev.keyEl(id);if(el)el.classList.add('lit');S.msg.push(id);renderMsg();await say(lbl(byId[id]));await new Promise(r=>setTimeout(r,250));if(el)el.classList.remove('lit')}
+ if(S.mode==='model'){dev.home();await say(p[S.lang])}S.busy=false};
 $('say').addEventListener('click',()=>{if(!S.msg.length||S.busy)return;const txt=S.msg.map(id=>lbl(byId[id])).join(' ');
- if(S.mode==='challenge'&&S.ch<CH.length){const t=T[S.lang];if(CH[S.ch].t(S.msg)){speak(txt,()=>{});S.stars++;S.ch++;S.fb=t.ch[3];S.msg=[];renderMsg();renderPanel();return}S.fb=t.ch[4];speak(txt);renderPanel();return}
- speak(txt)});
+ if(S.mode==='challenge'&&S.ch<CH.length){const t=T[S.lang];if(CH[S.ch].t(S.msg)){speak(txt,S.lang);S.stars++;S.ch++;S.fb=t.ch[3];S.msg=[];renderMsg();renderPanel();confetti($('panel'),50);return}S.fb=t.ch[4];speak(txt,S.lang);renderPanel();return}
+ speak(txt,S.lang)});
 $('del').addEventListener('click',()=>{if(S.busy)return;S.msg.pop();renderMsg()});
 $('clr').addEventListener('click',()=>{if(S.busy)return;S.msg=[];renderMsg()});
 $('panel').addEventListener('click',e=>{const p=e.target.closest('[data-p]');if(p){model(+p.dataset.p);return}
  if(e.target.id==='skip'){S.ch++;S.fb='';S.msg=[];renderMsg();renderPanel()}
  if(e.target.id==='restart'){S.ch=0;S.stars=0;S.fb='';S.msg=[];renderMsg();renderPanel()}});
 document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b)setMode(b.dataset.m)});
-document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b)return;S.lang=b.dataset.l;try{speechSynthesis.cancel()}catch(e){}S.busy=false;clearLit();all()});
-$('voice').addEventListener('change',e=>{saved[S.lang]=e.target.value;try{localStorage.setItem('tat-voice',JSON.stringify(saved))}catch(err){}speak(S.lang==='es'?'Hola, así sueno yo.':'Hi, this is how I sound.')});
+langToggle($('langs'),()=>S.lang,l=>{S.lang=l;S.busy=false;fill();all()});
+const fill=voiceSelect($('voice'),()=>S.lang);
 const fromHash=()=>{const h=location.hash.slice(1);return['free','challenge','model'].includes(h)?h:'free'};
 window.addEventListener('hashchange',()=>{const m=fromHash();if(m!==S.mode)setMode(m)});
+$('deco').innerHTML=[['../talker/symbols/say.svg',10,12,62,-8],['../talker/symbols/more.svg',46,58,44,8],['../talker/symbols/like.svg',78,10,50,-6],['../talker/symbols/go.svg',28,60,40,10]].map(([n,x,y,z,r],i)=>`<img src="${n}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
 S.mode=fromHash();all();
 }
 </script>

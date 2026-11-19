@@ -11,7 +11,7 @@
 /* VOICE everyday and playful, for families at home, low pressure
    IDEA a real bingo card on the fridge: big grid, stamped squares, B-I-N-G-O across the top
    PICTURE the bingo card itself, filling the first screen, with a tip panel for the square you tap
-   COLOUR white card, charcoal ink, sunny yellow stamps, the talker key colours on column heads
+   COLOUR white card, charcoal ink, sunny yellow stamps, the AAC device key colours on column heads
    TYPE Atkinson Hyperlegible, same family as the other tools
    LAYOUT laptop: card left, tip panel right; phone: card, then tip panel; print: card only */
 :root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--stamp:#f2b705;--stampbg:light-dark(#fff6cc,#3a3008);--win:#2b8a3e;--focus:light-dark(#1f7a3a,#6fd68e)}
@@ -109,12 +109,12 @@ const T={
   pick:'Tap any square to see an idea for that word.',mark:'I modeled it!',unmark:'Undo',bingo:'BINGO!',bingoP:'Five in a row. Keep going for a full card!',
   how:'Modeling means you touch the word on your child’s device while you say it. You don’t need them to copy you. Seeing it used is how they learn.',
   newc:'New card',clear:'Clear stamps',print:'Print',saved:'Your stamps are saved on this device.',
-  foot:'Sample page. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0. Words match the RUSD Try a Talker board; your child’s device may show them in different places.'},
+  foot:'Sample page. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0. Words match the RUSD Try an AAC Device board; your child’s device may show them in different places.'},
  es:{h1:'Bingo de modelar',sub:'Escoja un cuadro. Modele esa palabra durante una rutina que ya hacen y márquela. Sin examinar, solo mostrar.',free:'Libre',freeT:'¡Hoy modeló!',
   pick:'Toque cualquier cuadro para ver una idea para esa palabra.',mark:'¡Ya la modelé!',unmark:'Deshacer',bingo:'¡BINGO!',bingoP:'Cinco en línea. ¡Siga hasta llenar la tarjeta!',
   how:'Modelar significa tocar la palabra en el aparato de su hijo mientras la dice. No necesita que lo copie. Así aprende, viéndola usar.',
   newc:'Nueva tarjeta',clear:'Borrar marcas',print:'Imprimir',saved:'Sus marcas se guardan en este dispositivo.',
-  foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. Las palabras coinciden con el tablero Try a Talker de RUSD; el aparato de su hijo puede tenerlas en otro lugar.'}};
+  foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. Las palabras coinciden con el tablero Try an AAC Device de RUSD; el aparato de su hijo puede tenerlas en otro lugar.'}};
 const LINES=[[0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],[0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],[0,6,12,18,24],[4,8,12,16,20]];
 const load=()=>{try{return JSON.parse(localStorage.getItem('mbingo')||'null')}catch(e){return null}};
 const S=Object.assign({lang:'en',order:null,on:[],sel:-1},load()||{});

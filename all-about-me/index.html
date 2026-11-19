@@ -66,20 +66,20 @@ const {sym,esc,langToggle}=AAC;
 const TS='../talker/symbols/';
 const L={
  en:{h1:'All About Me',sub:'A one-page profile in the student’s own voice, for new teachers, subs, aides and bus drivers.',print:'Print my page',priv:'Nothing you type is saved or sent. It stays on this screen until you print or close it.',
-  f:{name:'First name',photo:'Photo (optional, stays on this device)',comm:'I communicate by',dev:'My talker (app or device)',lives:'Where my talker lives',yes:'My yes looks like',no:'My no looks like',love:'I love',notfav:'Not my favorite',help:'Help me by',upset:'When I’m upset, I might',calm:'What helps me calm down',dont:'Please don’t',ask:'Ask me about'},
-  comm:['Talking','My talker','Signs','Gestures and pointing','Pictures','Writing or typing'],
-  help:['Waiting for me to answer','Modeling words on my talker','Keeping my talker with me','Talking to me, not about me','Giving me a heads-up before changes'],
-  dont:['Take my talker away','Move my hands for me','Answer for me','Turn my talker’s volume off'],
+  f:{name:'First name',photo:'Photo (optional, stays on this device)',comm:'I communicate by',dev:'My AAC device (app or device)',lives:'Where my AAC device lives',yes:'My yes looks like',no:'My no looks like',love:'I love',notfav:'Not my favorite',help:'Help me by',upset:'When I’m upset, I might',calm:'What helps me calm down',dont:'Please don’t',ask:'Ask me about'},
+  comm:['Talking','My AAC device','Signs','Gestures and pointing','Pictures','Writing or typing'],
+  help:['Waiting for me to answer','Modeling words on my AAC device','Keeping my AAC device with me','Talking to me, not about me','Giving me a heads-up before changes'],
+  dont:['Take my AAC device away','Move my hands for me','Answer for me','Turn my AAC device’s volume off'],
   ph:{name:'e.g., Mia',dev:'e.g., Proloquo2Go on an iPad',lives:'e.g., In the blue case on my chair',yes:'e.g., I smile and nod',no:'e.g., I turn my head away',love:'e.g., Music, swings, pizza',notfav:'e.g., Loud bells, waiting in line',upset:'e.g., Cover my ears or walk away',calm:'e.g., Headphones and a quiet corner',ask:'e.g., My dog Coco and my favorite songs'},
-  p:{hi:'Hi! I’m',sub:'Here’s how to talk with me.',comm:'How I talk',dev:'My talker',yesno:'Yes and no',love:'I love',notfav:'Not my favorite',help:'You can help by',upset:'When I’m upset',dont:'Please don’t',ask:'Ask me about',yes:'Yes:',no:'No:',lives:'Find it:',calm:'What helps:',add:'Add this in the form'},
+  p:{hi:'Hi! I’m',sub:'Here’s how to talk with me.',comm:'How I talk',dev:'My AAC device',yesno:'Yes and no',love:'I love',notfav:'Not my favorite',help:'You can help by',upset:'When I’m upset',dont:'Please don’t',ask:'Ask me about',yes:'Yes:',no:'No:',lives:'Find it:',calm:'What helps:',add:'Add this in the form'},
   foot:'Fill this out together with the student whenever you can. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
  es:{h1:'Todo sobre mí',sub:'Un perfil de una página en la voz del estudiante, para maestros nuevos, suplentes, asistentes y choferes del autobús.',print:'Imprimir mi página',priv:'Nada de lo que escriba se guarda ni se envía. Se queda en esta pantalla hasta que la imprima o la cierre.',
-  f:{name:'Nombre',photo:'Foto (opcional, se queda en este dispositivo)',comm:'Me comunico con',dev:'Mi comunicador (aplicación o aparato)',lives:'Dónde está mi comunicador',yes:'Mi sí se ve así',no:'Mi no se ve así',love:'Me encanta',notfav:'No me gusta mucho',help:'Ayúdame',upset:'Cuando estoy molesto, puedo',calm:'Lo que me ayuda a calmarme',dont:'Por favor no',ask:'Pregúntame sobre'},
-  comm:['Hablando','Mi comunicador','Señas','Gestos y señalar','Imágenes','Escribiendo'],
-  help:['Esperando mi respuesta','Modelando palabras en mi comunicador','Dejando mi comunicador conmigo','Hablándome a mí, no sobre mí','Avisándome antes de los cambios'],
-  dont:['Me quites el comunicador','Me muevas las manos','Contestes por mí','Le apagues el volumen a mi comunicador'],
+  f:{name:'Nombre',photo:'Foto (opcional, se queda en este dispositivo)',comm:'Me comunico con',dev:'Mi dispositivo de CAA (aplicación o aparato)',lives:'Dónde está mi dispositivo de CAA',yes:'Mi sí se ve así',no:'Mi no se ve así',love:'Me encanta',notfav:'No me gusta mucho',help:'Ayúdame',upset:'Cuando estoy molesto, puedo',calm:'Lo que me ayuda a calmarme',dont:'Por favor no',ask:'Pregúntame sobre'},
+  comm:['Hablando','Mi dispositivo de CAA','Señas','Gestos y señalar','Imágenes','Escribiendo'],
+  help:['Esperando mi respuesta','Modelando palabras en mi dispositivo de CAA','Dejando mi dispositivo de CAA conmigo','Hablándome a mí, no sobre mí','Avisándome antes de los cambios'],
+  dont:['Me quites el dispositivo de CAA','Me muevas las manos','Contestes por mí','Le apagues el volumen a mi dispositivo de CAA'],
   ph:{name:'ej., Mia',dev:'ej., Proloquo2Go en un iPad',lives:'ej., En el estuche azul en mi silla',yes:'ej., Sonrío y digo que sí con la cabeza',no:'ej., Volteo la cabeza',love:'ej., Música, columpios, pizza',notfav:'ej., Timbres fuertes, hacer fila',upset:'ej., Me tapo los oídos o me voy',calm:'ej., Audífonos y un rincón tranquilo',ask:'ej., Mi perrita Coco y mis canciones favoritas'},
-  p:{hi:'¡Hola! Soy',sub:'Así puedes hablar conmigo.',comm:'Cómo hablo',dev:'Mi comunicador',yesno:'Sí y no',love:'Me encanta',notfav:'No me gusta mucho',help:'Puedes ayudarme',upset:'Cuando estoy molesto',dont:'Por favor no',ask:'Pregúntame sobre',yes:'Sí:',no:'No:',lives:'Dónde está:',calm:'Lo que ayuda:',add:'Agréguelo en el formulario'},
+  p:{hi:'¡Hola! Soy',sub:'Así puedes hablar conmigo.',comm:'Cómo hablo',dev:'Mi dispositivo de CAA',yesno:'Sí y no',love:'Me encanta',notfav:'No me gusta mucho',help:'Puedes ayudarme',upset:'Cuando estoy molesto',dont:'Por favor no',ask:'Pregúntame sobre',yes:'Sí:',no:'No:',lives:'Dónde está:',calm:'Lo que ayuda:',add:'Agréguelo en el formulario'},
   foot:'Siempre que se pueda, llénelo junto con el estudiante. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const S={lang:'en',v:{},comm:new Set(),help:new Set(),dont:new Set(),photo:''};
 const $=id=>document.getElementById(id);

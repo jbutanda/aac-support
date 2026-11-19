@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="../shared/base.css">
 <style>
 /* VOICE playful, a race against the clock at a staff training
-   IDEA an arcade timing game played on a real talker board
+   IDEA an arcade timing game played on a real AAC device board
    PICTURE the board in its dark housing with a big "Find: HELP" scoreboard above it
    COLOUR orange band, charcoal housing, Fitzgerald key colours
    TYPE Atkinson Hyperlegible
@@ -54,11 +54,11 @@ const T={
  en:{sub:'Ten words, one board. Find each word as fast as you can and build the motor memory you need to model without hunting.',find:'Find',time:'Time',best:'Best',round:'Word',start:'Start',timed:'Race the clock',practice:'Practice, no timer',hear:'Hear it',
   intro:'Knowing where words live is what lets you model in the moment. Tap the word shown at the top. Two misses and the right color zone lights up.',
   doneT:'Done!',doneP:(t,b)=>`${t} seconds. ${b?'New personal best!':'Your best is saved on this device.'}`,pdone:'Nice practice. Try racing the clock next.',again:'Play again',
-  foot:'Words and colors match the RUSD Try a Talker demo board, not any specific app. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+  foot:'Words and colors match the RUSD Try an AAC Device demo board, not any specific app. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
  es:{sub:'Diez palabras, un tablero. Encuentre cada palabra lo más rápido que pueda y desarrolle la memoria motora para modelar sin buscar.',find:'Busque',time:'Tiempo',best:'Mejor',round:'Palabra',start:'Empezar',timed:'Contra el reloj',practice:'Práctica, sin reloj',hear:'Escuchar',
   intro:'Saber dónde está cada palabra le permite modelar en el momento. Toque la palabra que aparece arriba. Con dos errores se ilumina la zona de color correcta.',
   doneT:'¡Listo!',doneP:(t,b)=>`${t} segundos. ${b?'¡Nuevo récord personal!':'Su mejor tiempo se guarda en este dispositivo.'}`,pdone:'Buena práctica. Intente contra el reloj la próxima vez.',again:'Jugar otra vez',
-  foot:'Las palabras y los colores coinciden con el tablero de demostración Try a Talker de RUSD, no con una aplicación específica. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+  foot:'Las palabras y los colores coinciden con el tablero de demostración Try an AAC Device de RUSD, no con una aplicación específica. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const S={lang:'en',mode:'timed',phase:'start',round:0,targets:[],miss:0,t0:0,elapsed:0,timer:null};
 const $=id=>document.getElementById(id);
 const pick=()=>{const a=W.map(w=>w.id);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,10)};

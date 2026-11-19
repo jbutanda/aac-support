@@ -11,8 +11,8 @@
 /* VOICE everyday, warm, quick to play at a family night or a staff meeting
    IDEA a deck of large flash cards you guess and flip, like a party card game
    PICTURE the card itself, centred and big, flipping to a stamped verdict
-   COLOUR white page, charcoal ink, rust red for Myth, green for Fact, talker key colours as accents
-   TYPE Atkinson Hyperlegible throughout, same as Try a Talker
+   COLOUR white page, charcoal ink, rust red for Myth, green for Fact, AAC device key colours as accents
+   TYPE Atkinson Hyperlegible throughout, same as Try an AAC Device
    LAYOUT title and controls on one row, card under it, score dots beneath; phone stacks the same */
 :root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--myth:#c2410c;--fact:#2b8a3e;--mythbg:light-dark(#fff1e8,#3a1d10);--factbg:light-dark(#ebfbee,#13301b);--focus:light-dark(#1f7a3a,#6fd68e)}
 :root[data-theme=light]{color-scheme:light}
@@ -151,20 +151,20 @@ const C=[
   es:{q:'La CAA impedirá que mi hijo aprenda a hablar.',a:'Las investigaciones no han encontrado que la CAA quite el habla. En un estudio de 27 personas, ninguna perdió el habla y la mayoría mejoró.',tip:'Hable y toque al mismo tiempo. Su voz y el aparato pueden trabajar juntos.',try:'Ver cómo se modela'},
   r:'Millar, Light & Schlosser (2006), Journal of Speech, Language, and Hearing Research; Schlosser & Wendt (2008), American Journal of Speech-Language Pathology.'},
  {v:'m',s:'go',t:'free',
-  en:{q:'My child has to show certain skills before trying AAC.',a:'There is no test to pass first. Many skills people thought had to come first actually grow by using AAC.',tip:'Start now, during everyday routines like snack, bath and play.',try:'Try a talker'},
-  es:{q:'Mi hijo tiene que demostrar ciertas habilidades antes de usar la CAA.',a:'No hay un examen que pasar primero. Muchas habilidades que se creían necesarias se desarrollan usando la CAA.',tip:'Empiece ahora, en rutinas diarias como la merienda, el baño y el juego.',try:'Probar un comunicador'},
+  en:{q:'My child has to show certain skills before trying AAC.',a:'There is no test to pass first. Many skills people thought had to come first actually grow by using AAC.',tip:'Start now, during everyday routines like snack, bath and play.',try:'Try an AAC device'},
+  es:{q:'Mi hijo tiene que demostrar ciertas habilidades antes de usar la CAA.',a:'No hay un examen que pasar primero. Muchas habilidades que se creían necesarias se desarrollan usando la CAA.',tip:'Empiece ahora, en rutinas diarias como la merienda, el baño y el juego.',try:'Probar un dispositivo de CAA'},
   r:'Romski & Sevcik (2005), Infants & Young Children; AssistiveWare, Busting AAC myths for good.'},
  {v:'m',s:'little',t:'model',
   en:{q:'My child is too young for AAC.',a:'There is no minimum age for AAC. Starting early may even help speech develop.',tip:'Young children can start with a few words, modeled during play.',try:'See modeling'},
   es:{q:'Mi hijo es demasiado pequeño para la CAA.',a:'No hay una edad mínima para la CAA. Empezar temprano incluso puede ayudar al desarrollo del habla.',tip:'Los niños pequeños pueden empezar con pocas palabras, modeladas durante el juego.',try:'Ver cómo se modela'},
   r:'Romski & Sevcik (2005), Infants & Young Children.'},
  {v:'m',s:'again',t:'free',
-  en:{q:'AAC is a last resort, for when speech therapy didn’t work.',a:'That was the thinking decades ago. Today AAC is offered as soon as a child needs more ways to communicate.',tip:'AAC and speech therapy can happen at the same time.',try:'Try a talker'},
-  es:{q:'La CAA es el último recurso, para cuando la terapia del habla no funcionó.',a:'Así se pensaba hace décadas. Hoy la CAA se ofrece en cuanto un niño necesita más formas de comunicarse.',tip:'La CAA y la terapia del habla pueden ocurrir al mismo tiempo.',try:'Probar un comunicador'},
+  en:{q:'AAC is a last resort, for when speech therapy didn’t work.',a:'That was the thinking decades ago. Today AAC is offered as soon as a child needs more ways to communicate.',tip:'AAC and speech therapy can happen at the same time.',try:'Try an AAC device'},
+  es:{q:'La CAA es el último recurso, para cuando la terapia del habla no funcionó.',a:'Así se pensaba hace décadas. Hoy la CAA se ofrece en cuanto un niño necesita más formas de comunicarse.',tip:'La CAA y la terapia del habla pueden ocurrir al mismo tiempo.',try:'Probar un dispositivo de CAA'},
   r:'Romski & Sevcik (2005), Infants & Young Children.'},
  {v:'m',s:'feel',t:'free',
-  en:{q:'My child has some words, so they don’t need AAC.',a:'Having some words is not the same as being able to say everything you want. AAC can fill the gaps, like feelings and questions.',tip:'Notice what your child can’t say yet. That’s where AAC helps most.',try:'Try a talker'},
-  es:{q:'Mi hijo dice algunas palabras, así que no necesita CAA.',a:'Decir algunas palabras no es lo mismo que poder decir todo lo que uno quiere. La CAA ayuda con lo que falta, como sentimientos y preguntas.',tip:'Fíjese en lo que su hijo todavía no puede decir. Ahí es donde más ayuda la CAA.',try:'Probar un comunicador'},
+  en:{q:'My child has some words, so they don’t need AAC.',a:'Having some words is not the same as being able to say everything you want. AAC can fill the gaps, like feelings and questions.',tip:'Notice what your child can’t say yet. That’s where AAC helps most.',try:'Try an AAC device'},
+  es:{q:'Mi hijo dice algunas palabras, así que no necesita CAA.',a:'Decir algunas palabras no es lo mismo que poder decir todo lo que uno quiere. La CAA ayuda con lo que falta, como sentimientos y preguntas.',tip:'Fíjese en lo que su hijo todavía no puede decir. Ahí es donde más ayuda la CAA.',try:'Probar un dispositivo de CAA'},
   r:'Sevcik, Barton-Hulsey & Romski (2008); Romski & Sevcik (2005), Infants & Young Children.'},
  {v:'f',s:'more',t:'free',
   en:{q:'Pressing the same button over and over can be a good sign.',a:'It’s often AAC babbling, like a baby playing with sounds. Kids are learning where words are and what they do.',tip:'Respond as if it means something: “More? You want more!”',try:'Press “more” five times'},
@@ -179,12 +179,12 @@ const C=[
   es:{q:'Modelar significa pedirle a mi hijo que copie lo que yo toco.',a:'Modelar es mostrar, no examinar. Los niños aprenden observando, como los bebés aprenden a hablar escuchando.',tip:'Modele, haga una pausa y espere. Si su hijo no toca nada, está bien.',try:'Ver cómo se modela'},
   r:'O’Neill, Light & Pope (2018), Journal of Speech, Language, and Hearing Research.'},
  {v:'m',s:'get',t:'free',
-  en:{q:'Kids should start with simple pictures and earn a “real” device later.',a:'Children don’t have to climb a ladder from objects to pictures to devices. Teams choose the tools that fit the child now.',tip:'Paper boards make great backups. They aren’t a test to pass.',try:'Try a talker'},
-  es:{q:'Los niños deben empezar con imágenes sencillas y ganarse un aparato “de verdad” después.',a:'Los niños no tienen que subir una escalera de objetos a imágenes a aparatos. El equipo escoge las herramientas que le sirven al niño ahora.',tip:'Los tableros de papel son un buen respaldo. No son un examen.',try:'Probar un comunicador'},
+  en:{q:'Kids should start with simple pictures and earn a “real” device later.',a:'Children don’t have to climb a ladder from objects to pictures to devices. Teams choose the tools that fit the child now.',tip:'Paper boards make great backups. They aren’t a test to pass.',try:'Try an AAC device'},
+  es:{q:'Los niños deben empezar con imágenes sencillas y ganarse un aparato “de verdad” después.',a:'Los niños no tienen que subir una escalera de objetos a imágenes a aparatos. El equipo escoge las herramientas que le sirven al niño ahora.',tip:'Los tableros de papel son un buen respaldo. No son un examen.',try:'Probar un dispositivo de CAA'},
   r:'Sevcik, Barton-Hulsey & Romski (2008); University of Nebraska-Lincoln, AAC Myths.'},
  {v:'m',s:'different',t:'free',
-  en:{q:'If the first device didn’t work, AAC isn’t right for my child.',a:'Learning any language takes time, and sometimes the first system isn’t the best fit. Changing the tool or the approach is normal.',tip:'Talk with your team about what’s working and what’s hard.',try:'Try a talker'},
-  es:{q:'Si el primer aparato no funcionó, la CAA no es para mi hijo.',a:'Aprender cualquier idioma toma tiempo, y a veces el primer sistema no es el mejor. Cambiar de herramienta o de estrategia es normal.',tip:'Hable con su equipo sobre lo que funciona y lo que es difícil.',try:'Probar un comunicador'},
+  en:{q:'If the first device didn’t work, AAC isn’t right for my child.',a:'Learning any language takes time, and sometimes the first system isn’t the best fit. Changing the tool or the approach is normal.',tip:'Talk with your team about what’s working and what’s hard.',try:'Try an AAC device'},
+  es:{q:'Si el primer aparato no funcionó, la CAA no es para mi hijo.',a:'Aprender cualquier idioma toma tiempo, y a veces el primer sistema no es el mejor. Cambiar de herramienta o de estrategia es normal.',tip:'Hable con su equipo sobre lo que funciona y lo que es difícil.',try:'Probar un dispositivo de CAA'},
   r:'Cress & Marvin (2003), Augmentative and Alternative Communication.'},
  {v:'f',s:'wait',t:'challenge',
   en:{q:'Talking with a device takes much longer than speaking.',a:'People who use AAC communicate about 15 to 20 times slower than typical speech. That’s why waiting matters so much.',tip:'Count to 10 in your head before you jump in or finish their sentence.',try:'Feel it yourself'},
@@ -196,10 +196,10 @@ const C=[
   r:'Romski & Sevcik (2005), Infants & Young Children; O\u2019Neill, Light & Pope (2018), Journal of Speech, Language, and Hearing Research.'}];
 const T={
  en:{h1:'Myth or Fact?',sub:'Twelve things people often hear about AAC. Make your guess, then flip the card.',of:(i,n)=>`Card ${i} of ${n}`,ask:'Myth or fact?',myth:'Myth',fact:'Fact',MYTH:'MYTH',FACT:'FACT',right:'You got it!',wrong:'Good guess, but not quite.',tip:'Try this',res:'Research says',read:'Read it to me',next:'Next card',last:'See my score',score:(a,b)=>`${a} of ${b} right so far`,
-  endT:'Nice work!',endP:(a,n)=>`You got ${a} of ${n}. Most people miss a few, and that’s why these myths are worth talking about.`,again:'Play again',talker:'Try a Talker',ask2:'Questions about AAC for your child? Ask your child’s speech-language pathologist.',
+  endT:'Nice work!',endP:(a,n)=>`You got ${a} of ${n}. Most people miss a few, and that’s why these myths are worth talking about.`,again:'Play again',talker:'Try an AAC Device',ask2:'Questions about AAC for your child? Ask your child’s speech-language pathologist.',
   foot:'Sample page. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0. Speech uses this device’s built-in voices.',vlab:'Voice',vdef:'Device default'},
  es:{h1:'¿Mito o realidad?',sub:'Doce cosas que la gente suele escuchar sobre la CAA. Adivine y luego voltee la tarjeta.',of:(i,n)=>`Tarjeta ${i} de ${n}`,ask:'¿Mito o realidad?',myth:'Mito',fact:'Realidad',MYTH:'MITO',FACT:'REALIDAD',right:'¡Correcto!',wrong:'Buen intento, pero no.',tip:'Pruebe esto',res:'Lo que dicen las investigaciones',read:'Léamelo',next:'Siguiente',last:'Ver mi puntaje',score:(a,b)=>`${a} de ${b} correctas hasta ahora`,
-  endT:'¡Muy bien!',endP:(a,n)=>`Acertó ${a} de ${n}. A la mayoría se le escapan algunas, y por eso vale la pena hablar de estos mitos.`,again:'Jugar otra vez',talker:'Probar un comunicador',ask2:'¿Preguntas sobre la CAA para su hijo? Pregúntele al patólogo del habla y lenguaje de su hijo.',
+  endT:'¡Muy bien!',endP:(a,n)=>`Acertó ${a} de ${n}. A la mayoría se le escapan algunas, y por eso vale la pena hablar de estos mitos.`,again:'Jugar otra vez',talker:'Probar un dispositivo de CAA',ask2:'¿Preguntas sobre la CAA para su hijo? Pregúntele al patólogo del habla y lenguaje de su hijo.',
   foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. La voz usa las voces del dispositivo.',vlab:'Voz',vdef:'Voz del dispositivo'}};
 const S={lang:'en',i:0,res:Array(C.length).fill(null),flip:false,done:false};
 const $=id=>document.getElementById(id);
