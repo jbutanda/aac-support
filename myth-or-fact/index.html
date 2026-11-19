@@ -80,10 +80,49 @@ details[open]{color:var(--ink)}
 .foot{margin-top:22px;font-size:14px;color:var(--soft)}
 @media(max-width:600px){.card,.end{min-height:500px}.qwrap{flex-direction:column;align-items:flex-start;gap:14px}.next{margin-left:0}}
 @media(prefers-reduced-motion:reduce){.card{transition:none}}
+
+/* game-show layer */
+body{background:light-dark(#f3f5ff,#0f1222)}
+.band{background:#1f3fd1;color:#fff;position:relative;overflow:hidden;padding:clamp(22px,3vw,40px) max(4vw,16px) 104px}
+.band .top{max-width:860px;margin:0 auto;position:relative;z-index:1}
+.band h1{color:#fff;font-size:clamp(40px,7vw,66px)}
+.band .sub{color:#dfe5ff;font-size:17px}
+.band .pill{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.band .pill[aria-pressed=true]{background:#fff;color:#1f3fd1;border-color:#fff}
+.band .vc{color:#dfe5ff}
+.band .vc select{background:#fff;color:#16181d;border-color:#fff}
+.deco{position:absolute;inset:0 0 0 58%}
+.deco img{position:absolute;opacity:.24;animation:bob 7s ease-in-out infinite}
+@media(max-width:700px){.deco{display:none}}
+@keyframes bob{50%{transform:translateY(-12px) rotate(8deg)}}
+.wrap{margin-top:-84px;position:relative;z-index:2;padding-top:0}
+.hud{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px;min-height:40px}
+.hc{background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px 6px 8px;font-weight:700;box-shadow:0 6px 18px rgba(16,24,64,.18);display:inline-flex;align-items:center;gap:6px}
+.hc img{width:26px;height:26px}
+.hc.hot{background:#ff922b;color:#16181d;animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.6)}}
+.face{border-width:0;box-shadow:0 22px 48px rgba(16,24,64,.22),0 2px 0 rgba(16,24,64,.06)}
+.back.m,.back.f{border-width:3px}
+.q{font-size:clamp(26px,4.4vw,38px)}
+.sym{background:#e8ecff;border-radius:24px}
+:root[data-theme=dark] .sym{background:#22264a}
+.guess button{font-size:24px;min-height:70px;box-shadow:0 6px 0 rgba(0,0,0,.28);transition:transform .08s,box-shadow .08s}
+.guess button:hover{transform:translateY(-2px);box-shadow:0 8px 0 rgba(0,0,0,.28)}
+.guess button:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.gm::before{content:'\2715';margin-right:10px}
+.gf::before{content:'\2713';margin-right:10px}
+.flip .stamp{animation:slam .5s .42s both cubic-bezier(.2,1.5,.4,1)}
+@keyframes slam{from{transform:scale(2.6) rotate(-16deg);opacity:0}to{transform:rotate(-4deg) scale(1);opacity:1}}
+.dots span{width:16px;height:16px}
+.end{border-width:0;box-shadow:0 22px 48px rgba(16,24,64,.22)}
+.end .trophy{width:96px;height:96px;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+.cf{position:fixed;z-index:50;border-radius:2px;pointer-events:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media(prefers-reduced-motion:reduce){.deco img,.flip .stamp,.hc.hot,.end .trophy{animation:none}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div>
   <div class="top">
     <div>
       <h1 id="h1">Myth or Fact?</h1>
@@ -95,9 +134,12 @@ details[open]{color:var(--ink)}
       <label class="vc" for="voice"><span id="vlab">Voice</span><select id="voice"></select></label>
     </div>
   </div>
+</header>
+<div class="wrap">
+  <div class="hud" id="hud" aria-hidden="true"></div>
   <div id="play"></div>
   <div class="dots" id="dots" aria-hidden="true"></div>
-  <p class="score" id="score" aria-live="polite"></p>
+  <p class="score sr" id="score" aria-live="polite"></p>
   <p class="foot" id="foot"></p>
 </div>
 <script>
@@ -175,12 +217,16 @@ loadV();try{speechSynthesis.addEventListener('voiceschanged',()=>{loadV();fillVo
 const speak=txt=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang=S.lang==='es'?'es-US':'en-US';const v=pickV(S.lang);if(v)u.voice=v;u.rate=.95;speechSynthesis.speak(u)}catch(e){}};
 const spk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
 const right=()=>S.res.filter(r=>r===true).length;
+const streak=()=>{let n=0;for(let k=S.res.length-1;k>=0;k--){if(S.res[k]===null)continue;if(S.res[k])n++;else break}return n};
+const confetti=(el,n=70)=>{try{if(matchMedia('(prefers-reduced-motion: reduce)').matches||!el)return;const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+Math.min(r.height/3,160);const cols=['#ffe066','#8ce99a','#8fc7ff','#d0b3ff','#ffb3d1','#ff9b9b','#ffffff'];for(let i=0;i<n;i++){const p=document.createElement('i');p.className='cf';p.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[i%cols.length]};width:${6+Math.random()*6}px;height:${8+Math.random()*9}px`;document.body.appendChild(p);const a=Math.random()*Math.PI*2,v=120+Math.random()*280,dx=Math.cos(a)*v,dy=Math.sin(a)*v-200;p.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},{transform:`translate(${dx}px,${dy+420}px) rotate(${Math.random()*720-360}deg)`,opacity:0}],{duration:1100+Math.random()*800,easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish=()=>p.remove()}}catch(e){}};
+const DECO=[['say',4,18,58,-12],['more',16,62,44,10],['look',30,8,40,6],['wait',46,70,50,-8],['help',60,14,46,12],['feel',73,58,56,-6],['go',86,12,48,8],['different',93,64,40,-14],['see',54,40,34,4],['again',24,40,30,-10]];
+document.getElementById('deco').innerHTML=DECO.map(([n,x,y,z,r],i)=>`<img src="symbols/${n}.svg" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i*0.7}s">`).join('');
 const render=()=>{const t=T[S.lang],n=C.length;
  document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;
  document.querySelectorAll('[data-l]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.lang));
  $('dots').innerHTML=C.map((_,k)=>`<span class="${S.res[k]===true?'ok':S.res[k]===false?'no':''}${k===S.i&&!S.done?' cur':''}"></span>`).join('');
- const answered=S.res.filter(r=>r!==null).length;$('score').textContent=answered?t.score(right(),answered):'';
- if(S.done){$('play').innerHTML=`<div class="end"><div class="big">${right()}/${n}</div><h2 style="margin:0;font-size:28px">${t.endT}</h2><p>${t.endP(right(),n)}</p><p style="color:var(--soft)">${t.ask2}</p><div class="row"><button class="next" id="again" style="margin:0">${t.again}</button><a class="try" href="${TALK}" target="_blank" rel="noopener">${t.talker}</a></div></div>`;return}
+ const answered=S.res.filter(r=>r!==null).length;const sk=streak();$('hud').innerHTML=answered?`<span class="hc"><img src="symbols/star.svg" alt="">${right()} / ${answered}</span>${sk>=2?`<span class="hc hot"><img src="symbols/fire.svg" alt="">${S.lang==='es'?`¡${sk} seguidas!`:`${sk} in a row!`}</span>`:''}`:'';$('score').textContent=answered?t.score(right(),answered):'';
+ if(S.done){$('play').innerHTML=`<div class="end"><img class="trophy" src="symbols/trophy.svg" alt=""><div class="big">${right()}/${n}</div><h2 style="margin:0;font-size:28px">${t.endT}</h2><p>${t.endP(right(),n)}</p><p style="color:var(--soft)">${t.ask2}</p><div class="row"><button class="next" id="again" style="margin:0">${t.again}</button><a class="try" href="${TALK}" target="_blank" rel="noopener">${t.talker}</a></div></div>`;return}
  const c=C[S.i],L=c[S.lang],r=S.res[S.i],isM=c.v==='m';
  $('play').innerHTML=`<div class="stage"><div class="card${S.flip?' flip':''}" id="card">
   <section class="face front" aria-hidden="${S.flip}">
@@ -200,10 +246,10 @@ const render=()=>{const t=T[S.lang],n=C.length;
   </section></div></div>`;
  if(S.flip){const b=$('next');if(b)setTimeout(()=>b.focus({preventScroll:true}),560)}};
 $('play').addEventListener('click',e=>{const g=e.target.closest('[data-g]');
- if(g&&!S.flip){S.res[S.i]=g.dataset.g===C[S.i].v;S.flip=true;try{speechSynthesis.cancel()}catch(err){}render();return}
+ if(g&&!S.flip){S.res[S.i]=g.dataset.g===C[S.i].v;S.flip=true;try{speechSynthesis.cancel()}catch(err){}render();if(S.res[S.i])setTimeout(()=>confetti($('card')),620);return}
  if(e.target.closest('#sayq')){speak(C[S.i][S.lang].q);return}
  if(e.target.closest('#saya')){const c=C[S.i],t=T[S.lang];speak(`${c.v==='m'?t.myth:t.fact}. ${c[S.lang].a} ${c[S.lang].tip}`);return}
- if(e.target.closest('#next')){try{speechSynthesis.cancel()}catch(err){}if(S.i<C.length-1){S.i++;S.flip=false}else S.done=true;render();return}
+ if(e.target.closest('#next')){try{speechSynthesis.cancel()}catch(err){}if(S.i<C.length-1){S.i++;S.flip=false}else S.done=true;render();if(S.done)setTimeout(()=>confetti(document.querySelector('.end'),110),150);return}
  if(e.target.closest('#again')){S.i=0;S.res=Array(C.length).fill(null);S.flip=false;S.done=false;render()}});
 document.querySelector('.ctrls').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b)return;S.lang=b.dataset.l;try{speechSynthesis.cancel()}catch(err){}fillVoices();render()});
 $('voice').addEventListener('change',e=>{saved[S.lang]=e.target.value;try{localStorage.setItem('tat-voice',JSON.stringify(saved))}catch(err){}speak(S.lang==='es'?'Hola, así sueno yo.':'Hi, this is how I sound.')});
