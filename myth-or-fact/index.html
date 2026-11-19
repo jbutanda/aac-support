@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Myth or Fact</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday, warm, quick to play at a family night or a staff meeting
+   IDEA a deck of large flash cards you guess and flip, like a party card game
+   PICTURE the card itself, centred and big, flipping to a stamped verdict
+   COLOUR white page, charcoal ink, rust red for Myth, green for Fact, talker key colours as accents
+   TYPE Atkinson Hyperlegible throughout, same as Try a Talker
+   LAYOUT title and controls on one row, card under it, score dots beneath; phone stacks the same */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--myth:#c2410c;--fact:#2b8a3e;--mythbg:light-dark(#fff1e8,#3a1d10);--factbg:light-dark(#ebfbee,#13301b);--focus:light-dark(#1f7a3a,#6fd68e)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:860px;margin:0 auto;padding:clamp(20px,3vw,40px) max(4vw,16px) 40px}
+.top{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:end;justify-content:space-between;margin-bottom:18px}
+h1{font-size:clamp(32px,5vw,46px);line-height:1.05;letter-spacing:-.02em;margin:0 0 4px}
+.sub{margin:0;color:var(--soft);max-width:48ch}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.pill[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.vc{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--soft)}
+.vc select{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;min-height:44px;padding:6px 10px;max-width:220px}
+button:focus-visible,a:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.stage{perspective:1600px}
+.card{position:relative;display:grid;min-height:440px;transition:transform .55s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.card.flip{transform:rotateY(180deg)}
+.face{grid-area:1/1;position:relative;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;border:2px solid var(--line);background:var(--card);padding:clamp(20px,4vw,36px);display:flex;flex-direction:column;box-shadow:0 1px 0 var(--line)}
+.back{transform:rotateY(180deg)}
+.back.m{background:var(--mythbg);border-color:color-mix(in srgb,var(--myth) 40%,transparent)}
+.back.f{background:var(--factbg);border-color:color-mix(in srgb,var(--fact) 40%,transparent)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;color:var(--soft);font-weight:700}
+.say{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14px;font-weight:700;min-height:44px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.say svg{width:18px;height:18px}
+.qwrap{flex:1;display:flex;align-items:center;gap:20px;padding:18px 0}
+.sym{width:clamp(64px,13vw,104px);aspect-ratio:1/1;flex:none;background:var(--tint);border-radius:20px;display:grid;place-items:center}
+.sym img{width:74%;height:74%}
+.q{font-size:clamp(24px,4vw,34px);line-height:1.15;font-weight:700;margin:0;text-wrap:balance}
+.ask{font-weight:700;color:var(--soft);margin:0 0 10px}
+.guess{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.guess button{font:inherit;font-size:22px;font-weight:700;min-height:64px;border-radius:16px;border:0;color:#fff;cursor:pointer}
+.gm{background:var(--myth)}
+.gf{background:var(--fact)}
+.guess button:active{transform:scale(.97)}
+.stamp{display:inline-block;font-size:clamp(34px,6vw,48px);font-weight:700;letter-spacing:.04em;line-height:1;padding:6px 16px 4px;border:4px solid currentColor;border-radius:12px;transform:rotate(-4deg);margin:6px 0 10px}
+.m .stamp{color:var(--myth)}
+.f .stamp{color:var(--fact)}
+.you{font-weight:700;margin:0 0 6px}
+.ans{font-size:clamp(17px,2.2vw,19px);margin:0 0 12px}
+.tip{background:var(--card);border-radius:14px;padding:12px 14px;margin:0 0 12px;display:flex;gap:12px;align-items:flex-start}
+.tip img{width:40px;height:40px;flex:none}
+.tip b{display:block;font-size:14px;color:var(--soft)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto}
+.try{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:700;text-decoration:none}
+.next{font:inherit;font-weight:700;min-height:44px;padding:8px 18px;border-radius:999px;border:0;background:var(--focus);color:var(--bg);cursor:pointer;margin-left:auto}
+details{font-size:14px;color:var(--soft);margin:0 0 10px}
+summary{cursor:pointer;font-weight:700;min-height:32px;display:flex;align-items:center;gap:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'+';display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;font-size:14px;line-height:1}
+details[open] summary::before{content:'\2212'}
+details[open]{color:var(--ink)}
+.dots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:18px 0 6px}
+.dots span{width:14px;height:14px;border-radius:50%;background:var(--line)}
+.dots span.ok{background:var(--fact)}
+.dots span.no{background:color-mix(in srgb,var(--myth) 55%,var(--line))}
+.dots span.cur{outline:2.5px solid var(--ink);outline-offset:2px}
+.score{text-align:center;font-weight:700;color:var(--soft);margin:0}
+.end{position:relative;border-radius:24px;border:2px solid var(--line);background:var(--card);padding:clamp(24px,5vw,44px);text-align:center;min-height:440px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px}
+.big{font-size:clamp(56px,10vw,88px);font-weight:700;line-height:1}
+.end p{max-width:46ch;margin:0}
+.end .row{justify-content:center;margin-top:12px}
+.foot{margin-top:22px;font-size:14px;color:var(--soft)}
+@media(max-width:600px){.card,.end{min-height:500px}.qwrap{flex-direction:column;align-items:flex-start;gap:14px}.next{margin-left:0}}
+@media(prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1 id="h1">Myth or Fact?</h1>
+      <p class="sub" id="sub">Twelve things people often hear about AAC. Make your guess, then flip the card.</p>
+    </div>
+    <div class="ctrls">
+      <button class="pill" data-l="en">English</button>
+      <button class="pill" data-l="es">Español</button>
+      <label class="vc" for="voice"><span id="vlab">Voice</span><select id="voice"></select></label>
+    </div>
+  </div>
+  <div id="play"></div>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <p class="score" id="score" aria-live="polite"></p>
+  <p class="foot" id="foot"></p>
+</div>
+<script>
+{
+const TALK='https://jbutanda.github.io/aac-support/talker/';
+const C=[
+ {v:'m',s:'say',t:'model',
+  en:{q:'AAC will stop my child from learning to talk.',a:'Research has not found AAC taking speech away. In one review of 27 people, none lost speech and most gained some.',tip:'Talk and tap together. Your voice and the device can work side by side.',try:'See modeling'},
+  es:{q:'La CAA impedirá que mi hijo aprenda a hablar.',a:'Las investigaciones no han encontrado que la CAA quite el habla. En un estudio de 27 personas, ninguna perdió el habla y la mayoría mejoró.',tip:'Hable y toque al mismo tiempo. Su voz y el aparato pueden trabajar juntos.',try:'Ver cómo se modela'},
+  r:'Millar, Light & Schlosser (2006), Journal of Speech, Language, and Hearing Research; Schlosser & Wendt (2008), American Journal of Speech-Language Pathology.'},
+ {v:'m',s:'go',t:'free',
+  en:{q:'My child has to show certain skills before trying AAC.',a:'There is no test to pass first. Many skills people thought had to come first actually grow by using AAC.',tip:'Start now, during everyday routines like snack, bath and play.',try:'Try a talker'},
+  es:{q:'Mi hijo tiene que demostrar ciertas habilidades antes de usar la CAA.',a:'No hay un examen que pasar primero. Muchas habilidades que se creían necesarias se desarrollan usando la CAA.',tip:'Empiece ahora, en rutinas diarias como la merienda, el baño y el juego.',try:'Probar un comunicador'},
+  r:'Romski & Sevcik (2005), Infants & Young Children; AssistiveWare, Busting AAC myths for good.'},
+ {v:'m',s:'little',t:'model',
+  en:{q:'My child is too young for AAC.',a:'There is no minimum age for AAC. Starting early may even help speech develop.',tip:'Young children can start with a few words, modeled during play.',try:'See modeling'},
+  es:{q:'Mi hijo es demasiado pequeño para la CAA.',a:'No hay una edad mínima para la CAA. Empezar temprano incluso puede ayudar al desarrollo del habla.',tip:'Los niños pequeños pueden empezar con pocas palabras, modeladas durante el juego.',try:'Ver cómo se modela'},
+  r:'Romski & Sevcik (2005), Infants & Young Children.'},
+ {v:'m',s:'again',t:'free',
+  en:{q:'AAC is a last resort, for when speech therapy didn’t work.',a:'That was the thinking decades ago. Today AAC is offered as soon as a child needs more ways to communicate.',tip:'AAC and speech therapy can happen at the same time.',try:'Try a talker'},
+  es:{q:'La CAA es el último recurso, para cuando la terapia del habla no funcionó.',a:'Así se pensaba hace décadas. Hoy la CAA se ofrece en cuanto un niño necesita más formas de comunicarse.',tip:'La CAA y la terapia del habla pueden ocurrir al mismo tiempo.',try:'Probar un comunicador'},
+  r:'Romski & Sevcik (2005), Infants & Young Children.'},
+ {v:'m',s:'feel',t:'free',
+  en:{q:'My child has some words, so they don’t need AAC.',a:'Having some words is not the same as being able to say everything you want. AAC can fill the gaps, like feelings and questions.',tip:'Notice what your child can’t say yet. That’s where AAC helps most.',try:'Try a talker'},
+  es:{q:'Mi hijo dice algunas palabras, así que no necesita CAA.',a:'Decir algunas palabras no es lo mismo que poder decir todo lo que uno quiere. La CAA ayuda con lo que falta, como sentimientos y preguntas.',tip:'Fíjese en lo que su hijo todavía no puede decir. Ahí es donde más ayuda la CAA.',try:'Probar un comunicador'},
+  r:'Sevcik, Barton-Hulsey & Romski (2008); Romski & Sevcik (2005), Infants & Young Children.'},
+ {v:'f',s:'more',t:'free',
+  en:{q:'Pressing the same button over and over can be a good sign.',a:'It’s often AAC babbling, like a baby playing with sounds. Kids are learning where words are and what they do.',tip:'Respond as if it means something: “More? You want more!”',try:'Press “more” five times'},
+  es:{q:'Tocar el mismo botón una y otra vez puede ser una buena señal.',a:'Muchas veces es balbuceo con la CAA, como un bebé que juega con sonidos. Así aprenden dónde están las palabras y qué hacen.',tip:'Responda como si tuviera significado: “¿Más? ¡Quieres más!”',try:'Toque “más” cinco veces'},
+  r:'AbleNet, AAC Babbling: Why Repetitive Button Pressing Is a Good Sign.'},
+ {v:'f',s:'look',t:'model',
+  en:{q:'When adults use the device while talking, kids learn faster.',a:'This is called modeling. A 2018 research review found it highly effective for people of many ages, disabilities and language levels.',tip:'Touch one or two key words while you talk. You don’t need to model every word.',try:'See modeling'},
+  es:{q:'Cuando los adultos usan el aparato mientras hablan, los niños aprenden más rápido.',a:'Esto se llama modelar. Una revisión de investigaciones de 2018 encontró que funciona muy bien en personas de muchas edades y niveles de lenguaje.',tip:'Toque una o dos palabras clave mientras habla. No hace falta modelar cada palabra.',try:'Ver cómo se modela'},
+  r:'O’Neill, Light & Pope (2018), Journal of Speech, Language, and Hearing Research.'},
+ {v:'m',s:'see',t:'model',
+  en:{q:'Modeling means having my child copy what I press.',a:'Modeling is showing, not testing. Kids learn by watching, the way babies learn to talk by listening.',tip:'Model, then pause and wait. If your child doesn’t press anything, that’s okay.',try:'See modeling'},
+  es:{q:'Modelar significa pedirle a mi hijo que copie lo que yo toco.',a:'Modelar es mostrar, no examinar. Los niños aprenden observando, como los bebés aprenden a hablar escuchando.',tip:'Modele, haga una pausa y espere. Si su hijo no toca nada, está bien.',try:'Ver cómo se modela'},
+  r:'O’Neill, Light & Pope (2018), Journal of Speech, Language, and Hearing Research.'},
+ {v:'m',s:'get',t:'free',
+  en:{q:'Kids should start with simple pictures and earn a “real” device later.',a:'Children don’t have to climb a ladder from objects to pictures to devices. Teams choose the tools that fit the child now.',tip:'Paper boards make great backups. They aren’t a test to pass.',try:'Try a talker'},
+  es:{q:'Los niños deben empezar con imágenes sencillas y ganarse un aparato “de verdad” después.',a:'Los niños no tienen que subir una escalera de objetos a imágenes a aparatos. El equipo escoge las herramientas que le sirven al niño ahora.',tip:'Los tableros de papel son un buen respaldo. No son un examen.',try:'Probar un comunicador'},
+  r:'Sevcik, Barton-Hulsey & Romski (2008); University of Nebraska-Lincoln, AAC Myths.'},
+ {v:'m',s:'different',t:'free',
+  en:{q:'If the first device didn’t work, AAC isn’t right for my child.',a:'Learning any language takes time, and sometimes the first system isn’t the best fit. Changing the tool or the approach is normal.',tip:'Talk with your team about what’s working and what’s hard.',try:'Try a talker'},
+  es:{q:'Si el primer aparato no funcionó, la CAA no es para mi hijo.',a:'Aprender cualquier idioma toma tiempo, y a veces el primer sistema no es el mejor. Cambiar de herramienta o de estrategia es normal.',tip:'Hable con su equipo sobre lo que funciona y lo que es difícil.',try:'Probar un comunicador'},
+  r:'Cress & Marvin (2003), Augmentative and Alternative Communication.'},
+ {v:'f',s:'wait',t:'challenge',
+  en:{q:'Talking with a device takes much longer than speaking.',a:'People who use AAC communicate about 15 to 20 times slower than typical speech. That’s why waiting matters so much.',tip:'Count to 10 in your head before you jump in or finish their sentence.',try:'Feel it yourself'},
+  es:{q:'Hablar con un aparato toma mucho más tiempo que hablar con la voz.',a:'Las personas que usan CAA se comunican entre 15 y 20 veces más lento que con el habla. Por eso esperar es tan importante.',tip:'Cuente hasta 10 en su mente antes de intervenir o terminar su frase.',try:'Sentirlo usted mismo'},
+  r:'Beukelman & Mirenda (2013), Augmentative and Alternative Communication, 4th ed.'},
+ {v:'m',s:'help',t:'model',
+  en:{q:'Once a child has a device, the device does the work.',a:'A device is a tool, like a pencil. Kids learn to use it when the people around them use it too, every day.',tip:'Run a VOICE check: Visible, On, In reach, Charged, Every setting.',try:'See modeling'},
+  es:{q:'Cuando un niño tiene su aparato, el aparato hace todo el trabajo.',a:'El aparato es una herramienta, como un lápiz. Los niños aprenden a usarlo cuando las personas a su alrededor también lo usan, todos los días.',tip:'Revise VOICE: visible, encendido (On), al alcance (In reach), cargado (Charged), en todo lugar (Every setting).',try:'Ver cómo se modela'},
+  r:'Romski & Sevcik (2005), Infants & Young Children; O\u2019Neill, Light & Pope (2018), Journal of Speech, Language, and Hearing Research.'}];
+const T={
+ en:{h1:'Myth or Fact?',sub:'Twelve things people often hear about AAC. Make your guess, then flip the card.',of:(i,n)=>`Card ${i} of ${n}`,ask:'Myth or fact?',myth:'Myth',fact:'Fact',MYTH:'MYTH',FACT:'FACT',right:'You got it!',wrong:'Good guess, but not quite.',tip:'Try this',res:'Research says',read:'Read it to me',next:'Next card',last:'See my score',score:(a,b)=>`${a} of ${b} right so far`,
+  endT:'Nice work!',endP:(a,n)=>`You got ${a} of ${n}. Most people miss a few, and that’s why these myths are worth talking about.`,again:'Play again',talker:'Try a Talker',ask2:'Questions about AAC for your child? Ask your child’s speech-language pathologist.',
+  foot:'Sample page. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0. Speech uses this device’s built-in voices.',vlab:'Voice',vdef:'Device default'},
+ es:{h1:'¿Mito o realidad?',sub:'Doce cosas que la gente suele escuchar sobre la CAA. Adivine y luego voltee la tarjeta.',of:(i,n)=>`Tarjeta ${i} de ${n}`,ask:'¿Mito o realidad?',myth:'Mito',fact:'Realidad',MYTH:'MITO',FACT:'REALIDAD',right:'¡Correcto!',wrong:'Buen intento, pero no.',tip:'Pruebe esto',res:'Lo que dicen las investigaciones',read:'Léamelo',next:'Siguiente',last:'Ver mi puntaje',score:(a,b)=>`${a} de ${b} correctas hasta ahora`,
+  endT:'¡Muy bien!',endP:(a,n)=>`Acertó ${a} de ${n}. A la mayoría se le escapan algunas, y por eso vale la pena hablar de estos mitos.`,again:'Jugar otra vez',talker:'Probar un comunicador',ask2:'¿Preguntas sobre la CAA para su hijo? Pregúntele al patólogo del habla y lenguaje de su hijo.',
+  foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. La voz usa las voces del dispositivo.',vlab:'Voz',vdef:'Voz del dispositivo'}};
+const S={lang:'en',i:0,res:Array(C.length).fill(null),flip:false,done:false};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+let voices=[];
+const vl=v=>(v.lang||'').toLowerCase().replace('_','-');
+const score=(v,l)=>{const n=v.name.toLowerCase();let s=0;if(/natural|neural/.test(n))s+=60;if(/premium/.test(n))s+=45;if(/enhanced/.test(n))s+=40;if(/siri/.test(n))s+=35;if(/google/.test(n))s+=25;if(/compact|espeak/.test(n))s-=40;const g=vl(v);if(l==='en'&&g==='en-us')s+=8;if(l==='es'&&(g==='es-us'||g==='es-mx'))s+=8;return s};
+const voicesFor=l=>voices.filter(v=>vl(v).startsWith(l)).sort((a,b)=>score(b,l)-score(a,l));
+const saved={};try{Object.assign(saved,JSON.parse(localStorage.getItem('tat-voice')||'{}'))}catch(e){}
+const pickV=l=>{const list=voicesFor(l);return list.find(v=>v.name===saved[l])||list[0]||null};
+const fillVoices=()=>{const t=T[S.lang],list=voicesFor(S.lang),cur=pickV(S.lang);$('vlab').textContent=t.vlab;
+ $('voice').innerHTML=list.length?list.map(v=>`<option value="${esc(v.name).replace(/"/g,'&quot;')}"${cur&&v.name===cur.name?' selected':''}>${esc(v.name)}</option>`).join(''):`<option value="">${t.vdef}</option>`};
+const loadV=()=>{try{voices=speechSynthesis.getVoices()}catch(e){voices=[]}};
+loadV();try{speechSynthesis.addEventListener('voiceschanged',()=>{loadV();fillVoices()})}catch(e){}
+const speak=txt=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang=S.lang==='es'?'es-US':'en-US';const v=pickV(S.lang);if(v)u.voice=v;u.rate=.95;speechSynthesis.speak(u)}catch(e){}};
+const spk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+const right=()=>S.res.filter(r=>r===true).length;
+const render=()=>{const t=T[S.lang],n=C.length;
+ document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;
+ document.querySelectorAll('[data-l]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.lang));
+ $('dots').innerHTML=C.map((_,k)=>`<span class="${S.res[k]===true?'ok':S.res[k]===false?'no':''}${k===S.i&&!S.done?' cur':''}"></span>`).join('');
+ const answered=S.res.filter(r=>r!==null).length;$('score').textContent=answered?t.score(right(),answered):'';
+ if(S.done){$('play').innerHTML=`<div class="end"><div class="big">${right()}/${n}</div><h2 style="margin:0;font-size:28px">${t.endT}</h2><p>${t.endP(right(),n)}</p><p style="color:var(--soft)">${t.ask2}</p><div class="row"><button class="next" id="again" style="margin:0">${t.again}</button><a class="try" href="${TALK}" target="_blank" rel="noopener">${t.talker}</a></div></div>`;return}
+ const c=C[S.i],L=c[S.lang],r=S.res[S.i],isM=c.v==='m';
+ $('play').innerHTML=`<div class="stage"><div class="card${S.flip?' flip':''}" id="card">
+  <section class="face front" aria-hidden="${S.flip}">
+   <div class="meta"><span>${t.of(S.i+1,n)}</span><button class="say" id="sayq">${spk}${t.read}</button></div>
+   <div class="qwrap"><div class="sym"><img src="symbols/${c.s}.svg" alt=""></div><p class="q">“${esc(L.q)}”</p></div>
+   <p class="ask">${t.ask}</p>
+   <div class="guess"><button class="gm" data-g="m">${t.myth}</button><button class="gf" data-g="f">${t.fact}</button></div>
+  </section>
+  <section class="face back ${c.v}" aria-hidden="${!S.flip}">
+   <div class="meta"><span>${t.of(S.i+1,n)}</span><button class="say" id="saya">${spk}${t.read}</button></div>
+   <div><span class="stamp">${isM?t.MYTH:t.FACT}</span></div>
+   <p class="you">${r===true?t.right:t.wrong}</p>
+   <p class="ans">${esc(L.a)}</p>
+   <div class="tip"><img src="symbols/${c.s}.svg" alt=""><div><b>${t.tip}</b>${esc(L.tip)}</div></div>
+   <details><summary>${t.res}</summary>${esc(c.r)}</details>
+   <div class="row"><a class="try" href="${TALK}#${c.t}" target="_blank" rel="noopener">${esc(L.try)}</a><button class="next" id="next">${S.i===n-1?t.last:t.next}</button></div>
+  </section></div></div>`;
+ if(S.flip){const b=$('next');if(b)setTimeout(()=>b.focus({preventScroll:true}),560)}};
+$('play').addEventListener('click',e=>{const g=e.target.closest('[data-g]');
+ if(g&&!S.flip){S.res[S.i]=g.dataset.g===C[S.i].v;S.flip=true;try{speechSynthesis.cancel()}catch(err){}render();return}
+ if(e.target.closest('#sayq')){speak(C[S.i][S.lang].q);return}
+ if(e.target.closest('#saya')){const c=C[S.i],t=T[S.lang];speak(`${c.v==='m'?t.myth:t.fact}. ${c[S.lang].a} ${c[S.lang].tip}`);return}
+ if(e.target.closest('#next')){try{speechSynthesis.cancel()}catch(err){}if(S.i<C.length-1){S.i++;S.flip=false}else S.done=true;render();return}
+ if(e.target.closest('#again')){S.i=0;S.res=Array(C.length).fill(null);S.flip=false;S.done=false;render()}});
+document.querySelector('.ctrls').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b)return;S.lang=b.dataset.l;try{speechSynthesis.cancel()}catch(err){}fillVoices();render()});
+$('voice').addEventListener('change',e=>{saved[S.lang]=e.target.value;try{localStorage.setItem('tat-voice',JSON.stringify(saved))}catch(err){}speak(S.lang==='es'?'Hola, así sueno yo.':'Hi, this is how I sound.')});
+fillVoices();render();
+}
+</script>
+</body>
+</html>
