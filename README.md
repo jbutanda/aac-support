@@ -27,7 +27,7 @@ Nothing on this page links to the RUSD AAC Hub. Add that later when the Hub is r
 - Scan the finished QR on a phone using district Wi-Fi, home Wi-Fi, and cellular before you approve the print proof.
 - Open every tile once from a phone. The Tobii Dynavox boards sit behind a sign-up form on their site; the page says so.
 
-## Try a Talker (talker/)
+## Try an AAC Device (talker/)
 
 Interactive 60-word core board with three modes (Free talk, Challenge, Watch me model), English and Spanish, and a voice picker. Lives at:
 
@@ -41,11 +41,11 @@ Symbols are OpenMoji (CC BY-SA 4.0); the credit line is in the page footer and i
 
 ## Myth or Fact? (myth-or-fact/)
 
-Twelve flip cards (9 myths, 3 facts) about AAC, English and Spanish, with a guess-and-flip game, score, "Read it to me" audio, a "Try this" tip, a research citation on each card, and a button that opens the matching Try a Talker mode. Lives at:
+Twelve flip cards (9 myths, 3 facts) about AAC, English and Spanish, with a guess-and-flip game, score, "Read it to me" audio, a "Try this" tip, a research citation on each card, and a button that opens the matching Try an AAC Device mode. Lives at:
 
     https://jbutanda.github.io/aac-support/myth-or-fact/
 
-Embed in Google Sites the same way as the talker (Insert > Embed > By URL); about 700 px tall on desktop.
+Embed in Google Sites the same way as the AAC device page (Insert > Embed > By URL); about 700 px tall on desktop.
 
 ## VOICE Check (voice-check/)
 
@@ -65,6 +65,10 @@ Family bingo card: 24 home routines, each paired with one core word and a modeli
 
     https://jbutanda.github.io/aac-support/modeling-bingo/
 
+## The demo AAC device (shared/device.js)
+
+Try an AAC Device (`talker/`) and Walk in Their Shoes use a robust demo device: the 60 core words on the home page, a row of folder keys (Little words, Questions, People, Feelings, Food, Places, Activities, Actions, Time, Describe, Chat) and an ABC keyboard for spelling. Folder words live in `shared/vocab.js` (about 190 words, English and Spanish). The `talker/` folder name is kept so existing links keep working.
+
 ## Prototype tools (shared foundation)
 
 These ten load `shared/core.js` and `shared/base.css`, so the board words, voices, colors and symbols stay consistent. Each lives at `https://jbutanda.github.io/aac-support/<folder>/`.
@@ -72,7 +76,7 @@ These ten load `shared/core.js` and `shared/base.css`, so the board words, voice
 | Folder | For | What it does |
 | --- | --- | --- |
 | `find-it-fast/` | Staff | Timed 10-word hunt on the 60-word board; best time saved |
-| `walk-in-their-shoes/` | Staff trainings | Partner answers questions using only the talker against a 60-second timer, then a debrief |
+| `walk-in-their-shoes/` | Staff trainings | Partner answers questions using only the AAC device against a 60-second timer, then a debrief |
 | `pd-path/` | Staff | Five stops, a six-question check, printable certificate; set `FORM_URL` to log completions |
 | `modeling-tracker/` | Staff | "I modeled!" counter with a daily goal ring, quick word chips, week bars; data stays in the browser |
 | `core-word-of-the-week/` | Families, staff | Auto-rotating weekly word with home and school ideas and a printable poster; set `START` to the school calendar |
