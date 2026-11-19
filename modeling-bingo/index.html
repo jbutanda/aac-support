@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modeling Bingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday and playful, for families at home, low pressure
+   IDEA a real bingo card on the fridge: big grid, stamped squares, B-I-N-G-O across the top
+   PICTURE the bingo card itself, filling the first screen, with a tip panel for the square you tap
+   COLOUR white card, charcoal ink, sunny yellow stamps, the talker key colours on column heads
+   TYPE Atkinson Hyperlegible, same family as the other tools
+   LAYOUT laptop: card left, tip panel right; phone: card, then tip panel; print: card only */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--stamp:#f2b705;--stampbg:light-dark(#fff6cc,#3a3008);--win:#2b8a3e;--focus:light-dark(#1f7a3a,#6fd68e)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:1100px;margin:0 auto;padding:clamp(20px,3vw,40px) max(4vw,16px) 40px}
+.top{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:end;justify-content:space-between;margin-bottom:16px}
+h1{font-size:clamp(32px,5vw,46px);line-height:1.05;letter-spacing:-.02em;margin:0 0 4px}
+.sub{margin:0;color:var(--soft);max-width:56ch}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.pill[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.main{display:grid;gap:20px;grid-template-columns:minmax(0,1fr)}
+@media(min-width:900px){.main{grid-template-columns:minmax(0,1fr) 300px;align-items:start}}
+.board{border-radius:22px;border:2px solid var(--line);background:var(--card);padding:clamp(8px,1.6vw,16px)}
+.heads,.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(4px,1vw,8px)}
+.heads{margin-bottom:clamp(4px,1vw,8px)}
+.heads b{text-align:center;font-size:clamp(26px,5vw,40px);line-height:1.15;border-radius:12px;color:#16181d}
+.h0{background:#ffe066}.h1{background:#8ce99a}.h2{background:#8fc7ff}.h3{background:#d0b3ff}.h4{background:#ffb3d1}
+.sq{position:relative;aspect-ratio:1/1;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;cursor:pointer;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}
+.sq img{width:44%;max-width:56px}
+.sq .w{font-weight:700;font-size:clamp(11px,1.5vw,16px);line-height:1.05;text-transform:uppercase}
+.sq .r{font-size:clamp(10px,1.1vw,12.5px);line-height:1.1;color:var(--soft)}
+.sq.sel{border-color:var(--ink)}
+.sq.on{background:var(--stampbg);border-color:var(--stamp)}
+.sq.on::after{content:'\2713';position:absolute;top:5px;right:5px;width:clamp(18px,2.4vw,26px);height:clamp(18px,2.4vw,26px);border-radius:50%;background:var(--stamp);color:#16181d;font-weight:700;font-size:clamp(11px,1.4vw,15px);display:grid;place-items:center;line-height:1}
+.sq.win{border-color:var(--win);box-shadow:inset 0 0 0 2px var(--win)}
+.sq.free{background:var(--stampbg);border-color:var(--stamp)}
+.panel{background:var(--tint);border-radius:20px;padding:20px}
+.panel h2{font-size:22px;line-height:1.15;margin:0 0 6px}
+.panel .rt{font-weight:700;color:var(--soft);margin:0 0 10px}
+.panel p{margin:0 0 12px}
+.big{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.big img{width:56px;height:56px;background:var(--card);border-radius:14px;padding:6px}
+.mark{margin-bottom:6px;font:inherit;font-weight:700;min-height:46px;padding:8px 18px;border-radius:999px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.bingo{background:var(--win);color:#fff;border-radius:16px;padding:14px 16px;margin-bottom:14px;font-weight:700}
+.bingo strong{display:block;font-size:28px;line-height:1.1}
+.how{font-size:15px;color:var(--soft);margin:12px 0 0}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.foot{margin-top:22px;font-size:14px;color:var(--soft)}
+@media(max-width:560px){.sq .r{display:none}.sq img{width:52%}}
+@media print{.top .ctrls,.panel,.acts,.foot{display:none!important}.main{display:block}.board{border:0}.sq{border:1.5px solid #999}.sq .r{display:block}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1 id="h1">Modeling Bingo</h1><p class="sub" id="sub"></p></div>
+    <div class="ctrls"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div>
+  </div>
+  <div class="main">
+    <section class="board" aria-label="Bingo card">
+      <div class="heads" aria-hidden="true"><b class="h0">B</b><b class="h1">I</b><b class="h2">N</b><b class="h3">G</b><b class="h4">O</b></div>
+      <div class="grid" id="grid"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+  <div class="acts"><button class="pill" id="newc"></button><button class="pill" id="clear"></button><button class="pill" id="print"></button></div>
+  <p class="foot" id="foot"></p>
+</div>
+<script>
+{
+/* [symbol, en word, es word, en routine, es routine, en tip, es tip] */
+const Q=[
+['more','more','más','Snack time','Merienda','Hand out one cracker at a time. Touch MORE as you say, “More?” Give more either way.','Dé una galleta a la vez. Toque MÁS mientras dice: “¿Más?” Dele más de todos modos.'],
+['put','put','pon','Getting dressed','Vestirse','“PUT on shoes. PUT on your shirt.” Touch PUT each time.','“PON los zapatos. PON la camisa.” Toque PON cada vez.'],
+['go','go','ir','Car or bus ride','En el carro o autobús','Before you pull out: “Ready, set... GO!” Touch GO as you say it.','Antes de arrancar: “Uno, dos, tres... ¡a IR!” Toque IR mientras lo dice.'],
+['hot','hot','caliente','Bath time','Hora del baño','Test the water together. “HOT? Not too HOT.”','Prueben el agua juntos. “¿CALIENTE? No muy CALIENTE.”'],
+['eat','eat','comer','Mealtime','La comida','“Let’s EAT.” Touch EAT right before the first bite.','“Vamos a COMER.” Toque COMER justo antes del primer bocado.'],
+['drink','drink','tomar','A drink','Tomar algo','Hold up the cup. “DRINK? Want a DRINK?”','Muestre el vaso. “¿TOMAR? ¿Quieres TOMAR algo?”'],
+['play','play','jugar','Toy time','Juguetes','Sit down together. “Let’s PLAY.”','Siéntense juntos. “Vamos a JUGAR.”'],
+['read','read','leer','Story time','Hora del cuento','Touch READ as you open the book. “Let’s READ.”','Toque LEER al abrir el libro. “Vamos a LEER.”'],
+['in','in','dentro','Cleanup','Recoger','Toys go IN the bin. Touch IN with a few of them.','Los juguetes van DENTRO de la caja. Toque DENTRO con algunos.'],
+['alldone','all done','terminé','End of a meal or game','Al terminar algo','“ALL DONE!” Touch it when something ends.','“¡TERMINÉ!” Tóquelo cuando algo se acaba.'],
+['look','look','mira','Walk outside','Paseo afuera','Point things out. “LOOK, a dog!”','Señale cosas. “¡MIRA, un perro!”'],
+['again','again','otra vez','Songs and tickles','Canciones y cosquillas','Stop and wait. “AGAIN?” Then do it again.','Pare y espere. “¿OTRA VEZ?” Luego hágalo otra vez.'],
+['make','make','hacer','Cooking together','Cocinar juntos','“Let’s MAKE a sandwich.”','“Vamos a HACER un sándwich.”'],
+['cold','cold','frío','Ice pop or fridge','Paleta o refrigerador','“Brr, COLD!” Touch COLD as you open the freezer.','“¡Brr, FRÍO!” Toque FRÍO al abrir el congelador.'],
+['hi','hi','hola','Someone at the door','Alguien en la puerta','“HI, Grandma!” Model HI when people arrive.','“¡HOLA, abuela!” Modele HOLA cuando llega alguien.'],
+['help','help','ayuda','Chores','Quehaceres','Ask for their help on purpose. “HELP me?”','Pídale ayuda a propósito. “¿Me AYUDAS?”'],
+['open','open','abrir','Bags and jars','Bolsas y frascos','Hand over a closed container. Model OPEN, then open it together.','Dele un recipiente cerrado. Modele ABRIR y luego ábranlo juntos.'],
+['wait','wait','espera','Microwave or a line','Microondas o una fila','“WAIT... WAIT... done!” Touch WAIT while you count.','“ESPERA... ESPERA... ¡listo!” Toque ESPERA mientras cuenta.'],
+['big','big','grande','Bubbles','Burbujas','Blow big and little ones. “BIG bubble!”','Haga burbujas grandes y chiquitas. “¡Burbuja GRANDE!”'],
+['feel','feel','siento','Feelings check','¿Cómo te sientes?','Share your own feelings, too. “I FEEL happy.”','Comparta sus propios sentimientos. “Me SIENTO feliz.”'],
+['turn','turn','turno','Games','Juegos','Roll a ball back and forth. “My TURN. Your TURN.”','Rueden una pelota. “Mi TURNO. Tu TURNO.”'],
+['what','what','qué','Something new','Algo nuevo','Wonder out loud together. “WHAT is that?”','Pregúntense en voz alta. “¿QUÉ es eso?”'],
+['where','where','dónde','A lost shoe','Un zapato perdido','Search together. “WHERE is your shoe?”','Busquen juntos. “¿DÓNDE está tu zapato?”'],
+['stop','stop','para','Chasing or tickles','Correr o cosquillas','Stop right away when they touch or say STOP. That teaches the word really works.','Pare de inmediato cuando toque o diga PARA. Así aprende que la palabra sí funciona.']];
+const T={
+ en:{h1:'Modeling Bingo',sub:'Pick a square. Model that word during a routine you already do, then stamp it. No quizzing, just show.',free:'Free',freeT:'You modeled today!',
+  pick:'Tap any square to see an idea for that word.',mark:'I modeled it!',unmark:'Undo',bingo:'BINGO!',bingoP:'Five in a row. Keep going for a full card!',
+  how:'Modeling means you touch the word on your child’s device while you say it. You don’t need them to copy you. Seeing it used is how they learn.',
+  newc:'New card',clear:'Clear stamps',print:'Print',saved:'Your stamps are saved on this device.',
+  foot:'Sample page. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0. Words match the RUSD Try a Talker board; your child’s device may show them in different places.'},
+ es:{h1:'Bingo de modelar',sub:'Escoja un cuadro. Modele esa palabra durante una rutina que ya hacen y márquela. Sin examinar, solo mostrar.',free:'Libre',freeT:'¡Hoy modeló!',
+  pick:'Toque cualquier cuadro para ver una idea para esa palabra.',mark:'¡Ya la modelé!',unmark:'Deshacer',bingo:'¡BINGO!',bingoP:'Cinco en línea. ¡Siga hasta llenar la tarjeta!',
+  how:'Modelar significa tocar la palabra en el aparato de su hijo mientras la dice. No necesita que lo copie. Así aprende, viéndola usar.',
+  newc:'Nueva tarjeta',clear:'Borrar marcas',print:'Imprimir',saved:'Sus marcas se guardan en este dispositivo.',
+  foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. Las palabras coinciden con el tablero Try a Talker de RUSD; el aparato de su hijo puede tenerlas en otro lugar.'}};
+const LINES=[[0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],[0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],[0,6,12,18,24],[4,8,12,16,20]];
+const load=()=>{try{return JSON.parse(localStorage.getItem('mbingo')||'null')}catch(e){return null}};
+const S=Object.assign({lang:'en',order:null,on:[],sel:-1},load()||{});
+const save=()=>{try{localStorage.setItem('mbingo',JSON.stringify({lang:S.lang,order:S.order,on:S.on}))}catch(e){}};
+const shuffle=()=>{const a=Q.map((_,i)=>i);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}a.splice(12,0,-1);return a};
+if(!Array.isArray(S.order)||S.order.length!==25)S.order=shuffle();
+if(!Array.isArray(S.on))S.on=[];
+const $=id=>document.getElementById(id);
+const isOn=c=>c===12||S.on.includes(c);
+const wins=()=>LINES.filter(l=>l.every(isOn));
+const render=()=>{const t=T[S.lang],es=S.lang==='es',W=wins(),winCells=new Set(W.flat());
+ document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;
+ $('newc').textContent=t.newc;$('clear').textContent=t.clear;$('print').textContent=t.print;
+ document.querySelectorAll('[data-l]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.lang));
+ $('grid').innerHTML=S.order.map((q,c)=>{if(q<0)return `<button class="sq free${winCells.has(c)?' win':''}" data-c="12" aria-label="${t.free}"><img src="symbols/star.svg" alt=""><span class="w">${t.free}</span></button>`;
+  const d=Q[q];return `<button class="sq${isOn(c)?' on':''}${S.sel===c?' sel':''}${winCells.has(c)?' win':''}" data-c="${c}" aria-label="${es?d[2]:d[1]}, ${es?d[4]:d[3]}${isOn(c)?', ✓':''}"><img src="symbols/${d[0]}.svg" alt=""><span class="w">${es?d[2]:d[1]}</span><span class="r">${es?d[4]:d[3]}</span></button>`}).join('');
+ let h=W.length?`<div class="bingo"><strong>${t.bingo}</strong>${t.bingoP}</div>`:'';
+ const q=S.sel>=0?S.order[S.sel]:null;
+ if(q===null||S.sel<0){h+=`<h2>${t.h1}</h2><p>${t.pick}</p>`}
+ else if(q<0){h+=`<div class="big"><img src="symbols/star.svg" alt=""><h2>${t.freeT}</h2></div>`}
+ else{const d=Q[q];h+=`<div class="big"><img src="symbols/${d[0]}.svg" alt=""><div><h2>${(es?d[2]:d[1]).toUpperCase()}</h2></div></div><p class="rt">${es?d[4]:d[3]}</p><p>${es?d[6]:d[5]}</p><button class="mark" id="mark">${isOn(S.sel)?t.unmark:t.mark}</button>`}
+ h+=`<p class="how">${t.how}</p><p class="how">${t.saved}</p>`;$('panel').innerHTML=h};
+$('grid').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;const c=+b.dataset.c;
+ if(S.sel===c&&c!==12){const k=S.on.indexOf(c);if(k<0)S.on.push(c);else S.on.splice(k,1);save()}
+ S.sel=c;render()});
+$('panel').addEventListener('click',e=>{if(e.target.closest('#mark')){const c=S.sel,k=S.on.indexOf(c);if(k<0)S.on.push(c);else S.on.splice(k,1);save();render()}});
+$('newc').addEventListener('click',()=>{S.order=shuffle();S.on=[];S.sel=-1;save();render()});
+$('clear').addEventListener('click',()=>{S.on=[];save();render()});
+$('print').addEventListener('click',()=>{try{window.print()}catch(e){}});
+document.querySelector('.ctrls').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(b){S.lang=b.dataset.l;save();render()}});
+render();
+}
+</script>
+</body>
+</html>

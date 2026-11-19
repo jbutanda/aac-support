@@ -46,3 +46,21 @@ Twelve flip cards (9 myths, 3 facts) about AAC, English and Spanish, with a gues
     https://jbutanda.github.io/aac-support/myth-or-fact/
 
 Embed in Google Sites the same way as the talker (Insert > Embed > By URL); about 700 px tall on desktop.
+
+## VOICE Check (voice-check/)
+
+Five-step daily device check for teachers and paras (Visible, On, In reach, Charged, Every setting), English and Spanish, with a one-line fix for every "not yet." About 650 px tall when embedded.
+
+    https://jbutanda.github.io/aac-support/voice-check/
+
+## What Would You Do? (what-would-you-do/)
+
+Twelve real-life scenarios (classroom staff, families, behavior team, a transition-age student in the community), three choices each with coaching on every choice and a research note. Filters by audience. English and Spanish. About 1000 px tall when embedded.
+
+    https://jbutanda.github.io/aac-support/what-would-you-do/
+
+## Modeling Bingo (modeling-bingo/)
+
+Family bingo card: 24 home routines, each paired with one core word and a modeling tip, plus a free square. Tap a square for the tip, stamp it when you model it, five in a row is bingo. New card, clear and print buttons; stamps are saved in the browser. English and Spanish. About 900 px tall when embedded.
+
+    https://jbutanda.github.io/aac-support/modeling-bingo/
