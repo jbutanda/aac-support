@@ -25,7 +25,8 @@
 .pg h2{font-size:clamp(30px,5vw,42px);margin:0 0 6px}
 .pg p{font-size:clamp(19px,2.6vw,23px);max-width:34ch;margin:0 auto 14px}
 .nav{display:flex;justify-content:space-between;gap:10px;margin-top:12px}
-.minib{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;max-width:520px;margin:0 auto 10px;background:#1d2026;border-radius:16px;padding:10px}
+.bdev{text-align:left;margin:0 0 12px}
+.bdev .gw{overflow-x:auto}
 .say{font:inherit;font-weight:700;min-height:44px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
 .ch{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:0 auto}
 .ch button{font:inherit;font-weight:700;font-size:19px;border-radius:20px;border:3px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;padding:14px;display:grid;gap:8px;justify-items:center}
@@ -50,6 +51,8 @@
   <p class="foot" id="foot"></p>
 </main>
 <script src="../shared/core.js"></script>
+<script src="../shared/vocab.js"></script>
+<script src="../shared/device.js"></script>
 <script>
 {
 const {byId,sym,speak,hush,voiceSelect,langToggle,keyHtml,confetti,esc}=AAC;
@@ -76,7 +79,7 @@ const total=P.length+Q.length+1;
 const render=()=>{const t=T[S.lang],es=S.lang==='es';document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=es?'Voz':'Voice';
  const dots=`<div class="dots noprint">${Array.from({length:total},(_,k)=>`<i class="${k<=S.i?'on':''}"></i>`).join('')}</div>`;
  if(S.i<P.length){const p=P[S.i],[h,x]=p[S.lang];
-  $('card').innerHTML=dots+`<div class="pg"><div class="art"><img src="${p.img}" alt=""></div><h2>${h}</h2><p>${x}</p>${p.board?`<div class="minib">${['i','you','go','play','more','like'].map(id=>keyHtml(byId[id],S.lang)).join('')}</div>`:''}<button class="say" id="read">${t.read}</button></div><div class="nav"><button class="btn ghost" id="back"${S.i===0?' disabled':''}>${t.back}</button><button class="btn go" id="next">${t.next}</button></div>`;return}
+  $('card').innerHTML=dots+`<div class="pg"><div class="art"><img src="${p.img}" alt=""></div><h2>${h}</h2><p>${x}</p>${p.board?`<div class="device bdev"><div class="gw"><div id="bdv"></div></div><p class="swipe">${es?'Desliza para ver todo el tablero.':'Swipe to see the whole board.'}</p></div>`:''}<button class="say" id="read">${t.read}</button></div><div class="nav"><button class="btn ghost" id="back"${S.i===0?' disabled':''}>${t.back}</button><button class="btn go" id="next">${t.next}</button></div>`;if(p.board)AAC.Device($('bdv'),{lang:()=>S.lang,onPick:w=>speak(w[S.lang],S.lang)});return}
  const qi=S.i-P.length;
  if(qi<Q.length){const q=Q[qi];
   $('card').innerHTML=dots+`<div class="pg"><h2>${t.quiz}</h2><p>${es?q.es:q.en}</p><div class="ch">${q.a.map((a,j)=>`<button data-a="${j}" class="${S.picked===j?(a.ok?'ok':'bad'):''}"><img src="${a.img}" alt="">${es?a.es:a.en}</button>`).join('')}</div><p style="margin-top:14px;font-weight:700;min-height:1.4em">${S.picked!=null?(q.a[S.picked].ok?t.got:t.try):''}</p></div><div class="nav"><button class="btn ghost" id="back">${t.back}</button><button class="btn go" id="next"${S.picked!=null&&q.a[S.picked].ok?'':' disabled'}>${qi===Q.length-1?t.badge:t.next}</button></div>`;return}
@@ -85,7 +88,7 @@ $('card').addEventListener('click',e=>{const t=T[S.lang];
  if(e.target.closest('#next')){hush();S.i++;S.picked=null;render();if(S.i===total-1)setTimeout(()=>confetti($('card'),120),150);return}
  if(e.target.closest('#back')){hush();S.i=Math.max(0,S.i-1);S.picked=null;render();return}
  if(e.target.closest('#read')){const[h,x]=P[S.i][S.lang];speak(h+'. '+x,S.lang);return}
- const k=e.target.closest('.k');if(k){speak(byId[k.dataset.id][S.lang],S.lang);return}
+ if(e.target.closest('#bdv'))return;
  const a=e.target.closest('[data-a]');if(a){S.picked=+a.dataset.a;render();const q=Q[S.i-P.length];speak(q.a[S.picked].ok?t.got:t.try,S.lang);return}
  if(e.target.closest('#print')){try{window.print()}catch(err){}return}
  if(e.target.closest('#again')){S.i=0;S.picked=null;render()}});
