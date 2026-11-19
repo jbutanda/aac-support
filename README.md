@@ -38,3 +38,11 @@ Deep links open a mode directly: `talker/#free`, `talker/#challenge`, `talker/#m
 To put it on the Google Site: Insert > Embed > By URL, paste the address above, then drag the embed box tall enough to show the whole board (about 900 px on desktop).
 
 Symbols are OpenMoji (CC BY-SA 4.0); the credit line is in the page footer and in `talker/CREDITS.md`. Keep both if the page is copied or changed.
+
+## Myth or Fact? (myth-or-fact/)
+
+Twelve flip cards (9 myths, 3 facts) about AAC, English and Spanish, with a guess-and-flip game, score, "Read it to me" audio, a "Try this" tip, a research citation on each card, and a button that opens the matching Try a Talker mode. Lives at:
+
+    https://jbutanda.github.io/aac-support/myth-or-fact/
+
+Embed in Google Sites the same way as the talker (Insert > Embed > By URL); about 700 px tall on desktop.
