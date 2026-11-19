@@ -67,7 +67,7 @@ Family bingo card: 24 home routines, each paired with one core word and a modeli
 
 ## The demo AAC device (shared/device.js)
 
-Try an AAC Device (`talker/`) and Walk in Their Shoes use a robust demo device: the 60 core words on the home page, a row of folder keys (Little words, Questions, People, Feelings, Food, Places, Activities, Actions, Time, Describe, Chat) and an ABC keyboard for spelling. Folder words live in `shared/vocab.js` (about 190 words, English and Spanish). The `talker/` folder name is kept so existing links keep working.
+Try an AAC Device (`talker/`), Walk in Their Shoes, Find It Fast and AAC Buddy all use the same robust demo device: the 60 core words on the home page, a row of folder keys (Little words, Questions, People, Feelings, Food, Places, Activities, Actions, Time, Describe, Chat) and an ABC keyboard for spelling. Folder words live in `shared/vocab.js` (about 190 words, English and Spanish). The `talker/` folder name is kept so existing links keep working.
 
 ## Prototype tools (shared foundation)
 
@@ -75,7 +75,7 @@ These ten load `shared/core.js` and `shared/base.css`, so the board words, voice
 
 | Folder | For | What it does |
 | --- | --- | --- |
-| `find-it-fast/` | Staff | Timed 10-word hunt on the 60-word board; best time saved |
+| `find-it-fast/` | Staff | Timed 10-word hunt on the full device: core words plus folder words, with folder hints; best time saved |
 | `walk-in-their-shoes/` | Staff trainings | Partner answers questions using only the AAC device against a 60-second timer, then a debrief |
 | `pd-path/` | Staff | Five stops, a six-question check, printable certificate; set `FORM_URL` to log completions |
 | `modeling-tracker/` | Staff | "I modeled!" counter with a daily goal ring, quick word chips, week bars; data stays in the browser |

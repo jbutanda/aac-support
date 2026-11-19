@@ -9,84 +9,97 @@
 <link rel="stylesheet" href="../shared/base.css">
 <style>
 /* VOICE playful, a race against the clock at a staff training
-   IDEA an arcade timing game played on a real AAC device board
-   PICTURE the board in its dark housing with a big "Find: HELP" scoreboard above it
-   COLOUR orange band, charcoal housing, Fitzgerald key colours
+   IDEA an arcade timing game played on the same robust AAC device as every other tool
+   PICTURE the device in its dark housing with a big "Find: PARK" scoreboard above it
+   COLOUR orange band, charcoal housing, Fitzgerald key colours, orange folders
    TYPE Atkinson Hyperlegible
-   LAYOUT scoreboard row, board; phone scrolls the board sideways */
+   LAYOUT scoreboard row, device; phone scrolls the device sideways */
 :root{--band:#e8590c;--maxw:1080px}
-.score{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;margin-bottom:14px}
+.score{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center}
 .find{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .find small{font-weight:700;color:var(--soft);font-size:16px}
 .find b{font-size:clamp(34px,6vw,56px);line-height:1;letter-spacing:-.01em;text-transform:uppercase}
+.where{font-size:14px;font-weight:700;color:var(--soft);margin:6px 0 0;min-height:1.4em}
 .stat{background:var(--tint);border-radius:16px;padding:8px 14px;text-align:center;min-width:92px}
 .stat b{display:block;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
 .stat span{font-size:13px;color:var(--soft);font-weight:700}
 .say{font:inherit;font-weight:700;min-height:44px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
 .gw{overflow-x:auto}
-.grid{grid-template-columns:repeat(10,minmax(0,1fr))}
-.k.hint{outline:4px dashed #fff;outline-offset:-4px}
+.k.hint,.fk.hint{outline:4px dashed #fff;outline-offset:-4px;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{filter:brightness(1.15)}}
 .k.right{box-shadow:0 0 0 4px #fff,0 0 22px 6px #69db7c;transform:scale(1.06)}
 .k.wrong{animation:shake .35s}
 .start{text-align:center;padding:10px 0 4px}
-.start p{max-width:52ch;margin:6px auto 16px}
-.modes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.start p{max-width:56ch;margin:6px auto 16px}
+.modes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .big{font-size:clamp(56px,10vw,88px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .res img{width:84px;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
-@media(max-width:640px){.grid{min-width:600px;gap:4px}.score{grid-template-columns:1fr auto}.score .stat:last-child{display:none}}
+@media(max-width:640px){.score{grid-template-columns:1fr auto}.score .stat:last-child{display:none}}
 </style>
 </head>
 <body>
 <header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
-  <div class="top"><div><h1 id="h1">Find It Fast</h1><p class="sub" id="sub"></p></div>
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
 </div></header>
 <main class="wrap">
   <section class="card" id="top"></section>
-  <section class="card"><div class="device"><div class="gw"><div class="grid" id="grid"></div></div></div></section>
+  <section class="card"><div class="device"><div class="gw"><div id="dv"></div></div><p class="swipe" id="swipe"></p></div></section>
   <p class="foot" id="foot"></p>
 </main>
 <script src="../shared/core.js"></script>
+<script src="../shared/vocab.js"></script>
+<script src="../shared/device.js"></script>
 <script>
 {
-const {W,byId,sym,speak,voiceSelect,confetti,langToggle,store,keyHtml,hush}=AAC;
+const {W,byId,sym,speak,voiceSelect,confetti,langToggle,store}=AAC;
+const FOLD=window.AAC_FOLDERS;
 const T={
- en:{sub:'Ten words, one board. Find each word as fast as you can and build the motor memory you need to model without hunting.',find:'Find',time:'Time',best:'Best',round:'Word',start:'Start',timed:'Race the clock',practice:'Practice, no timer',hear:'Hear it',
-  intro:'Knowing where words live is what lets you model in the moment. Tap the word shown at the top. Two misses and the right color zone lights up.',
+ en:{h1:'Find It Fast',sub:'Ten words on a real AAC device. Some are on the home page, some are inside folders. Find each one as fast as you can.',find:'Find',time:'Time',best:'Best',round:'Word',start:'Start',timed:'Race the clock',practice:'Practice, no timer',hear:'Hear it',
+  sc:['Core + folders','Core words only'],inF:f=>`Hint: it’s in the ${f} folder.`,core:'Hint: it’s on the home page (Core).',
+  intro:'Knowing where words live is what lets you model in the moment. Tap the word shown at the top. If it’s in a folder, open the folder first. After a correct word the device goes back home, like most real devices do. Two misses and a hint lights up.',
   doneT:'Done!',doneP:(t,b)=>`${t} seconds. ${b?'New personal best!':'Your best is saved on this device.'}`,pdone:'Nice practice. Try racing the clock next.',again:'Play again',
-  foot:'Words and colors match the RUSD Try an AAC Device demo board, not any specific app. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
- es:{sub:'Diez palabras, un tablero. Encuentre cada palabra lo más rápido que pueda y desarrolle la memoria motora para modelar sin buscar.',find:'Busque',time:'Tiempo',best:'Mejor',round:'Palabra',start:'Empezar',timed:'Contra el reloj',practice:'Práctica, sin reloj',hear:'Escuchar',
-  intro:'Saber dónde está cada palabra le permite modelar en el momento. Toque la palabra que aparece arriba. Con dos errores se ilumina la zona de color correcta.',
+  foot:'Uses the same demo AAC device as every RUSD tool, not any specific app. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Encuéntrala rápido',sub:'Diez palabras en un dispositivo de CAA real. Algunas están en la página de inicio y otras dentro de carpetas. Encuentre cada una lo más rápido que pueda.',find:'Busque',time:'Tiempo',best:'Mejor',round:'Palabra',start:'Empezar',timed:'Contra el reloj',practice:'Práctica, sin reloj',hear:'Escuchar',
+  sc:['Inicio + carpetas','Solo palabras clave'],inF:f=>`Pista: está en la carpeta ${f}.`,core:'Pista: está en la página de inicio.',
+  intro:'Saber dónde está cada palabra le permite modelar en el momento. Toque la palabra que aparece arriba. Si está en una carpeta, abra la carpeta primero. Después de cada palabra correcta el dispositivo regresa al inicio, como la mayoría de los dispositivos reales. Con dos errores se ilumina una pista.',
   doneT:'¡Listo!',doneP:(t,b)=>`${t} segundos. ${b?'¡Nuevo récord personal!':'Su mejor tiempo se guarda en este dispositivo.'}`,pdone:'Buena práctica. Intente contra el reloj la próxima vez.',again:'Jugar otra vez',
-  foot:'Las palabras y los colores coinciden con el tablero de demostración Try an AAC Device de RUSD, no con una aplicación específica. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
-const S={lang:'en',mode:'timed',phase:'start',round:0,targets:[],miss:0,t0:0,elapsed:0,timer:null};
+  foot:'Usa el mismo dispositivo de CAA de demostración que todas las herramientas de RUSD, no una aplicación específica. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const S={lang:'en',mode:'timed',scope:'all',phase:'start',round:0,targets:[],miss:0,t0:0,elapsed:0,timer:null,newBest:false};
 const $=id=>document.getElementById(id);
-const pick=()=>{const a=W.map(w=>w.id);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,10)};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=()=>{const core=shuffle(W.map(w=>w.id));if(S.scope==='core')return core.slice(0,10);
+ const fw=shuffle(FOLD.flatMap(f=>f.items.map(it=>it.id)));return shuffle(core.slice(0,5).concat(fw.slice(0,5)))};
+const bestKey=()=>'fif-best-'+S.scope;
 const sec=()=>((S.phase==='play'?performance.now()-S.t0:S.elapsed)/1000).toFixed(1);
-const bestKey=()=>'fif-best';
-const grid=()=>{$('grid').innerHTML=W.map(w=>keyHtml(w,S.lang)).join('')};
-const top=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=T[S.lang].find==='Find'?'Find It Fast':'Encuéntrala rápido';$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=S.lang==='es'?'Voz':'Voice';
+const folderName=id=>{const f=FOLD.find(x=>id.startsWith('f:'+x.id+':'));return f?f[S.lang]:null};
+const clearHints=()=>document.querySelectorAll('#dv .hint').forEach(k=>k.classList.remove('hint'));
+let dev;
+const hint=()=>{const id=S.targets[S.round],f=dev.folderOf(id),t=T[S.lang];
+ if(dev.page!==f){const fk=document.querySelector(`#dv .fk[data-f="${f}"]`);if(fk)fk.classList.add('hint')}else{const k=dev.keyEl(id);if(k)k.classList.add('hint')}
+ const w=$('where');if(w)w.textContent=f==='core'?t.core:t.inF(folderName(id))};
+dev=AAC.Device($('dv'),{lang:()=>S.lang,
+ onNav:()=>{if(S.phase==='play'&&S.miss>=(S.mode==='practice'?1:2))hint()},
+ onPick:(w,el)=>{speak(w[S.lang],S.lang);if(S.phase!=='play'||w.id.startsWith('t:'))return;
+  if(w.id===S.targets[S.round]){if(el)el.classList.add('right');clearHints();S.miss=0;S.round++;
+   setTimeout(()=>{if(S.round>=10){S.elapsed=performance.now()-S.t0;clearInterval(S.timer);S.phase='done';if(S.mode==='timed'){const s=+(S.elapsed/1000).toFixed(1),b0=store.get(bestKey(),null);S.newBest=!b0||s<b0;if(S.newBest)store.set(bestKey(),s)}dev.home();top();setTimeout(()=>confetti($('top'),110),120)}else{dev.home();top()}},320);return}
+  if(el){el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong')}S.miss++;if(S.miss>=(S.mode==='practice'?1:2))hint()}});
+const top=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=S.lang==='es'?'Voz':'Voice';
+ $('swipe').textContent=S.lang==='es'?'Desliza para ver todo el tablero, o gira el teléfono.':'Swipe to see the whole board, or turn your phone sideways.';
  const best=store.get(bestKey(),null);
- if(S.phase==='start'){$('top').innerHTML=`<div class="start"><h2>${t.find}... ${S.lang==='es'?'¿lista?':'ready?'}</h2><p>${t.intro}</p><div class="modes"><button class="pill" data-m="timed" aria-pressed="${S.mode==='timed'}">${t.timed}</button><button class="pill" data-m="practice" aria-pressed="${S.mode==='practice'}">${t.practice}</button></div><button class="btn go" id="go">${t.start}</button>${best?`<p class="muted small" style="margin-top:12px">${t.best}: ${best}s</p>`:''}</div>`;return}
- if(S.phase==='done'){const nb=S.newBest;$('top').innerHTML=`<div class="start res"><img src="${sym('trophy')}" alt=""><h2>${t.doneT}</h2>${S.mode==='timed'?`<div class="big">${S.elapsed? (S.elapsed/1000).toFixed(1):'0'}s</div><p>${t.doneP((S.elapsed/1000).toFixed(1),nb)}</p>`:`<p>${t.pdone}</p>`}<button class="btn go" id="again">${t.again}</button></div>`;return}
+ if(S.phase==='start'){$('top').innerHTML=`<div class="start"><h2>${t.find}... ${S.lang==='es'?'¿lista?':'ready?'}</h2><p>${t.intro}</p><div class="modes">${['all','core'].map((s,i)=>`<button class="pill" data-s="${s}" aria-pressed="${S.scope===s}">${t.sc[i]}</button>`).join('')}</div><div class="modes"><button class="pill" data-m="timed" aria-pressed="${S.mode==='timed'}">${t.timed}</button><button class="pill" data-m="practice" aria-pressed="${S.mode==='practice'}">${t.practice}</button></div><button class="btn go" id="go">${t.start}</button>${best?`<p class="muted small" style="margin-top:12px">${t.best}: ${best}s</p>`:''}</div>`;return}
+ if(S.phase==='done'){$('top').innerHTML=`<div class="start res"><img src="${sym('trophy')}" alt=""><h2>${t.doneT}</h2>${S.mode==='timed'?`<div class="big">${(S.elapsed/1000).toFixed(1)}s</div><p>${t.doneP((S.elapsed/1000).toFixed(1),S.newBest)}</p>`:`<p>${t.pdone}</p>`}<button class="btn go" id="again">${t.again}</button></div>`;return}
  const w=byId[S.targets[S.round]];
- $('top').innerHTML=`<div class="score"><div class="find"><small>${t.find}</small><b>${w[S.lang]}</b><button class="say" id="hear">${t.hear}</button></div><div class="stat"><b>${S.round+1}/10</b><span>${t.round}</span></div>${S.mode==='timed'?`<div class="stat"><b id="clock">${sec()}</b><span>${t.time}</span></div>`:'<div></div>'}</div>`};
-const tick=()=>{const c=$('clock');if(c)c.textContent=sec()};
-const begin=()=>{S.targets=pick();S.round=0;S.miss=0;S.phase='play';S.t0=performance.now();clearInterval(S.timer);if(S.mode==='timed')S.timer=setInterval(tick,100);top();grid()};
-$('top').addEventListener('click',e=>{const m=e.target.closest('[data-m]');if(m){S.mode=m.dataset.m;top();return}
- if(e.target.closest('#go')||e.target.closest('#again')){if(e.target.closest('#again')){S.phase='start';top();return}begin();return}
- if(e.target.closest('#hear')){speak(byId[S.targets[S.round]][S.lang],S.lang)}});
-$('grid').addEventListener('click',e=>{const b=e.target.closest('.k');if(!b)return;const w=byId[b.dataset.id];speak(w[S.lang],S.lang);if(S.phase!=='play')return;
- const target=S.targets[S.round];
- if(w.id===target){b.classList.add('right');setTimeout(()=>b.classList.remove('right'),380);document.querySelectorAll('.k.hint').forEach(k=>k.classList.remove('hint'));S.miss=0;S.round++;
-  if(S.round>=10){S.elapsed=performance.now()-S.t0;clearInterval(S.timer);S.phase='done';if(S.mode==='timed'){const s=+(S.elapsed/1000).toFixed(1),b0=store.get(bestKey(),null);S.newBest=!b0||s<b0;if(S.newBest)store.set(bestKey(),s)}top();setTimeout(()=>confetti($('top'),110),120);return}
-  top();return}
- b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');S.miss++;
- if(S.miss>=(S.mode==='practice'?1:2)){const c=byId[target].c;document.querySelectorAll('.k').forEach(k=>k.classList.toggle('hint',byId[k.dataset.id].c===c))}});
-langToggle($('langs'),()=>S.lang,l=>{S.lang=l;fill();top();grid()});
+ $('top').innerHTML=`<div class="score"><div><div class="find"><small>${t.find}</small><b>${w[S.lang]}</b><button class="say" id="hear">${t.hear}</button></div><p class="where" id="where"></p></div><div class="stat"><b>${S.round+1}/10</b><span>${t.round}</span></div>${S.mode==='timed'?`<div class="stat"><b id="clock">${sec()}</b><span>${t.time}</span></div>`:'<div></div>'}</div>`};
+const begin=()=>{S.targets=pick();S.round=0;S.miss=0;S.phase='play';S.t0=performance.now();clearInterval(S.timer);if(S.mode==='timed')S.timer=setInterval(()=>{const c=$('clock');if(c)c.textContent=sec()},100);dev.home();top()};
+$('top').addEventListener('click',e=>{const m=e.target.closest('[data-m]'),s=e.target.closest('[data-s]');if(m){S.mode=m.dataset.m;top();return}if(s){S.scope=s.dataset.s;top();return}
+ if(e.target.closest('#go')){begin();return}
+ if(e.target.closest('#again')){S.phase='start';top();return}
+ if(e.target.closest('#hear'))speak(byId[S.targets[S.round]][S.lang],S.lang)});
 const fill=voiceSelect($('voice'),()=>S.lang);
+langToggle($('langs'),()=>S.lang,l=>{S.lang=l;fill();top();dev.render()});
 $('deco').innerHTML=[['stopwatch',10,14,64,-8],['target',46,56,58,10],['fire',78,12,50,-6],['star',30,62,40,12],['trophy',88,58,46,-10]].map(([n,x,y,z,r],i)=>`<img src="${sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
-top();grid();
+top();
 }
 </script>
 </body>
