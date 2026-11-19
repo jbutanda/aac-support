@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAC Awareness Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA October as a 31-day word calendar plus a friendly race between schools
+   LAYOUT district goal meter, school leaderboard (bars + table view), then the word calendar with stamps and badges */
+:root{--band:#0ca678;--maxw:1100px;--decol:70%;--bar:light-dark(#2a78d6,#3987e5)}
+.sample{display:flex;gap:12px;align-items:center;background:#fff4e6;color:#4a2300;border-radius:18px;padding:12px 16px;margin-bottom:16px}
+.sample img{width:34px}.sample p{margin:0}
+.goal{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin-bottom:6px}
+.goal .num{font-size:clamp(40px,7vw,64px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.goal .lab{color:var(--soft);font-weight:700}
+.meter{height:26px;border-radius:999px;background:var(--tint);overflow:hidden;position:relative;margin-top:8px}
+.meter i{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(90deg,#20c997,#0ca678);transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.meter b{position:absolute;right:12px;top:2px;font-size:14px}
+.lb{margin-top:18px}
+.lb h2,.cal h2{display:flex;align-items:center;gap:10px}
+.lb h2 img,.cal h2 img{width:34px}
+.rows{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.r{display:grid;grid-template-columns:210px 1fr;gap:12px;align-items:center;position:relative}
+.r .nm{font-weight:700;text-align:right;font-size:15px;display:flex;justify-content:flex-end;align-items:center;gap:6px}
+.r .nm img{width:24px}
+.r .tr{position:relative;height:30px}
+.r .b{position:absolute;left:0;top:3px;bottom:3px;background:var(--bar);border-radius:0 4px 4px 0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.r .v{position:absolute;top:4px;font-weight:700;font-size:15px;white-space:nowrap}
+.r:hover .b{filter:brightness(1.1)}
+.tip{position:fixed;pointer-events:none;background:#16181d;color:#fff;border-radius:10px;padding:6px 10px;font-size:14px;z-index:20;display:none}
+details{margin-top:12px}
+table{border-collapse:collapse;width:100%;margin-top:8px}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+.log{margin-top:14px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 14px}
+.bd{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 14px 6px 6px;background:var(--tint);font-weight:700;opacity:.45}
+.bd img{width:34px;background:#fff;border-radius:50%;padding:4px}
+.bd.on{opacity:1;background:#c3fae8;color:#063d2c;animation:pop .5s cubic-bezier(.2,1.8,.4,1)}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.day{font:inherit;position:relative;border:0;border-radius:16px;background:var(--tint);color:var(--ink);cursor:pointer;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:96px;transition:transform .15s}
+.day:hover{transform:translateY(-2px)}
+.day .d{position:absolute;left:8px;top:5px;font-size:12px;font-weight:700;color:var(--soft)}
+.day img{width:40px;margin-top:10px}
+.day .w{font-weight:700;font-size:14px}
+.day.done::after{content:'✓';position:absolute;right:6px;top:4px;width:24px;height:24px;border-radius:50%;background:#0ca678;color:#fff;font-size:14px;display:grid;place-items:center;animation:pop .4s cubic-bezier(.2,1.8,.4,1)}
+.day.sel{box-shadow:0 0 0 3px #0ca678}
+.dtl{margin-top:14px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:linear-gradient(135deg,#e6fcf5,#fff 70%);border-radius:22px;padding:16px 18px;color:#16181d}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .dtl{background:linear-gradient(135deg,#0f2e25,#1b1d23 70%);color:#eceef2}}
+.dtl .k{width:110px;aspect-ratio:1/1}
+.dtl .k img{width:58%}
+.dtl h3{margin:0 0 4px;font-size:24px}
+.dtl p{margin:0 0 10px;font-size:18px}
+@media(max-width:640px){.r{grid-template-columns:110px 1fr}.r .nm{font-size:13px}.days{grid-template-columns:repeat(4,minmax(0,1fr))}.dtl{grid-template-columns:1fr;text-align:center}.dtl .k{margin:0 auto}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card" id="race"></section>
+  <section class="card cal" id="cal"></section>
+  <p class="foot" id="foot"></p>
+</main>
+<div class="tip" id="tip"></div>
+<script src="../shared/core.js"></script>
+<script>
+/* SETUP: publish a Google Sheet with two columns, School and Models (File > Share > Publish to web > CSV)
+   and paste the link below. FORM_URL is the Google Form staff use to log models. GOAL is the district target. */
+const SHEET_CSV_URL='',FORM_URL='',GOAL=10000;
+const {esc,sym,byId,speak,confetti}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),sel=null,data=null,sample=true,done=AAC.store.get('ac-done',[]);
+const T={en:{h1:'AAC Awareness Challenge',sub:'October is AAC Awareness Month. One core word a day, and a friendly race to see which school models the most.',vlab:'Voice',
+ sample:'Sample numbers and school names. Connect the Google Sheet to show real counts.',goal:'models logged across the district',of:'Goal: {g}',
+ lb:'School leaderboard',table:'Show as a table',school:'School',models:'Models',log:'Log your models',
+ cal:'31 days, 31 words',calp:'Tap a day to see the word and an idea for using it. Mark it done when your class tries it.',mark:'We did it!',unmark:'Undo',hear:'Hear it',
+ badges:[[7,'One week'],[14,'Two weeks'],[21,'Three weeks'],[31,'The whole month']],foot:'Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+es:{h1:'Reto de concientización de CAA',sub:'Octubre es el Mes de Concientización de la CAA. Una palabra clave al día y una competencia amistosa para ver qué escuela modela más.',vlab:'Voz',
+ sample:'Números y nombres de escuelas de ejemplo. Conecte la hoja de Google para mostrar datos reales.',goal:'modelos registrados en el distrito',of:'Meta: {g}',
+ lb:'Tabla de escuelas',table:'Ver como tabla',school:'Escuela',models:'Modelos',log:'Registre sus modelos',
+ cal:'31 días, 31 palabras',calp:'Toque un día para ver la palabra y una idea para usarla. Márquelo cuando su clase lo intente.',mark:'¡Lo hicimos!',unmark:'Deshacer',hear:'Escuchar',
+ badges:[[7,'Una semana'],[14,'Dos semanas'],[21,'Tres semanas'],[31,'Todo el mes']],foot:'Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const D=[['hi','Greet everyone who comes in.','Saluden a todos los que entren.'],['go','Play ready, set, go games.','Jueguen a "en sus marcas, listos, ya".'],['more','At snack, give a little at a time.','En la merienda, den poquito a poco.'],['stop','Freeze dance!','¡Baile de estatuas!'],['help','Model it when you need help too.','Modélenlo cuando ustedes necesiten ayuda.'],['want','Offer two choices.','Ofrezcan dos opciones.'],['like','Talk about favorite things.','Hablen de sus cosas favoritas.'],
+['look','Point out something cool.','Señalen algo interesante.'],['i','Share something about yourself.','Compartan algo sobre ustedes.'],['you','Ask about someone else.','Pregunten por otra persona.'],['play','Recess and centers.','Recreo y centros.'],['turn','Take turns in a game.','Tomen turnos en un juego.'],['open','Containers, doors and books.','Recipientes, puertas y libros.'],['eat','Lunch talk.','Plática en el almuerzo.'],
+['drink','Water breaks.','Descansos para tomar agua.'],['alldone','At the end of each activity.','Al final de cada actividad.'],['again','Favorite songs on repeat.','Canciones favoritas otra vez.'],['big','Compare sizes.','Comparen tamaños.'],['little','Go on a tiny things hunt.','Busquen cosas pequeñitas.'],['happy','Name happy moments.','Nombren momentos felices.'],['sad','Read a story with a sad part.','Lean un cuento con una parte triste.'],
+['feel','Feelings check-in.','Revisión de sentimientos.'],['what','Mystery bag.','Bolsa misteriosa.'],['where','Hide a toy and look for it.','Escondan un juguete y búsquenlo.'],['who','Guess who from photos.','Adivinen quién con fotos.'],['different','Spot the difference.','Encuentren la diferencia.'],['same','Matching games.','Juegos de pares.'],['put','Clean-up time.','Hora de recoger.'],
+['in','In the bin, in the bag.','En la caja, en la bolsa.'],['up','Jump and stretch.','Salten y estírense.'],['good','Celebrate the month!','¡Celebren el mes!']];
+const SAMPLE=[['Sample Elementary A',1840],['Sample Elementary B',1515],['Sample Middle C',1260],['Sample Elementary D',1190],['Sample High E',870],['Sample Elementary F',760],['Sample Middle G',540],['Sample Elementary H',415]];
+const t=k=>T[L][k],fmt=n=>n.toLocaleString(L==='es'?'es-US':'en-US');
+async function load(){data=SAMPLE;sample=true;if(!SHEET_CSV_URL)return;try{const r=await fetch(SHEET_CSV_URL);const txt=await r.text();const rows=txt.trim().split(/\r?\n/).slice(1).map(l=>{const m=l.match(/^"?([^",]*)"?,\s*"?([\d,]+)"?/);return m?[m[1],+m[2].replace(/,/g,'')]:null}).filter(Boolean);if(rows.length){data=rows;sample=false}}catch(e){}}
+function race(){const rows=[...data].sort((a,b)=>b[1]-a[1]),max=Math.max(...rows.map(r=>r[1])),tot=rows.reduce((a,r)=>a+r[1],0);
+ $('race').innerHTML=`${sample?`<div class="sample"><img src="${sym('bulb')}" alt=""><p>${t('sample')}</p></div>`:''}
+ <div class="goal"><span class="num">${fmt(tot)}</span><div><span class="lab">${t('goal')}</span><div class="meter"><i id="mt" style="width:0"></i><b>${t('of').replace('{g}',fmt(GOAL))}</b></div></div></div>
+ <div class="lb"><h2><img src="${sym('trophy')}" alt="">${t('lb')}</h2><div class="rows">${rows.map(([n,v],i)=>`<div class="r" data-i="${i}"><span class="nm">${i===0?`<img src="${sym('medal')}" alt="">`:''}${esc(n)}</span><div class="tr"><i class="b" style="width:0" data-w="${v/max*82}"></i><span class="v" data-w="${v/max*82}">${fmt(v)}</span></div></div>`).join('')}</div>
+ <details><summary>${t('table')}</summary><table><tr><th>${t('school')}</th><th style="text-align:right">${t('models')}</th></tr>${rows.map(([n,v])=>`<tr><td>${esc(n)}</td><td class="n">${fmt(v)}</td></tr>`).join('')}</table></details>
+ ${FORM_URL?`<a class="btn go log" href="${esc(FORM_URL)}" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex">${t('log')}</a>`:''}</div>`;
+ requestAnimationFrame(()=>{$('mt').style.width=Math.min(100,tot/GOAL*100)+'%';document.querySelectorAll('.r .b').forEach(b=>b.style.width=b.dataset.w+'%');document.querySelectorAll('.r .v').forEach(v=>v.style.left=`calc(${v.dataset.w}% + 8px)`)});
+ const tip=$('tip');document.querySelectorAll('.r').forEach(r=>{r.addEventListener('mousemove',e=>{const [n,v]=rows[+r.dataset.i];tip.style.display='block';tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY-34+'px';tip.textContent=`${n}: ${fmt(v)} ${t('models').toLowerCase()}`});r.addEventListener('mouseleave',()=>tip.style.display='none')})}
+function cal(){const n=done.length;
+ $('cal').innerHTML=`<h2><img src="${sym('calendar')}" alt="">${t('cal')}</h2><p class="muted">${t('calp')}</p>
+ <div class="badges">${t('badges').map(([k,l])=>`<span class="bd ${n>=k?'on':''}"><img src="${sym(k>=31?'trophy':'medal')}" alt="">${esc(l)}</span>`).join('')}</div>
+ <div class="days">${D.map(([id],i)=>{const w=byId[id];return `<button class="day ${done.includes(i)?'done':''} ${sel===i?'sel':''}" data-d="${i}" aria-label="${i+1}: ${esc(w[L])}"><span class="d">${i+1}</span><img src="${w.img}" alt=""><span class="w">${esc(w[L])}</span></button>`}).join('')}</div>
+ <div id="dtl"></div>`;dtl()}
+function dtl(){if(sel==null){$('dtl').innerHTML='';return}const [id,en,es]=D[sel],w=byId[id],on=done.includes(sel);
+ $('dtl').innerHTML=`<div class="dtl">${AAC.keyHtml(w,L,'data-hear="1"')}<div><p class="muted" style="margin:0">${L==='es'?'Octubre':'October'} ${sel+1}</p><h3>${esc(w[L])}</h3><p>${esc(L==='es'?es:en)}</p><div class="row"><button class="btn go" data-a="mark">${on?t('unmark'):t('mark')}</button></div></div></div>`}
+document.addEventListener('click',e=>{const d=e.target.closest('[data-d]');if(d){sel=+d.dataset.d;cal();const w=byId[D[sel][0]];speak(w[L],L);return}
+ const h=e.target.closest('[data-hear]');if(h){speak(byId[D[sel][0]][L],L);return}
+ const a=e.target.closest('[data-a=mark]');if(a){const i=done.indexOf(sel);const before=done.length;if(i<0)done.push(sel);else done.splice(i,1);AAC.store.set('ac-done',done);cal();if([7,14,21,31].includes(done.length)&&done.length>before)confetti($('cal'),90)}});
+function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');race();cal()}
+AAC.deco($('deco'),[['trophy',8,10,60,-8],['calendar',46,58,44,6],['party',80,12,56,8],['medal',28,60,40,-4]]);
+load().then(()=>AAC.page(()=>L,l=>L=l,render));
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+</body>
+</html>

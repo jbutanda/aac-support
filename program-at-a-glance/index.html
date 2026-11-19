@@ -88,5 +88,6 @@ $('deco').innerHTML=[['chart',12,12,60,-8],['clipboard',48,58,46,8],['target',80
 if(SHEET_CSV_URL){fetch(SHEET_CSV_URL).then(r=>r.text()).then(t=>{const d=parse(t);d.length?draw(d,false):draw(SAMPLE,true)}).catch(()=>draw(SAMPLE,true))}else draw(SAMPLE,true);
 }
 </script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
 </body>
 </html>

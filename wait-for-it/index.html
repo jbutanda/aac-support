@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wait For It</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA a patience game: ask, then hold back while the student finds their words. Jump in too soon and you miss what they were about to say
+   LAYOUT stage (student + thinking dots + optional ring) with Ask / Jump in buttons; results chart of your six waits against the 5 to 10 second zone */
+:root{--band:#5c940d;--maxw:900px;--decol:70%}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.hud b{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.part{font-weight:700;border-radius:999px;padding:4px 12px;background:#d8f5a2;color:#2b4a00;font-size:14px}
+.stage{position:relative;border-radius:26px;background:radial-gradient(circle at 50% 40%,#f4fce3,#e9fac8 60%,#d8f5a2);padding:26px 18px 22px;text-align:center;color:#16181d;overflow:hidden}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .stage{background:radial-gradient(circle at 50% 40%,#25331a,#1e2a14 60%,#18230f);color:#eceef2}}
+.qq{font-size:clamp(20px,3vw,26px);font-weight:700;margin:0 auto 14px;max-width:30ch;min-height:2.4em}
+.qq small{display:block;font-size:15px;font-weight:400;opacity:.75}
+.who{position:relative;width:200px;height:200px;margin:0 auto}
+.who svg.ring{position:absolute;inset:0;transform:rotate(-90deg)}
+.who svg.ring circle{fill:none;stroke-width:12}
+.who .bg{stroke:rgba(92,148,13,.18)}
+.who .fg{stroke:#5c940d;stroke-linecap:round;transition:stroke .3s}
+.who .zone{stroke:#94d82d;opacity:.55}
+.av{position:absolute;inset:26px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.av img{width:96px}
+.name{font-weight:700;margin:8px 0 0;font-size:18px}
+.think{position:absolute;right:-6px;top:-4px;background:#fff;border-radius:22px;padding:10px 14px;display:flex;gap:6px;box-shadow:0 6px 14px rgba(0,0,0,.12);opacity:0;transition:opacity .3s}
+.think.on{opacity:1}
+.think i{width:10px;height:10px;border-radius:50%;background:#5c940d;animation:dot 1.2s infinite}
+.think i:nth-child(2){animation-delay:.2s}.think i:nth-child(3){animation-delay:.4s}
+@keyframes dot{40%{transform:translateY(-6px);opacity:.4}}
+.ans{min-height:110px;display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px}
+.ans .k{width:96px;animation:pop .5s cubic-bezier(.2,1.8,.4,1)}
+.ans .k img{width:60%}
+.cue{font-size:18px;min-height:1.6em;margin:6px 0 0;font-weight:700;color:#2b4a00}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .cue{color:#c0eb75}}
+.secs{font-variant-numeric:tabular-nums;font-size:15px;opacity:.75;margin:2px 0 0;min-height:1.4em}
+.btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:16px}
+.btn.jump{background:#f76707;color:#fff}
+.btn.ask{background:#5c940d;color:#fff;font-size:19px;padding:12px 28px}
+.result{margin-top:16px;border-radius:20px;padding:16px 18px;animation:pop .35s cubic-bezier(.2,1.4,.4,1);display:flex;gap:14px;align-items:center;text-align:left}
+.result img{width:52px;flex:none}
+.result.good{background:#ebfbee;color:#0b3d16}
+.result.miss{background:#fff4e6;color:#4a2300}
+.result p{margin:0;font-size:17px}
+.result b{font-size:20px;display:block}
+.chart{margin:10px 0 6px}
+.chart svg{width:100%;height:auto;display:block}
+.chart text{font:14px "Atkinson Hyperlegible",system-ui,sans-serif;fill:var(--soft)}
+.chart .vl{fill:var(--ink);font-weight:700}
+.tip{position:fixed;pointer-events:none;background:#16181d;color:#fff;border-radius:10px;padding:6px 10px;font-size:14px;z-index:20;display:none}
+.sum{font-size:19px}
+details{margin-top:10px}
+table{border-collapse:collapse;width:100%;margin-top:8px}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+.why{background:var(--tint);border-radius:18px;padding:16px;margin-top:14px}
+.why p{margin:0}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card" id="game"></section>
+  <p class="foot" id="foot"></p>
+</main>
+<div class="tip" id="tip"></div>
+<script src="../shared/core.js"></script><script src="../shared/vocab.js"></script><script src="../shared/device.js"></script>
+<script>
+const {esc,sym,byId,speak,hush,confetti}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),r=0,state='ready',t0=0,raf=0,timer=0,waits=[],intro=true;
+const T={en:{h1:'Wait For It',sub:'AAC users often need extra time to find their words. How long do you really wait? Find out, then practice the pause.',vlab:'Voice',
+ round:'Round {a} of {b}',p1:'Part 1: Check yourself',p2:'Part 2: Practice the pause',
+ introh:'Here’s how it works',intro:'You’ll ask a student a question. Then do what you would normally do. If you would repeat the question, give a hint or answer for them, tap Jump in. If you wait long enough, the student will answer on their device.',
+ introp2:'Now the ring is on. Count slowly in your head, breathe, and let the ring fill toward the green zone.',start:'Let’s go',ask:'Ask the question',jump:'Jump in',next:'Next round →',
+ cues:['','Count in your head…','Keep looking at them…','Breathe…','Almost there…'],
+ good:'You waited {s} seconds, and {n} answered!',goodp:'That pause gave {n} time to find the words.',
+ miss:'You jumped in at {s} seconds.',missp:'{n} was about to say “{w}.” Waiting a few more seconds would have let them say it.',
+ endh:'Your waits',avg:'Your average wait: {s} seconds.',zone:'The green band is the 5 to 10 second zone.',
+ sumHi:'You gave students the time they needed. That is a habit worth keeping.',sumLo:'Most of us jump in fast. Classroom research has found adults often wait about a second. With practice, the pause gets easier.',
+ why:'Why it matters: finding a word on an AAC device takes planning and motor steps. When we jump in, students learn that someone else will talk for them. A quiet pause tells them their turn is coming.',
+ table:'Show as a table',tr:'Round',ts:'Seconds waited',tres:'Result',ans:'answered',jumped:'jumped in',again:'Play again',sec:'{s} s',
+ foot:'Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+es:{h1:'Espera',sub:'Los usuarios de CAA a menudo necesitan más tiempo para encontrar sus palabras. ¿Cuánto espera usted de verdad? Descúbralo y practique la pausa.',vlab:'Voz',
+ round:'Ronda {a} de {b}',p1:'Parte 1: Revísese',p2:'Parte 2: Practique la pausa',
+ introh:'Así funciona',intro:'Le hará una pregunta a un estudiante. Luego haga lo que normalmente haría. Si repetiría la pregunta, daría una pista o contestaría por él, toque Intervenir. Si espera lo suficiente, el estudiante contestará en su dispositivo.',
+ introp2:'Ahora el círculo está activado. Cuente despacio en su mente, respire y deje que el círculo se llene hasta la zona verde.',start:'¡Vamos!',ask:'Hacer la pregunta',jump:'Intervenir',next:'Siguiente ronda →',
+ cues:['','Cuente en su mente…','Siga mirándolo…','Respire…','Ya casi…'],
+ good:'¡Esperó {s} segundos y {n} contestó!',goodp:'Esa pausa le dio a {n} tiempo para encontrar las palabras.',
+ miss:'Intervino a los {s} segundos.',missp:'{n} estaba por decir “{w}.” Unos segundos más le habrían permitido decirlo.',
+ endh:'Sus tiempos de espera',avg:'Su espera promedio: {s} segundos.',zone:'La franja verde es la zona de 5 a 10 segundos.',
+ sumHi:'Les dio a los estudiantes el tiempo que necesitaban. Es un hábito que vale la pena mantener.',sumLo:'La mayoría intervenimos rápido. Estudios en salones han encontrado que los adultos esperan alrededor de un segundo. Con práctica, la pausa se hace más fácil.',
+ why:'Por qué importa: encontrar una palabra en un dispositivo de CAA requiere planear y varios movimientos. Cuando intervenimos, los estudiantes aprenden que otra persona hablará por ellos. Una pausa tranquila les dice que su turno viene.',
+ table:'Ver como tabla',tr:'Ronda',ts:'Segundos de espera',tres:'Resultado',ans:'contestó',jumped:'intervino',again:'Jugar otra vez',sec:'{s} s',
+ foot:'Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const Q=[
+{n:'Maya',en:'What do you want for snack?',es:'¿Qué quieres de merienda?',a:'f:food:cookie',s:5.6},
+{n:'Leo',en:'Where should we go after lunch?',es:'¿A dónde vamos después del almuerzo?',a:'f:places:library',s:7.2},
+{n:'Sofía',en:'How are you feeling today?',es:'¿Cómo te sientes hoy?',a:'f:feelings:tired',s:6.4},
+{n:'Jayden',en:'Who do you want to sit with?',es:'¿Con quién te quieres sentar?',a:'f:people:friend',s:8.1},
+{n:'Ana',en:'What should we do next?',es:'¿Qué hacemos ahora?',a:'play',s:6.1},
+{n:'Marcus',en:'What did you do at recess?',es:'¿Qué hiciste en el recreo?',a:'f:actions:played',s:8.6}];
+const t=k=>T[L][k],f1=x=>(Math.round(x*10)/10).toFixed(1);
+const ring=()=>r>=3;
+const R=84,C=2*Math.PI*R;
+function stage(){const q=Q[r];const part=r<3?t('p1'):t('p2');
+ const zoneArc=C*(5/10*0)+0;
+ return `<div class="hud"><b>${t('round').replace('{a}',r+1).replace('{b}',Q.length)}</b><span class="part">${part}</span></div>
+ <div class="stage"><p class="qq" id="qq">${state==='ready'?'&nbsp;':`“${esc(q[L])}”`}</p>
+ <div class="who">${ring()?`<svg class="ring" viewBox="0 0 200 200"><circle class="bg" cx="100" cy="100" r="${R}"/><circle class="zone" cx="100" cy="100" r="${R}" stroke-dasharray="${C*.5} ${C}" stroke-dashoffset="${-C*.5}"/><circle class="fg" id="fg" cx="100" cy="100" r="${R}" stroke-dasharray="0 ${C}"/></svg>`:''}
+ <div class="av"><img src="${sym('kid')}" alt=""></div><div class="think" id="think"><i></i><i></i><i></i></div></div>
+ <p class="name">${esc(q.n)}</p><div class="ans" id="ans"></div><p class="cue" id="cue"></p><p class="secs" id="secs"></p>
+ <div class="btns" id="btns">${state==='ready'?`<button class="btn ask" data-a="ask">${t('ask')}</button>`:state==='waiting'?`<button class="btn jump" data-a="jump">${t('jump')}</button>`:''}</div></div><div id="res"></div>`}
+function show(){
+ if(intro){$('game').innerHTML=`<div class="why" style="margin:0 0 14px"><h2>${t('introh')}</h2><p>${r>=3?t('introp2'):t('intro')}</p></div><div class="row" style="justify-content:center"><button class="btn ask" data-a="start" style="background:#5c940d;color:#fff">${t('start')}</button></div>`;return}
+ if(r>=Q.length){results();return}
+ $('game').innerHTML=stage();
+}
+function ask(){const q=Q[r];state='asking';show();
+ const go=()=>{if(state!=='asking')return;state='waiting';show();$('think').classList.add('on');t0=performance.now();const due=q.s+(Math.random()*1.2-.6);q.due=due;
+  const tick=()=>{const s=(performance.now()-t0)/1000;if(ring()){const fg=$('fg');if(fg){fg.setAttribute('stroke-dasharray',`${Math.min(s/10,1)*C} ${C}`);fg.style.stroke=s>=5?'#2b8a3e':'#94d82d'}$('secs').textContent=f1(s)+' s'}
+   $('cue').textContent=ring()?t('cues')[Math.min(4,Math.floor(s/1.6))]:'';
+   if(s>=due){answer(due);return}raf=requestAnimationFrame(tick)};raf=requestAnimationFrame(tick)};
+ speak(q[L],L,go);clearTimeout(timer);timer=setTimeout(go,900+q[L].length*75)}
+function answer(s){cancelAnimationFrame(raf);state='done';const q=Q[r],w=byId[q.a];waits[r]={s,ok:true};
+ $('think').classList.remove('on');$('btns').innerHTML='';$('cue').textContent='';$('ans').innerHTML=AAC.keyHtml(w,L);speak(w[L],L);
+ $('res').innerHTML=`<div class="result good"><img src="${sym('party')}" alt=""><div><b>${t('good').replace('{s}',f1(s)).replace('{n}',esc(q.n))}</b><p>${t('goodp').replace('{n}',esc(q.n))}</p></div></div><div class="btns"><button class="btn go" data-a="next">${t('next')}</button></div>`;confetti($('ans'),40)}
+function jump(){const s=(performance.now()-t0)/1000;cancelAnimationFrame(raf);hush();state='done';const q=Q[r],w=byId[q.a];waits[r]={s,ok:false};
+ $('think').classList.remove('on');$('btns').innerHTML='';$('cue').textContent='';
+ $('res').innerHTML=`<div class="result miss"><img src="${sym('hourglass')}" alt=""><div><b>${t('miss').replace('{s}',f1(s))}</b><p>${t('missp').replace('{n}',esc(q.n)).replace('{w}',esc(w[L]))}</p></div></div><div class="btns"><button class="btn go" data-a="next">${t('next')}</button></div>`}
+function results(){
+ const avg=waits.reduce((a,b)=>a+b.s,0)/waits.length,W=640,H=260,pl=44,pb=34,pt=14,max=10,bw=(W-pl-20)/waits.length;
+ const y=v=>pt+(H-pt-pb)*(1-Math.min(v,max)/max);
+ const bars=waits.map((w,k)=>{const x=pl+k*bw+bw*.22,bwid=bw*.56,top=y(w.s);return `<g class="bar" data-k="${k}"><rect x="${pl+k*bw}" y="${pt}" width="${bw}" height="${H-pt-pb}" fill="transparent"/><path d="M${x},${H-pb} V${top+4} q0,-4 4,-4 h${bwid-8} q4,0 4,4 V${H-pb}Z" fill="#5c940d"/><text class="vl" x="${x+bwid/2}" y="${top-6}" text-anchor="middle">${f1(w.s)}</text><text x="${x+bwid/2}" y="${H-12}" text-anchor="middle">${k+1}</text></g>`}).join('');
+ const grid=[0,5,10].map(v=>`<line x1="${pl}" x2="${W-10}" y1="${y(v)}" y2="${y(v)}" stroke="currentColor" opacity=".12"/><text x="${pl-8}" y="${y(v)+5}" text-anchor="end">${v}s</text>`).join('');
+ $('game').innerHTML=`<h2>${t('endh')}</h2><p class="sum"><b>${t('avg').replace('{s}',f1(avg))}</b> ${avg>=5?t('sumHi'):t('sumLo')}</p>
+ <div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t('endh')}"><rect x="${pl}" y="${y(10)}" width="${W-pl-10}" height="${y(5)-y(10)}" fill="#94d82d" opacity=".22"/>${grid}${bars}</svg></div>
+ <p class="muted small">${t('zone')}</p>
+ <details><summary>${t('table')}</summary><table><tr><th>${t('tr')}</th><th>${t('ts')}</th><th>${t('tres')}</th></tr>${waits.map((w,k)=>`<tr><td>${k+1}</td><td>${f1(w.s)}</td><td>${w.ok?t('ans'):t('jumped')}</td></tr>`).join('')}</table></details>
+ <div class="why"><p>${t('why')}</p></div><div class="btns"><button class="btn go" data-a="again">${t('again')}</button></div>`;
+ if(avg>=5)confetti($('game'),80);
+ const tip=$('tip');document.querySelectorAll('.bar').forEach(g=>{g.addEventListener('mousemove',e=>{const w=waits[+g.dataset.k];tip.style.display='block';tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY-34+'px';tip.textContent=`${t('tr')} ${+g.dataset.k+1}: ${f1(w.s)} s, ${w.ok?t('ans'):t('jumped')}`});g.addEventListener('mouseleave',()=>tip.style.display='none')})}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;const k=a.dataset.a;
+ if(k==='start'){intro=false;state='ready';show()}
+ if(k==='ask')ask();
+ if(k==='jump'&&state==='waiting')jump();
+ if(k==='next'){r++;state='ready';if(r===3)intro=true;show();$('game').scrollIntoView({behavior:AAC.reduced()?'auto':'smooth',block:'start'})}
+ if(k==='again'){r=0;waits=[];state='ready';intro=true;show()}});
+function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');if(state==='waiting'||state==='asking'){cancelAnimationFrame(raf);hush();state='ready'}show()}
+AAC.deco($('deco'),[['hourglass',8,10,60,-8],['turtle',46,58,50,4],['stopwatch',80,14,54,8],['speech',28,62,40,0]]);
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+</body>
+</html>

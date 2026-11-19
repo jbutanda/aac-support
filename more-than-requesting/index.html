@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>More Than Requesting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA a mail sorter: AAC messages drop in one at a time, you sort them into six bins by what they DO
+   LAYOUT message bubble (phrase + device chips) on top, six bins below that fill up; end screen shows all six full */
+:root{--band:#d6336c;--maxw:980px;--decol:72%}
+.hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+.hud b{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.streak{display:flex;gap:8px;align-items:center;font-weight:700}
+.streak img{width:28px}
+.drop{display:flex;justify-content:center;margin:4px 0 18px;min-height:150px}
+.bubble{position:relative;background:#fff;color:#16181d;border-radius:28px;padding:18px 26px 16px;box-shadow:0 14px 30px rgba(214,51,108,.22),0 0 0 3px #faa2c1;text-align:center;max-width:560px;animation:fall .5s cubic-bezier(.2,1.5,.4,1)}
+.bubble::after{content:'';position:absolute;left:50%;bottom:-16px;margin-left:-14px;border:14px solid transparent;border-top-color:#fff;border-bottom:0}
+@keyframes fall{from{transform:translateY(-40px) scale(.8);opacity:0}}
+.bubble .say{font-size:clamp(26px,4.4vw,38px);font-weight:700;margin:0 0 10px;line-height:1.1}
+.bubble .on{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#868e96;margin:0 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:9px;font-weight:700;font-size:16px}
+.chip img{width:24px}
+.hear{font:inherit;font-weight:700;border:0;background:#fff0f6;color:#a61e4d;border-radius:999px;padding:8px 14px;margin-top:10px;cursor:pointer;min-height:44px}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.bin{font:inherit;position:relative;border:0;border-radius:24px;background:var(--bc);color:#1d2026;padding:14px 46px 12px 14px;cursor:pointer;text-align:left;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center;min-height:96px;transition:transform .15s,box-shadow .15s;overflow:hidden}
+.bin:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(0,0,0,.12)}
+.bin img{width:52px;grid-row:span 2;background:rgba(255,255,255,.7);border-radius:16px;padding:6px}
+.bin b{font-size:18px;line-height:1.15}
+.bin span{font-size:14px;opacity:.8}
+.bin .cnt{font-style:normal;position:absolute;right:12px;top:10px;background:rgba(0,0,0,.12);border-radius:999px;font-weight:700;font-size:14px;padding:1px 9px;opacity:1}
+.bin .fill{position:absolute;left:0;bottom:0;height:7px;background:rgba(0,0,0,.25);transition:width .4s}
+.bin.right{animation:yes .6s}
+.bin.wrong{animation:shake .45s}
+@keyframes yes{30%{transform:scale(1.06);box-shadow:0 0 0 5px #2b8a3e}}
+.fb{min-height:64px;margin:16px 0 0;border-radius:18px;padding:12px 16px;display:none;font-size:17px}
+.fb.on{display:block;animation:pop .3s}
+.fb.good{background:#ebfbee;color:#0b3d16}
+.fb.bad{background:#fff4e6;color:#4a2300}
+.end{text-align:center}
+.end .big{font-size:clamp(36px,6vw,56px);font-weight:700;margin:6px 0}
+.end .bins{margin:18px 0;pointer-events:none}
+.take{background:var(--tint);border-radius:20px;padding:18px;text-align:left;margin:16px 0}
+.take h3{margin:0 0 6px}
+.take p{margin:0 0 8px}
+@media(max-width:640px){.bins{grid-template-columns:repeat(2,minmax(0,1fr))}.bin{grid-template-columns:1fr;text-align:center;justify-items:center;padding:14px 10px 12px}.bin img{grid-row:auto;width:44px}.bin span{display:none}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card" id="game"></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script><script src="../shared/vocab.js"></script><script src="../shared/device.js"></script>
+<script>
+const {esc,sym,byId,speak,confetti}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),order=[],i=0,score=0,streak=0,best=0,tries=0,counts={},fb=null;
+const T={en:{h1:'More Than Requesting',sub:'AAC is for every kind of talk. Sort each message by what it does.',vlab:'Voice',count:'Message {a} of {b}',on:'On the device',hear:'Hear it',
+ right:['Yes!','Nice!','Exactly.','You got it.'],also:'That one could also go in {b}. Messages can do more than one job.',wrong:'Not quite. Try another bin.',hint:'Hint: {h}',
+ endh:'All sorted!',endp:'{s} of {n} on the first try. Your best streak: {k}.',takeh:'What this means for students',
+ take:['Asking for things is only one of six jobs. Students also need ways to comment, ask questions, say no, connect with friends and share feelings.','If a student’s device or IEP goals only cover requesting, take a look at what is missing. Model the other five every day.'],
+ again:'Play again',foot:'Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+es:{h1:'Más que pedir',sub:'La CAA es para todo tipo de conversación. Clasifique cada mensaje según lo que hace.',vlab:'Voz',count:'Mensaje {a} de {b}',on:'En el dispositivo',hear:'Escuchar',
+ right:['¡Sí!','¡Bien!','Exacto.','¡Correcto!'],also:'Ese también podría ir en {b}. Los mensajes pueden hacer más de una cosa.',wrong:'Casi. Pruebe otra opción.',hint:'Pista: {h}',
+ endh:'¡Todo clasificado!',endp:'{s} de {n} al primer intento. Su mejor racha: {k}.',takeh:'Lo que esto significa para los estudiantes',
+ take:['Pedir cosas es solo una de seis funciones. Los estudiantes también necesitan comentar, preguntar, decir que no, conectar con amigos y expresar sentimientos.','Si el dispositivo o las metas del IEP de un estudiante solo cubren pedir, revise lo que falta. Modele las otras cinco todos los días.'],
+ again:'Jugar otra vez',foot:'Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const B=[
+{id:'request',ic:'../talker/symbols/want.svg',c:'#b2f2bb',en:['Asking for something','I want, more, help'],es:['Pedir algo','quiero, más, ayuda'],hen:'Is the student trying to get something or get help?',hes:'¿El estudiante quiere obtener algo o pedir ayuda?'},
+{id:'comment',ic:'eyes',c:'#a5d8ff',en:['Commenting','Look, big, funny'],es:['Comentar','mira, grande, chistoso'],hen:'Is the student telling you about something they notice?',hes:'¿El estudiante le cuenta algo que nota?'},
+{id:'question',ic:'question',c:'#d0bfff',en:['Asking a question','What, where, who'],es:['Hacer una pregunta','qué, dónde, quién'],hen:'Does the student want information back?',hes:'¿El estudiante quiere recibir información?'},
+{id:'refuse',ic:'hand',c:'#ffc9c9',en:['Saying no','No, stop, all done'],es:['Decir que no','no, para, terminé'],hen:'Is the student rejecting or ending something?',hes:'¿El estudiante rechaza o termina algo?'},
+{id:'social',ic:'wave',c:'#fcc2d7',en:['Being social','Hi, bye, just kidding'],es:['Socializar','hola, adiós, es broma'],hen:'Is the student connecting with someone?',hes:'¿El estudiante conecta con alguien?'},
+{id:'feel',ic:'heart',c:'#ffec99',en:['Sharing feelings','Happy, sad, scared'],es:['Expresar sentimientos','feliz, triste, asustado'],hen:'Is the student telling how they feel inside?',hes:'¿El estudiante dice cómo se siente por dentro?'}];
+const MS=[
+{ids:['i','want','f:food:juice'],en:'I want juice.',es:'Quiero jugo.',ok:['request']},
+{ids:['more','please'],en:'More, please.',es:'Más, por favor.',ok:['request']},
+{ids:['help','open'],en:'Help me open it.',es:'Ayúdame a abrirlo.',ok:['request']},
+{ids:['big','f:people:dog'],en:'Big dog!',es:'¡Perro grande!',ok:['comment']},
+{ids:['f:chat:thats-funny'],en:'That’s funny!',es:'¡Qué chistoso!',ok:['comment','social']},
+{ids:['look','f:places:airplane'],en:'Look, an airplane!',es:'¡Mira, un avión!',ok:['comment']},
+{ids:['where','f:people:mom'],en:'Where is Mom?',es:'¿Dónde está mamá?',ok:['question']},
+{ids:['f:questions:what-happened'],en:'What happened?',es:'¿Qué pasó?',ok:['question']},
+{ids:['f:questions:how-about-you'],en:'How about you?',es:'¿Y tú?',ok:['question','social']},
+{ids:['no','stop'],en:'No, stop!',es:'¡No, para!',ok:['refuse']},
+{ids:['alldone'],en:'All done.',es:'Terminé.',ok:['refuse','request']},
+{ids:['f:chat:no-way'],en:'No way!',es:'¡Ni loco!',ok:['refuse','comment']},
+{ids:['hi','f:people:friend'],en:'Hi, friend!',es:'¡Hola, amigo!',ok:['social']},
+{ids:['f:chat:see-you-later'],en:'See you later!',es:'¡Nos vemos!',ok:['social']},
+{ids:['f:chat:just-kidding'],en:'Just kidding!',es:'¡Es broma!',ok:['social']},
+{ids:['i','feel','sad'],en:'I feel sad.',es:'Me siento triste.',ok:['feel']},
+{ids:['f:feelings:excited'],en:'Excited!',es:'¡Emocionado!',ok:['feel']},
+{ids:['i','f:little:am','f:feelings:worried'],en:'I am worried.',es:'Estoy preocupado.',ok:['feel']}];
+const t=k=>T[L][k];
+const chip=id=>{const w=byId[id];return `<span class="chip ${w.c}">${w.img?`<img src="${w.img}" alt="">`:''}${esc(w[L])}</span>`};
+const bimg=b=>b.ic.includes('/')?b.ic:sym(b.ic);
+const shuffle=a=>{for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
+function start(){order=shuffle(MS.map((_,k)=>k));i=0;score=0;streak=0;best=0;tries=0;counts={};fb=null;show()}
+function binsHtml(){return `<div class="bins">${B.map(b=>`<button class="bin" data-b="${b.id}" style="--bc:${b.c}"><img src="${bimg(b)}" alt=""><b>${esc(b[L][0])}</b><span>${esc(b[L][1])}</span><i class="cnt">${counts[b.id]||0}</i><i class="fill" style="width:${Math.min(100,(counts[b.id]||0)/3*100)}%"></i></button>`).join('')}</div>`}
+function show(){
+ if(i>=order.length){end();return}
+ const m=MS[order[i]];
+ $('game').innerHTML=`<div class="hud"><b>${t('count').replace('{a}',i+1).replace('{b}',MS.length)}</b><span class="streak"><img src="${sym('fire')}" alt="">${streak}</span></div>
+ <div class="drop"><div class="bubble" id="bub"><p class="say">${esc(m[L])}</p><p class="on">${t('on')}</p><div class="chips">${m.ids.map(chip).join('')}</div><button class="hear" data-a="hear">🔊 ${t('hear')}</button></div></div>
+ ${binsHtml()}<div class="fb ${fb?'on '+fb[0]:''}" id="fb" aria-live="polite">${fb?fb[1]:''}</div>`}
+function pick(id,el){const m=MS[order[i]];
+ if(m.ok.includes(id)){tries++;const first=tries===1;if(first){score++;streak++;best=Math.max(best,streak)}else streak=0;
+  counts[id]=(counts[id]||0)+1;const other=m.ok.find(x=>x!==id),ob=B.find(b=>b.id===other);
+  const msg=t('right')[Math.floor(Math.random()*4)]+(other?' '+t('also').replace('{b}',ob[L][0].toUpperCase()):'');
+  fb=['good',esc(msg)];el.classList.add('right');speak(m[L],L);
+  const bub=$('bub'),r1=bub.getBoundingClientRect(),r2=el.getBoundingClientRect();
+  if(!AAC.reduced())bub.animate([{transform:'none',opacity:1},{transform:`translate(${r2.left+r2.width/2-(r1.left+r1.width/2)}px,${r2.top-r1.top}px) scale(.2)`,opacity:0}],{duration:450,easing:'ease-in'});
+  setTimeout(()=>{i++;tries=0;show()},AAC.reduced()?200:480)}
+ else{tries++;streak=0;el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong');const right=B.find(b=>b.id===m.ok[0]);
+  const f=$('fb');f.className='fb on bad';f.innerHTML=esc(t('wrong'))+(tries>=2?' '+esc(t('hint').replace('{h}',L==='es'?right.hes:right.hen)):'');fb=null}}
+function end(){counts={};B.forEach(b=>counts[b.id]=3);
+ $('game').innerHTML=`<div class="end"><img src="${sym('trophy')}" alt="" width="84"><p class="big">${t('endh')}</p><p>${t('endp').replace('{s}',score).replace('{n}',MS.length).replace('{k}',best)}</p>${binsHtml()}
+ <div class="take"><h3>${t('takeh')}</h3>${t('take').map(p=>`<p>${esc(p)}</p>`).join('')}</div><button class="btn go" data-a="again">${t('again')}</button></div>`;confetti($('game'),90)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b&&i<order.length){pick(b.dataset.b,b);return}
+ const a=e.target.closest('[data-a]');if(!a)return;if(a.dataset.a==='hear'){const m=MS[order[i]];speak(m[L],L)}if(a.dataset.a==='again')start()});
+function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');fb=null;if(order.length)show()}
+AAC.deco($('deco'),[['speech',8,10,60,-8],['question',46,58,42,8],['wave',80,14,54,6],['heart',28,62,40,-6]]);
+order=shuffle(MS.map((_,k)=>k));
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+</body>
+</html>

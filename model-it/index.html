@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model It</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA flight simulator for modeling: a real moment happens, you answer on the device, a coach gives three quick checks
+   LAYOUT moment card (scene, what the student did) -> device with message bar -> coaching card with stars and team ideas */
+:root{--band:#1098ad;--maxw:1180px;--decol:72%}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.hud b{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.score{display:flex;gap:6px;align-items:center;font-weight:700}
+.score img{width:26px}
+.moment{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center;background:linear-gradient(135deg,#e3fafc,#fff 70%);border-radius:24px;padding:18px 22px;color:#16181d}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .moment{background:linear-gradient(135deg,#0b3a42,#1b1d23 70%);color:#eceef2}}
+.scene{width:150px;height:150px;border-radius:30px;background:#fff;display:grid;place-items:center;box-shadow:0 8px 0 rgba(16,152,173,.25);position:relative}
+.scene img{width:96px}
+.scene .mini{position:absolute;width:52px;right:-10px;bottom:-10px;background:#fff;border-radius:16px;padding:6px;box-shadow:0 4px 10px rgba(0,0,0,.15)}
+.where{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0c8599;margin:0}
+.moment h2{font-size:clamp(20px,2.6vw,26px);margin:4px 0 10px}
+.did{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:17px}
+.did .lab{font-weight:700}
+.bub{background:#fff;color:#16181d;border-radius:16px;padding:6px 12px;font-style:italic;box-shadow:inset 0 0 0 2px #99e9f2}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:9px;font-weight:700;font-size:17px}
+.chip img{width:24px}
+.ask{margin:16px 0 10px;font-weight:700;font-size:18px}
+.msg{display:flex;gap:8px;margin-bottom:10px}
+.say{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:62px;padding:8px 12px;border-radius:14px;background:#f7f7f2;color:#16181d}
+.say .ph{color:#7a7f8a}
+.ctl{width:60px;border-radius:14px;border:0;background:#2a2e37;color:#eceef2;cursor:pointer;display:grid;place-items:center}
+.ctl svg{width:24px;height:24px}
+.gw{overflow-x:auto}
+.check{background:#3bc9db;color:#062a30;font-weight:700;width:auto;padding:0 18px;font-size:17px}
+.coach{margin-top:18px;border-radius:24px;padding:20px 22px;background:var(--tint);animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.coach .stars{display:flex;gap:6px;margin-bottom:8px}
+.coach .stars img{width:40px;opacity:.2;transition:opacity .3s,transform .3s}
+.coach .stars img.on{opacity:1;animation:pop .5s cubic-bezier(.2,1.8,.4,1) backwards}
+.coach .stars img.on:nth-child(2){animation-delay:.12s}.coach .stars img.on:nth-child(3){animation-delay:.24s}
+.coach h3{margin:0 0 10px;font-size:22px}
+.ck{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px;font-size:17px}
+.ck i{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;color:#fff;background:#2b8a3e}
+.ck.no i{background:#e67700}
+.ideas{margin:14px 0 4px}
+.ideas b{display:block;margin-bottom:6px}
+.idea{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;align-items:center}
+.idea button{font:inherit;border:0;background:none;cursor:pointer;padding:0;display:flex;gap:6px;flex-wrap:wrap}
+.why{margin:8px 0 14px;color:var(--soft)}
+.end{text-align:center;padding:10px 0}
+.end .big{font-size:clamp(40px,7vw,64px);font-weight:700;margin:0}
+.end img{width:90px}
+@media(max-width:640px){.moment{grid-template-columns:1fr;text-align:center}.scene{margin:0 auto}.did{justify-content:center}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card" id="game">
+    <div class="hud"><b id="count"></b><span class="score" id="score"></span></div>
+    <div id="moment"></div>
+    <p class="ask" id="ask"></p>
+    <div class="device"><div class="msg"><div class="say" id="say" aria-live="polite"></div>
+      <button class="ctl" id="del" aria-label="Delete last word"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M17 9l-5 6M12 9l5 6"/></svg></button>
+      <button class="ctl check" id="go"></button></div>
+      <div class="gw"><div id="dv"></div></div><p class="swipe" id="swipe"></p></div>
+    <div id="coach"></div>
+  </section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script><script src="../shared/vocab.js"></script><script src="../shared/device.js"></script>
+<script>
+const {esc,sym,byId,speak,confetti}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),i=0,msg=[],stars=0,best=[],checked=false,done=false;
+const T={en:{h1:'Model It',sub:'Real moments from school and home. Answer on the AAC device the way you would model for the student, then get quick coaching.',vlab:'Voice',
+ count:'Moment {a} of {b}',ask:'What would you model? Tap the words on the device.',go:'Check',ph:'Your model shows up here',did:'The student',said:'taps',none:'Tap some words first.',
+ lenOk:'Good length. You went one small step beyond what the student said.',lenShort:'Try adding a word. Model one step beyond what the student said.',lenLong:'That’s a lot of words for this moment. Two or three key words usually land better.',
+ fitOk:'{w} fits this moment.',fitNo:'Try a word that matches what is happening right now.',
+ fnOk:{request:'You built right on top of the student’s idea.',comment:'You commented instead of asking for something. That’s the kind of talk students hear least.',protest:'You gave the student a respectful way to say no. That matters.',social:'You modeled being social. Friends talk this way all day.',feel:'You named the feeling. That helps the student learn feeling words in the moment.',tell:'You modeled telling about something. That builds toward real conversation.'},
+ fnNo:{request:'Try keeping the student’s word in your model and adding to it.',comment:'Every word you used is a request word. Try a comment instead.',protest:'Try a word the student could use to refuse or ask for a break.',social:'Try a greeting or a friendly question.',feel:'Try naming the feeling.',tell:'Try a word that tells what happened.'},
+ h:['Keep practicing','Nice modeling','Great modeling!','Excellent!'],ideas:'Ideas from the AAC team (tap one to hear it)',next:'Next moment →',again:'Try again',
+ endh:'You finished!',endp:'You earned {s} of {m} stars. Modeling is a habit, so the more you practice, the easier it gets in real life.',restart:'Play again',foot:'Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.',swipe:'Swipe the device sideways to see all the words.'},
+es:{h1:'Modélalo',sub:'Momentos reales de la escuela y la casa. Responda en el dispositivo de CAA como modelaría para el estudiante y reciba consejos rápidos.',vlab:'Voz',
+ count:'Momento {a} de {b}',ask:'¿Qué modelaría? Toque las palabras en el dispositivo.',go:'Revisar',ph:'Su modelo aparece aquí',did:'El estudiante',said:'toca',none:'Primero toque algunas palabras.',
+ lenOk:'Buena longitud. Fue un pasito más allá de lo que dijo el estudiante.',lenShort:'Agregue una palabra. Modele un paso más allá de lo que dijo el estudiante.',lenLong:'Son muchas palabras para este momento. Dos o tres palabras clave suelen funcionar mejor.',
+ fitOk:'{w} va bien con este momento.',fitNo:'Pruebe una palabra que vaya con lo que está pasando ahora.',
+ fnOk:{request:'Construyó sobre la idea del estudiante.',comment:'Hizo un comentario en vez de pedir algo. Es lo que los estudiantes escuchan menos.',protest:'Le dio al estudiante una forma respetuosa de decir que no. Eso importa.',social:'Modeló ser sociable. Los amigos hablan así todo el día.',feel:'Nombró el sentimiento. Así el estudiante aprende palabras de sentimientos en el momento.',tell:'Modeló cómo contar algo. Eso lleva a conversaciones reales.'},
+ fnNo:{request:'Intente mantener la palabra del estudiante y agregarle algo.',comment:'Todas sus palabras son para pedir. Pruebe un comentario.',protest:'Pruebe una palabra que el estudiante pueda usar para negarse o pedir un descanso.',social:'Pruebe un saludo o una pregunta amistosa.',feel:'Pruebe nombrar el sentimiento.',tell:'Pruebe una palabra que cuente qué pasó.'},
+ h:['Siga practicando','Buen modelado','¡Muy buen modelado!','¡Excelente!'],ideas:'Ideas del equipo de CAA (toque una para escucharla)',next:'Siguiente momento →',again:'Intentar otra vez',
+ endh:'¡Terminó!',endp:'Ganó {s} de {m} estrellas. Modelar es un hábito, así que entre más practique, más fácil será en la vida real.',restart:'Jugar otra vez',foot:'Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.',swipe:'Deslice el dispositivo hacia los lados para ver todas las palabras.'}};
+const REQ=['want','more','please','give','get','need','help'];
+const M=[
+{ic:'bubbles',mini:'play',fn:'request',did:[],en:{w:'Play time',s:'The bubbles just stopped. The student reaches for the wand and looks at you.',g:'reaches for the bubbles'},es:{w:'Hora de jugar',s:'Las burbujas se acabaron. El estudiante busca la varita y lo mira.',g:'busca las burbujas'},
+ good:['more','again','go','open','help','want'],ideas:[['more'],['again'],['go','again'],['open','more']]},
+{ic:'plate',mini:'school',fn:'request',did:['eat'],en:{w:'Lunch',s:'At lunch the student taps EAT and points at the tray.'},es:{w:'Almuerzo',s:'En el almuerzo el estudiante toca COMER y señala la bandeja.'},
+ good:['eat','f:food:','want','like','more'],keep:true,ideas:[['eat','f:food:pizza'],['i','eat','f:food:chicken'],['eat','more']]},
+{ic:'laugh',mini:'play',fn:'comment',did:[],en:{w:'Building blocks',s:'The block tower crashes down. The student laughs and claps.',g:'laughs and claps'},es:{w:'Bloques',s:'La torre de bloques se cae. El estudiante se ríe y aplaude.',g:'se ríe y aplaude'},
+ good:['f:chat:oops','f:describe:funny','f:chat:thats-funny','again','make','big','bad','f:feelings:silly','up'],ideas:[['f:chat:oops'],['f:chat:thats-funny'],['make','again'],['f:describe:funny']]},
+{ic:'memo',mini:'school',fn:'protest',did:[],en:{w:'Work time',s:'The student pushes the worksheet away and puts their head down.',g:'pushes the work away'},es:{w:'Hora de trabajar',s:'El estudiante empuja la hoja de trabajo y baja la cabeza.',g:'empuja el trabajo'},
+ good:['no','stop','alldone','f:describe:hard','f:feelings:mad','f:feelings:tired','different','help','f:describe:boring','wait','f:feelings:confused'],ideas:[['alldone'],['f:describe:hard'],['help','please'],['no','different']]},
+{ic:'wave',mini:'school',fn:'social',did:[],en:{w:'Morning arrival',s:'A classmate walks in and sits next to the student. The student smiles at them.',g:'smiles at a friend'},es:{w:'Llegada en la mañana',s:'Un compañero entra y se sienta junto al estudiante. El estudiante le sonríe.',g:'le sonríe a un amigo'},
+ good:['hi','f:people:friend','f:questions:whats-up','f:questions:how-about-you','you','happy','f:chat:nice-to-meet-you','f:questions:how-was'],ideas:[['hi'],['hi','f:people:friend'],['f:questions:whats-up']]},
+{ic:'tree',mini:'school',fn:'request',did:['go'],en:{w:'Recess',s:'At the classroom door before recess, the student taps GO.'},es:{w:'Recreo',s:'En la puerta antes del recreo, el estudiante toca IR.'},
+ good:['go','f:places:','play','we','f:time:now','f:activities:'],keep:true,ideas:[['go','f:places:outside'],['we','go','play'],['go','f:time:now']]},
+{ic:'sad',mini:'tree',fn:'feel',did:[],en:{w:'On the playground',s:'The student trips and falls, then starts crying.',g:'is crying'},es:{w:'En el patio',s:'El estudiante se tropieza, se cae y empieza a llorar.',g:'está llorando'},
+ good:['sad','f:feelings:','feel','bad','help','f:feelings:scared'],ideas:[['sad'],['you','feel','sad'],['help']]},
+{ic:'book',mini:'school',fn:'comment',did:[],en:{w:'Story time',s:'You turn the page and there is a big dog. The student points at it.',g:'points at the dog'},es:{w:'Hora del cuento',s:'Pasa la página y hay un perro grande. El estudiante lo señala.',g:'señala el perro'},
+ good:['look','f:people:dog','big','little','see','like','f:describe:funny','f:describe:cool'],ideas:[['look','f:people:dog'],['big','f:people:dog'],['i','see','f:people:dog']]},
+{ic:'play',mini:'home',fn:'request',did:['i','want'],en:{w:'Free choice',s:'During free choice the student taps I WANT, then looks around the room.'},es:{w:'Tiempo libre',s:'En tiempo libre el estudiante toca YO QUIERO y mira alrededor del salón.'},
+ good:['play','f:activities:','f:food:','go','read','f:places:','eat','drink'],keep:true,ideas:[['i','want','play'],['i','want','f:activities:draw'],['i','want','go','f:places:outside']]},
+{ic:'calendar',mini:'home',fn:'tell',did:['f:actions:went'],en:{w:'Monday morning',s:'You ask about the weekend. The student taps WENT.'},es:{w:'Lunes en la mañana',s:'Usted pregunta por el fin de semana. El estudiante toca FUI.'},
+ good:['f:places:','f:time:','f:actions:went','f:little:to','f:people:'],keep:true,ideas:[['f:actions:went','f:little:to','f:places:park'],['i','f:actions:went','f:places:store'],['f:actions:went','f:places:grandmas-house']]}];
+const t=k=>T[L][k];
+const lbl=w=>w[L]||w.en;
+const chip=id=>{const w=byId[id];return `<span class="chip ${w.c}">${w.img?`<img src="${w.img}" alt="">`:''}${esc(lbl(w))}</span>`};
+const has=(ids,p)=>ids.some(x=>p.endsWith(':')?x.startsWith(p):x===p);
+const dev=AAC.Device($('dv'),{lang:()=>L,onPick:w=>{if(done)return;msg.push(w.id);checked=false;$('coach').innerHTML='';say();speak(lbl(w),L)}});
+function say(){$('say').innerHTML=msg.length?msg.map(chip).join(''):`<span class="ph">${t('ph')}</span>`}
+function hud(){$('count').textContent=t('count').replace('{a}',Math.min(i+1,M.length)).replace('{b}',M.length);$('score').innerHTML=`<img src="${sym('star')}" alt="">${stars}`}
+function moment(){if(done){end();return}const m=M[i],d=m[L];
+ $('moment').innerHTML=`<div class="moment"><div class="scene"><img src="${sym(m.ic)}" alt=""><img class="mini" src="${sym(m.mini)}" alt=""></div><div><p class="where">${esc(d.w)}</p><h2>${esc(d.s)}</h2>
+ <div class="did"><span class="lab">${t('did')}</span>${m.did.length?`<span>${t('said')}</span>${m.did.map(chip).join('')}`:`<span class="bub">${esc(d.g)}</span>`}</div></div></div>`}
+function check(){
+ if(!msg.length){$('coach').innerHTML=`<div class="coach"><p class="ck no"><i>!</i>${t('none')}</p></div>`;return}
+ const m=M[i],n=m.did.length,len=msg.length,res=[];
+ speak(msg.map(id=>lbl(byId[id])).join(' '),L);
+ const lo=n+1,hi=n+3;res.push(len>=lo&&len<=hi?[1,t('lenOk')]:[0,len<lo?t('lenShort'):t('lenLong')]);
+ const fit=msg.find(id=>m.good.some(g=>g.endsWith(':')?id.startsWith(g):id===g));
+ res.push(fit?[1,t('fitOk').replace('{w}',lbl(byId[fit]).toUpperCase())]:[0,t('fitNo')]);
+ let fn;if(m.fn==='request')fn=m.keep?m.did.every(d=>msg.includes(d)):!!fit;else fn=msg.some(id=>!REQ.includes(id))&&!!fit;
+ res.push(fn?[1,t('fnOk')[m.fn]]:[0,t('fnNo')[m.fn]]);
+ const got=res.filter(r=>r[0]).length;checked=true;best[i]=Math.max(best[i]||0,got);stars=best.reduce((a,b)=>a+(b||0),0);hud();
+ $('coach').innerHTML=`<div class="coach"><div class="stars">${[0,1,2].map(k=>`<img src="${sym('star')}" alt="" class="${k<got?'on':''}">`).join('')}</div><h3>${t('h')[got]}</h3>
+ ${res.map(([ok,txt])=>`<p class="ck ${ok?'':'no'}"><i>${ok?'✓':'+'}</i>${esc(txt)}</p>`).join('')}
+ <div class="ideas"><b>${t('ideas')}</b>${m.ideas.map((ids,k)=>`<div class="idea"><button data-idea="${k}" aria-label="${esc(ids.map(id=>lbl(byId[id])).join(' '))}">${ids.map(chip).join('')}</button></div>`).join('')}</div>
+ <div class="row"><button class="btn go" data-a="next">${t('next')}</button><button class="btn ghost" data-a="retry">${t('again')}</button></div></div>`;
+ if(got===3)confetti($('coach'),50);
+}
+function end(){$('moment').innerHTML='';$('ask').style.display='none';document.querySelector('.device').style.display='none';
+ $('coach').innerHTML=`<div class="end"><img src="${sym('trophy')}" alt=""><p class="big">${t('endh')}</p><p>${t('endp').replace('{s}',stars).replace('{m}',M.length*3)}</p><button class="btn go" data-a="restart">${t('restart')}</button></div>`;confetti($('game'),90)}
+function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('ask').textContent=t('ask');$('go').textContent=t('go');$('foot').textContent=t('foot');$('swipe').textContent=t('swipe');document.title=t('h1');
+ hud();moment();say();dev.render();if(checked&&!done)check()}
+$('go').onclick=check;
+$('del').onclick=()=>{msg.pop();checked=false;$('coach').innerHTML='';say()};
+document.addEventListener('click',e=>{const a=e.target.closest('[data-a]');const id=e.target.closest('[data-idea]');
+ if(id){const ids=M[i].ideas[+id.dataset.idea];speak(ids.map(x=>lbl(byId[x])).join(' '),L);return}
+ if(!a)return;const k=a.dataset.a;
+ if(k==='next'){i++;msg=[];checked=false;$('coach').innerHTML='';dev.home();if(i>=M.length)done=true;hud();moment();say();if(!done)$('game').scrollIntoView({behavior:AAC.reduced()?'auto':'smooth'})}
+ if(k==='retry'){msg=[];checked=false;$('coach').innerHTML='';dev.home();say()}
+ if(k==='restart'){i=0;stars=0;best=[];msg=[];checked=false;done=false;$('ask').style.display='';document.querySelector('.device').style.display='';$('coach').innerHTML='';dev.home();render()}
+});
+AAC.deco($('deco'),[['target',8,12,62,-8],['speech',46,58,46,6],['star',80,14,52,10],['bubbles',28,60,46,0]]);
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+</body>
+</html>

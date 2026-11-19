@@ -85,3 +85,25 @@ These ten load `shared/core.js` and `shared/base.css`, so the board words, voice
 | `calm-boards/` | Students | Tap-to-talk regulation boards for TK-2, 3-5 and 6-12, with Spanish -o/-a endings |
 | `core-board-maker/` | SLPs, teachers | Printable 12/24/36/60-word core boards in English, Spanish or both |
 | `program-at-a-glance/` | Admin | Program dashboard; shows sample numbers until `SHEET_CSV_URL` points to a published Google Sheet |
+
+## Second set of tools (November 2026)
+
+Eleven more, on the same shared foundation, all English and Spanish.
+
+| Folder | For | What it does |
+| --- | --- | --- |
+| `start-here/` | Everyone | Front door: three questions point people to the right tools, plus a "My Tools" shelf and every tool with audience filters |
+| `help-desk/` | Families, staff | Pick the problem (no sound, stuck, frozen, words moved, battery, voice, broken, won't use it) and try one fix at a time; makes a note for the team if it's still stuck |
+| `aac-journey/` | Families, admin | Eight stops from first concern to growing, with what happens, who is there, what to ask and California timelines |
+| `talk-at-home/` | Families | Ten home routines, four words each with a phrase and tip; prints as a fridge card |
+| `model-it/` | Staff, families | Ten real moments; build a model on the full device and get three quick checks (length, fit, function) plus team ideas |
+| `wait-for-it/` | Staff, families | Ask a question, then see if you wait long enough for the student to answer; results chart against the 5 to 10 second zone |
+| `more-than-requesting/` | Staff, admin | Sort 18 AAC messages into six communication functions |
+| `escape-room/` | PD | Team game: six locks opened by talking on the device, timer, hints, printable certificate |
+| `core-games/` | Classrooms | Smartboard games (Bubbles, Race Car, Silly Monster) driven by six big core keys; full-screen button |
+| `voices/` | Admin, families | Gallery of student messages that replay word by word. Shows EXAMPLES ONLY until real ones are added with written family permission; optional `FORM_URL` |
+| `awareness-challenge/` | District | October word calendar with stamps and badges, plus a school leaderboard; sample data until `SHEET_CSV_URL` is set |
+
+### Save to My Tools
+
+Every tool now has a star button in its header (`shared/bookmark.js`, reading the list in `shared/catalog.js`). Saved tools appear on Start Here. They are kept in the visitor's browser only. When the tools are embedded in Google Sites, saves made on that site stay together. When you add a new tool, add one line for it to `shared/catalog.js`.
