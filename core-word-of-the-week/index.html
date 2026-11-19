@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Core Word of the Week</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE warm and simple, something families and teachers check every Monday
+   IDEA a weekly poster on the fridge: one big word, where it lives, how to use it
+   PICTURE the word as a giant key with its symbol, next to a mini board showing its spot
+   COLOUR the word's own key colour leads the poster; magenta band
+   TYPE Atkinson Hyperlegible
+   LAYOUT poster row (big key, word, buttons), mini board, two idea cards; prints as one page */
+:root{--band:#a61e4d;--maxw:960px;--decol:78%}
+.weeknav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+.weeknav b{font-size:16px}
+.poster{display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,4vw,36px);align-items:center}
+.bigkey{width:clamp(140px,22vw,200px);aspect-ratio:1/1;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 10px 0 rgba(0,0,0,.18);transition:transform .2s}
+.bigkey img{width:56%}
+.bigkey span{font-weight:700;font-size:clamp(20px,3vw,28px)}
+.bigkey.lit{transform:scale(1.05) rotate(-2deg)}
+.word{font-size:clamp(54px,10vw,96px);line-height:.95;font-weight:700;letter-spacing:-.02em;margin:0;text-transform:uppercase}
+.ex{font-size:clamp(18px,2.4vw,22px);margin:10px 0 16px}
+.mini{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;background:#1d2026;border-radius:14px;padding:8px;margin:20px auto 0;max-width:380px}
+.mini i{aspect-ratio:1/.92;border-radius:4px;opacity:.35}
+.mini i.on{opacity:1;box-shadow:0 0 0 3px #fff,0 0 14px 4px rgba(255,255,255,.6);animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.mini+p{margin:8px auto 0;text-align:center;max-width:52ch}
+.ideas{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.idea{background:var(--tint);border-radius:20px;padding:18px;display:flex;gap:14px;align-items:flex-start}
+.idea img{width:52px;height:52px;flex:none;background:var(--card);border-radius:14px;padding:6px}
+.idea h3{margin:0 0 4px;font-size:18px}
+.idea p{margin:0}
+@media(max-width:640px){.poster{grid-template-columns:1fr;justify-items:center;text-align:center}.ideas{grid-template-columns:1fr}.poster .row{justify-content:center}}
+@media print{.weeknav{display:none}.bigkey{box-shadow:none;border:2px solid #999}.mini{background:#333}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card">
+    <div class="weeknav noprint"><button class="btn ghost" id="prev">&larr;</button><b id="wlabel"></b><button class="btn ghost" id="next">&rarr;</button></div>
+    <div class="poster"><div class="bigkey" id="bigkey"></div><div><p class="word" id="word"></p><p class="ex" id="ex"></p><div class="row noprint"><button class="btn go" id="model"></button><button class="btn ghost" id="say"></button><button class="btn ghost" id="print"></button></div></div></div>
+    <div class="mini" id="mini" aria-hidden="true"></div><p class="muted small" id="where"></p>
+  </section>
+  <section class="card"><div class="ideas" id="ideas"></div></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+const {W,byId,sym,speak,voiceSelect,langToggle,esc}=AAC;
+/* First Monday of the rotation. Change this to line the weeks up with the RUSD school calendar. */
+const START='2026-08-10';
+/* [word id, en example, es example, en home, es home, en school, es school] */
+const LIST=[
+['more','More bubbles?','¿Más burbujas?','Snack: hand out one piece at a time and model MORE.','Merienda: dé un pedazo a la vez y modele MÁS.','Turn-taking games: MORE turns, MORE paint, MORE blocks.','Juegos por turnos: MÁS turnos, MÁS pintura, MÁS bloques.'],
+['go','Ready, set, GO!','Uno, dos, tres... ¡a IR!','Car rides and walks: model GO before you start moving.','En el carro o caminando: modele IR antes de arrancar.','Transitions and races: GO to lunch, GO outside.','Transiciones y carreras: IR al almuerzo, IR afuera.'],
+['stop','Stop the music!','¡Para la música!','Tickles and chase: stop the moment they say STOP.','Cosquillas y carreras: pare en cuanto diga PARA.','Freeze dance and songs: model STOP when the music ends.','Baile congelado y canciones: modele PARA cuando acaba la música.'],
+['help','I need help.','Necesito ayuda.','Jars and jackets: pause before you help and model HELP.','Frascos y chamarras: haga una pausa antes de ayudar y modele AYUDA.','Model HELP when you need help yourself, out loud.','Modele AYUDA cuando usted necesite ayuda, en voz alta.'],
+['look','Look, a dog!','¡Mira, un perro!','Walks and windows: point things out with LOOK.','Paseos y ventanas: señale cosas con MIRA.','Books and science: LOOK at the picture, LOOK at the bug.','Libros y ciencias: MIRA el dibujo, MIRA el insecto.'],
+['want','I want that one.','Yo quiero ese.','Choices at meals: “I WANT juice.” Model your own wants too.','Opciones en la comida: “Yo QUIERO jugo.” Modele también lo que usted quiere.','Centers and choice time: model WANT before kids choose.','Centros y tiempo libre: modele QUIERO antes de que escojan.'],
+['like','I like it!','¡Me gusta!','Taste tests: share what you LIKE and don’t.','Probar comidas: diga lo que le GUSTA y lo que no.','Art and music: “I LIKE your picture.”','Arte y música: “Me GUSTA tu dibujo.”'],
+['alldone','All done!','¡Terminé!','End of meals, baths and games: ALL DONE.','Al terminar la comida, el baño o un juego: TERMINÉ.','Clean-up and end of a task: model ALL DONE.','Al recoger y al terminar una tarea: modele TERMINÉ.'],
+['turn','My turn, your turn.','Mi turno, tu turno.','Board games and ball play: MY TURN, YOUR TURN.','Juegos de mesa y pelota: MI TURNO, TU TURNO.','Line-ups and partner work: whose TURN is it?','Filas y trabajo en pareja: ¿de quién es el TURNO?'],
+['open','Open the door!','¡Abre la puerta!','Snack bags, doors and boxes: model OPEN first.','Bolsas, puertas y cajas: modele ABRIR primero.','Books and backpacks: OPEN your book, OPEN the bag.','Libros y mochilas: ABRIR el libro, ABRIR la mochila.'],
+['what','What is that?','¿Qué es eso?','Mystery bag or new toy: wonder WHAT out loud.','Bolsa misteriosa o juguete nuevo: pregunte QUÉ en voz alta.','Read-alouds: “WHAT happens next?”','Lectura en voz alta: “¿QUÉ pasa después?”'],
+['in','Put it in!','¡Ponlo dentro!','Clean-up: toys go IN the box.','Al recoger: los juguetes van DENTRO de la caja.','Sorting and recycling: put it IN the bin.','Clasificar y reciclar: ponlo DENTRO del bote.'],
+['again','Again! Again!','¡Otra vez! ¡Otra vez!','Songs and tickles: pause, then AGAIN?','Canciones y cosquillas: haga una pausa y luego ¿OTRA VEZ?','Favorite videos or songs: model AGAIN before you replay.','Videos o canciones favoritas: modele OTRA VEZ antes de repetir.'],
+['feel','I feel happy.','Me siento feliz.','Bedtime check-in: how do you FEEL today?','Antes de dormir: ¿cómo te SIENTES hoy?','Morning circle: model how YOU feel first.','Círculo de la mañana: modele primero cómo se siente usted.'],
+['where','Where is it?','¿Dónde está?','Hide and seek with toys: WHERE is teddy?','Esconder juguetes: ¿DÓNDE está el osito?','Lost items and maps: WHERE did it go?','Cosas perdidas y mapas: ¿DÓNDE quedó?'],
+['make','Let’s make it.','Vamos a hacerlo.','Cooking and crafts: MAKE a sandwich, MAKE a card.','Cocinar y manualidades: HACER un sándwich, HACER una tarjeta.','Art and building: what will you MAKE?','Arte y construcción: ¿qué vas a HACER?']];
+const T={
+ en:{h1:'Core Word of the Week',sub:'One word, all week, at home and at school. Model it every chance you get.',week:'Week of',model:'Show me',say:'Hear it',print:'Print poster',home:'At home',school:'At school',where:'Where it lives on the RUSD demo board. Your child’s app may put it somewhere else.',
+  foot:'Words rotate every week. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Palabra de la semana',sub:'Una palabra, toda la semana, en casa y en la escuela. Modélela cada vez que pueda.',week:'Semana del',model:'Muéstrame',say:'Escuchar',print:'Imprimir cartel',home:'En casa',school:'En la escuela',where:'Dónde está en el tablero de demostración de RUSD. La aplicación de su hijo puede tenerla en otro lugar.',
+  foot:'Las palabras cambian cada semana. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const $=id=>document.getElementById(id);
+const DAY=864e5,[sy,sm,sd]=START.split('-').map(Number),startD=new Date(sy,sm-1,sd);
+const now=Math.max(0,Math.floor(Math.round((Date.now()-startD)/DAY)/7));
+const S={lang:'en',wk:now};
+const render=()=>{const t=T[S.lang],es=S.lang==='es',e=LIST[((S.wk%LIST.length)+LIST.length)%LIST.length],w=byId[e[0]];
+ document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=es?'Voz':'Voice';
+ const d=new Date(startD);d.setDate(d.getDate()+S.wk*7);$('wlabel').textContent=`${t.week} ${d.toLocaleDateString(es?'es-US':'en-US',{month:'long',day:'numeric'})}`;
+ $('bigkey').className='bigkey '+w.c;$('bigkey').innerHTML=`<img src="${w.img}" alt=""><span>${esc(w[S.lang])}</span>`;
+ $('word').textContent=w[S.lang];$('ex').textContent=`“${es?e[2]:e[1]}”`;
+ $('model').textContent=t.model;$('say').textContent=t.say;$('print').textContent=t.print;
+ $('mini').innerHTML=W.map(x=>`<i class="${x.c}${x.id===w.id?' on':''}"></i>`).join('');$('where').textContent=t.where;
+ $('ideas').innerHTML=`<div class="idea"><img src="${sym('home')}" alt=""><div><h3>${t.home}</h3><p>${esc(es?e[4]:e[3])}</p></div></div><div class="idea"><img src="${sym('school')}" alt=""><div><h3>${t.school}</h3><p>${esc(es?e[6]:e[5])}</p></div></div>`};
+const cur=()=>LIST[((S.wk%LIST.length)+LIST.length)%LIST.length];
+$('prev').addEventListener('click',()=>{S.wk--;render()});
+$('next').addEventListener('click',()=>{S.wk++;render()});
+$('say').addEventListener('click',()=>speak(byId[cur()[0]][S.lang],S.lang));
+$('model').addEventListener('click',()=>{const e=cur(),k=$('bigkey');k.classList.add('lit');speak(byId[e[0]][S.lang],S.lang,()=>setTimeout(()=>speak(S.lang==='es'?e[2]:e[1],S.lang,()=>k.classList.remove('lit')),300))});
+$('print').addEventListener('click',()=>{try{window.print()}catch(e){}});
+langToggle($('langs'),()=>S.lang,l=>{S.lang=l;fill();render()});
+const fill=voiceSelect($('voice'),()=>S.lang);
+$('deco').innerHTML=[['calendar',12,12,60,-8],['star',48,58,44,8],['home',80,14,52,-6],['school',30,60,46,10]].map(([n,x,y,z,r],i)=>`<img src="${sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
+render();
+}
+</script>
+</body>
+</html>

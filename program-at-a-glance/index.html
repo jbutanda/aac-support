@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAC Program at a Glance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE work: a one-screen program report for administrators
+   IDEA a newspaper graphics box: headline finding, key figures, two honest charts
+   PICTURE the monthly bar charts of staff trained and AAC requests, one hue each
+   COLOUR slate band, white cards, one blue series colour, recessive grid
+   TYPE Atkinson Hyperlegible
+   LAYOUT finding and four figures, then two charts side by side (stacked on phone), then the numbers table */
+:root{--band:#343a40;--maxw:1080px;--decol:76%;--series:#2a78d6;--grid:light-dark(#e9ecef,#2c2f38)}
+:root[data-theme=dark]{--series:#3987e5}
+@media(prefers-color-scheme:dark){:root:where(:not([data-theme=light])){--series:#3987e5}}
+.flag{display:inline-block;background:#fff3bf;color:#5c3c00;font-weight:700;font-size:14px;border-radius:999px;padding:4px 12px;margin-bottom:10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:12px}
+.kpi{background:var(--tint);border-radius:18px;padding:14px 16px}
+.kpi b{display:block;font-size:clamp(32px,4.5vw,44px);line-height:1.05;font-variant-numeric:tabular-nums}
+.kpi span{font-weight:700;font-size:14px;color:var(--soft)}
+.kpi small{display:block;font-size:13px;color:var(--soft);margin-top:4px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.charts .card+.card{margin-top:0}
+.chart h3{margin:0 0 2px;font-size:18px}
+.chart p{margin:0 0 12px;font-size:14px;color:var(--soft)}
+.plot{position:relative;height:220px;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:2px;align-items:end;border-bottom:1px solid var(--soft);background:repeating-linear-gradient(to top,var(--grid) 0 1px,transparent 1px 25%)}
+.col{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.col i{display:block;width:62%;max-width:34px;background:var(--series);border-radius:4px 4px 0 0;min-height:2px}
+.col:hover i,.col:focus i{filter:brightness(1.15)}
+.col b{font-size:12px;font-variant-numeric:tabular-nums;margin-bottom:3px;color:var(--ink)}
+.xl{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:2px;margin-top:6px}
+.xl span{text-align:center;font-size:12px;color:var(--soft);font-weight:700}
+.tip{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:700;display:none}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+details summary{cursor:pointer;font-weight:700;min-height:40px;display:flex;align-items:center}
+.scroll{overflow-x:auto}
+@media(max-width:760px){.charts{grid-template-columns:1fr}.col b{font-size:10.5px}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1>AAC Program at a Glance</h1><p class="sub">Rialto Unified AAC services, school year to date. Counts only, never student information.</p></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card"><span class="flag" id="flag">Sample numbers for layout only</span><h2 id="head"></h2><div class="kpis" id="kpis"></div></section>
+  <div class="charts" style="margin-top:18px"><section class="card chart" id="c1"></section><section class="card chart" id="c2"></section></div>
+  <section class="card"><details><summary>Show the numbers</summary><div class="scroll" id="tbl"></div></details></section>
+  <p class="foot">To show real numbers, publish a Google Sheet tab to the web as CSV with the columns month, staff_trained, trainings, requests, median_days, classrooms_with_ipads, then paste its link into SHEET_CSV_URL in this page. The page reads it each time it opens. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.</p>
+</main>
+<div class="tip" id="tip"></div>
+<script src="../shared/core.js"></script>
+<script>
+{
+/* Paste a published-to-web Google Sheet CSV link here. Leave empty to show sample numbers. */
+const SHEET_CSV_URL='';
+const {sym,esc}=AAC;
+const SAMPLE=[
+ {month:'Aug',staff_trained:6,trainings:1,requests:4,median_days:9,classrooms_with_ipads:0},
+ {month:'Sep',staff_trained:18,trainings:3,requests:7,median_days:8,classrooms_with_ipads:2},
+ {month:'Oct',staff_trained:31,trainings:5,requests:11,median_days:7,classrooms_with_ipads:5},
+ {month:'Nov',staff_trained:40,trainings:6,requests:9,median_days:6,classrooms_with_ipads:8},
+ {month:'Dec',staff_trained:12,trainings:2,requests:5,median_days:6,classrooms_with_ipads:10},
+ {month:'Jan',staff_trained:55,trainings:7,requests:8,median_days:5,classrooms_with_ipads:12}];
+const $=id=>document.getElementById(id);
+const parse=t=>{const rows=t.trim().split(/\r?\n/).map(r=>r.split(',').map(c=>c.replace(/^"|"$/g,'').trim()));const h=rows.shift().map(x=>x.toLowerCase());return rows.filter(r=>r.length>=h.length&&r[0]).map(r=>Object.fromEntries(h.map((k,i)=>[k,k==='month'?r[i]:+r[i]||0])))};
+const sum=(d,k)=>d.reduce((a,r)=>a+(+r[k]||0),0);
+const bars=(el,d,k,title,note,unit)=>{const mx=Math.max(1,...d.map(r=>r[k]));const nice=Math.ceil(mx/4)*4;
+ el.innerHTML=`<h3>${title}</h3><p>${note}</p><div class="plot" style="--n:${d.length}">${d.map(r=>`<div class="col" tabindex="0" data-t="${esc(r.month)}: ${r[k]} ${unit}"><b>${r[k]}</b><i style="height:${r[k]/nice*88}%"></i></div>`).join('')}</div><div class="xl" style="--n:${d.length}">${d.map(r=>`<span>${esc(r.month)}</span>`).join('')}</div>`};
+const draw=(d,sample)=>{$('flag').style.display=sample?'':'none';
+ const last=d[d.length-1]||{},st=sum(d,'staff_trained'),tr=sum(d,'trainings'),rq=sum(d,'requests');
+ $('head').textContent=`${st} staff trained across ${tr} sessions, with ${last.classrooms_with_ipads||0} classrooms now running classroom AAC.`;
+ $('kpis').innerHTML=[[last.classrooms_with_ipads||0,'Classrooms with iPads','classroom AAC rollout'],[st,'Staff trained','teachers, paras, BSAs, SLPs'],[rq,'AAC requests','from site teams'],[last.median_days||0,'Median days to respond',`in ${esc(last.month||'')}`]].map(([v,l,s])=>`<div class="kpi"><b>${v}</b><span>${l}</span><small>${s}</small></div>`).join('');
+ bars($('c1'),d,'staff_trained','Staff trained each month','People who attended an AAC training.','staff');
+ bars($('c2'),d,'requests','AAC requests each month','New requests for AAC support from site teams.','requests');
+ const cols=['month','staff_trained','trainings','requests','median_days','classrooms_with_ipads'],lab=['Month','Staff trained','Trainings','Requests','Median days','Classrooms with iPads'];
+ $('tbl').innerHTML=`<table><thead><tr>${lab.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${d.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table>`};
+const tip=$('tip');
+document.addEventListener('mouseover',e=>{const c=e.target.closest('.col');if(!c){tip.style.display='none';return}tip.textContent=c.dataset.t;tip.style.display='block'});
+document.addEventListener('mousemove',e=>{if(tip.style.display==='block'){tip.style.left=Math.min(innerWidth-180,e.clientX+12)+'px';tip.style.top=(e.clientY-36)+'px'}});
+document.addEventListener('focusin',e=>{const c=e.target.closest('.col');if(c){const r=c.getBoundingClientRect();tip.textContent=c.dataset.t;tip.style.display='block';tip.style.left=r.left+'px';tip.style.top=(r.top-36)+'px'}else tip.style.display='none'});
+$('deco').innerHTML=[['chart',12,12,60,-8],['clipboard',48,58,46,8],['target',80,14,52,-6]].map(([n,x,y,z,r],i)=>`<img src="${sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
+if(SHEET_CSV_URL){fetch(SHEET_CSV_URL).then(r=>r.text()).then(t=>{const d=parse(t);d.length?draw(d,false):draw(SAMPLE,true)}).catch(()=>draw(SAMPLE,true))}else draw(SAMPLE,true);
+}
+</script>
+</body>
+</html>

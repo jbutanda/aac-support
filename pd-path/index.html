@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAC PD Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Literata:opsz,wght@7..72,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE professional but encouraging, self-paced staff PD
+   IDEA a trail map with stops: finish each stop, pass the check, earn a certificate
+   PICTURE the path itself, stops joined by a line that fills green as you go
+   COLOUR forest green band, white cards, gold certificate seal
+   TYPE Atkinson Hyperlegible; Literata only on the certificate
+   LAYOUT path stops, then the knowledge check, then the certificate; certificate prints alone */
+:root{--band:#1e6b38;--maxw:860px}
+.stops{position:relative;display:grid;gap:12px;padding-left:34px}
+.stops::before{content:'';position:absolute;left:15px;top:20px;bottom:20px;width:4px;border-radius:4px;background:var(--line)}
+.stops .fill{position:absolute;left:15px;top:20px;width:4px;border-radius:4px;background:var(--go);transition:height .4s}
+.stop{position:relative;display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;background:var(--tint);border-radius:18px;padding:12px 14px}
+.stop::before{content:'';position:absolute;left:-27px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:var(--card);border:4px solid var(--line)}
+.stop.done::before{background:var(--go);border-color:var(--go)}
+.stop img{width:56px;height:56px;background:var(--card);border-radius:14px;padding:6px}
+.stop h3{margin:0;font-size:18px}
+.stop p{margin:2px 0 0;font-size:14px;color:var(--soft)}
+.stop .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.open{display:inline-flex;align-items:center;min-height:40px;padding:6px 14px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:700;text-decoration:none;font-size:15px}
+.chk{font:inherit;font-weight:700;min-height:40px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;font-size:15px}
+.stop.done .chk{background:var(--go);color:#fff;border-color:var(--go)}
+.prog{display:flex;justify-content:space-between;font-weight:700;color:var(--soft);margin:0 0 12px}
+.qq{border-top:1px solid var(--line);padding:16px 0}
+.qq:first-of-type{border-top:0}
+.qq h3{font-size:18px;margin:0 0 10px}
+.qq label{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);margin-bottom:8px;cursor:pointer}
+.qq input{width:20px;height:20px;margin-top:2px;flex:none}
+.qq label.ok{border-color:var(--go);background:var(--gobg)}
+.qq label.bad{border-color:#c2410c;background:light-dark(#fff1e8,#3a1d10)}
+.qq .why{font-size:14px;color:var(--soft);margin:2px 0 0}
+.form{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.form label{display:grid;gap:4px;font-weight:700;font-size:14px}
+.form .full{grid-column:1/-1}
+.cert{border:10px double #b08900;border-radius:8px;padding:clamp(22px,5vw,48px);text-align:center;background:light-dark(#fffdf3,#1f1c10);position:relative}
+.cert .seal{width:90px;height:90px;margin:0 auto 6px}
+.cert small{display:block;letter-spacing:.08em;font-weight:700;color:var(--soft)}
+.cert .nm{font-family:Literata,Georgia,serif;font-size:clamp(30px,5vw,46px);line-height:1.1;margin:10px 0}
+.cert p{max-width:52ch;margin:6px auto}
+.cert .meta{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin-top:18px;font-size:14px}
+.cert .meta b{display:block;font-size:16px}
+.note{font-size:14px;color:var(--soft)}
+@media(max-width:600px){.stop{grid-template-columns:44px 1fr}.stop img{width:44px;height:44px}.stop .acts{grid-column:1/-1;justify-content:flex-start}.form{grid-template-columns:1fr}}
+@media print{body *{visibility:hidden}#certwrap,#certwrap *{visibility:visible}#certwrap{position:absolute;inset:0}.noprint{display:none!important}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1>AAC PD Path</h1><p class="sub">Five short stops, a quick check, and a certificate. About 45 minutes, at your own pace.</p></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card"><p class="prog"><span id="cnt"></span><span>~45 min</span></p><div class="stops" id="stops"></div></section>
+  <section class="card" id="quiz"></section>
+  <section class="card" id="certwrap" hidden></section>
+  <p class="foot">Progress and answers are saved only in this browser. Completion logging: set FORM_URL in this page to a Google Form to collect names for PD hours. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.</p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+/* Paste a Google Form link here to let staff log completion for PD credit. Leave empty to hide the button. */
+const FORM_URL='';
+const {sym,esc,store,confetti}=AAC;
+const M=[
+ {id:'myth',t:'Myth or Fact?',d:'Twelve common beliefs about AAC, and what research says.',min:10,url:'../myth-or-fact/',img:sym('star')},
+ {id:'model',t:'Watch Me Model',d:'See what modeling looks like on a talker.',min:5,url:'../talker/#model',img:'../talker/symbols/look.svg'},
+ {id:'wwyd',t:'What Would You Do?',d:'Twelve real classroom moments with coaching.',min:15,url:'../what-would-you-do/',img:'../talker/symbols/stop.svg'},
+ {id:'voice',t:'VOICE Check',d:'The five-step daily device check.',min:5,url:'../voice-check/',img:sym('clipboard')},
+ {id:'fast',t:'Find It Fast',d:'Learn where core words live on a board.',min:5,url:'../find-it-fast/',img:sym('stopwatch')}];
+const Q=[
+ {q:'What did research on AAC and speech find?',a:['AAC usually stops children from talking.','No one lost speech, and most people gained some.','AAC only helps after age five.'],c:1,w:'In a review of 27 people, none lost speech and 89% gained some (Millar, Light & Schlosser, 2006).'},
+ {q:'A student taps STOP in the middle of a task. What’s the best first step?',a:['Honor it with a short break or a smaller piece of the task.','Tell them to finish first.','Gently guide their hand to keep working.'],c:0,w:'When a word works, students use it instead of behavior. You can still return to the task.'},
+ {q:'What does modeling mean?',a:['Asking the student to copy what you press.','Touching words on the device while you talk, with no demand.','Pressing words for the student when they’re slow.'],c:1,w:'Modeling is showing, not testing.'},
+ {q:'After you ask a question, how long should you wait?',a:['About two seconds.','Ten seconds or more, with an expectant look.','Don’t wait. Give choices right away.'],c:1,w:'AAC is many times slower than speech, so wait time matters.'},
+ {q:'A student’s device is dead when they arrive. What do you do?',a:['They can skip it today.','Use a paper core board now and set up a charging routine.','Load a different app on a classroom iPad.'],c:1,w:'A backup keeps them talking. A routine prevents a repeat.'},
+ {q:'When is it okay to take a student’s device away?',a:['When they keep playing with it.','As a consequence for behavior.','Never as a punishment. If safety is the issue, use a case or strap so it stays available.'],c:2,w:'The device is the student’s voice. Keep it available.'}];
+const $=id=>document.getElementById(id);
+const S={done:store.get('pd-done',{}),ans:store.get('pd-ans',{}),checked:false,name:store.get('pd-name',''),site:store.get('pd-site',''),role:store.get('pd-role','')};
+const renderStops=()=>{const n=M.filter(m=>S.done[m.id]).length;$('cnt').textContent=`${n} of ${M.length} stops done`;
+ $('stops').innerHTML=`<div class="fill" style="height:calc(${n/M.length*100}% - 40px)"></div>`+M.map(m=>`<div class="stop${S.done[m.id]?' done':''}"><img src="${m.img}" alt=""><div><h3>${m.t}</h3><p>${m.d} About ${m.min} min.</p></div><div class="acts"><a class="open" href="${m.url}" target="_blank" rel="noopener">Open</a><button class="chk" data-d="${m.id}">${S.done[m.id]?'✓ Done':'Mark done'}</button></div></div>`).join('')};
+const score=()=>Q.filter((q,i)=>S.ans[i]===q.c).length;
+const renderQuiz=()=>{const all=M.every(m=>S.done[m.id]);
+ if(!all){$('quiz').innerHTML=`<h2>Knowledge check</h2><p class="muted">Finish all five stops to unlock six quick questions.</p>`;$('certwrap').hidden=true;return}
+ $('quiz').innerHTML=`<h2>Knowledge check</h2><p class="muted">Get 5 of 6 to earn your certificate.</p>`+Q.map((q,i)=>`<div class="qq"><h3>${i+1}. ${q.q}</h3>${q.a.map((a,j)=>{const cls=S.checked&&S.ans[i]===j?(j===q.c?' ok':' bad'):'';return `<label class="${cls}"><input type="radio" name="q${i}" value="${j}"${S.ans[i]===j?' checked':''}>${a}</label>`}).join('')}${S.checked?`<p class="why">${S.ans[i]===q.c?'✓ ':''}${q.w}</p>`:''}</div>`).join('')+`<div class="row"><button class="btn go" id="check">Check my answers</button>${S.checked?`<b>${score()} of 6</b>`:''}</div>`;
+ renderCert()};
+const today=()=>new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+const renderCert=()=>{const pass=S.checked&&score()>=5;$('certwrap').hidden=!pass;if(!pass)return;
+ $('certwrap').innerHTML=`<div class="noprint"><h2>Your certificate</h2><div class="form"><label>Name<input class="in" id="nm" value="${esc(S.name)}" placeholder="First and last name"></label><label>School or site<input class="in" id="st" value="${esc(S.site)}" placeholder="e.g., Casey Elementary"></label><label class="full">Role<input class="in" id="rl" value="${esc(S.role)}" placeholder="e.g., Paraeducator"></label></div><div class="row" style="margin:14px 0 18px"><button class="btn go" id="print">Print certificate</button>${FORM_URL?`<a class="open" href="${FORM_URL}" target="_blank" rel="noopener">Log my completion</a>`:''}</div></div>
+ <div class="cert"><img class="seal" src="${sym('medal')}" alt=""><small>CERTIFICATE OF COMPLETION</small><div class="nm" id="cn">${esc(S.name)||'Your Name'}</div><p>completed the <b>AAC Foundations PD Path</b>: Myth or Fact, Watch Me Model, What Would You Do, VOICE Check and Find It Fast, and passed the knowledge check.</p><div class="meta"><div><b id="cs">${esc(S.site)||'—'}</b>Site</div><div><b id="cr">${esc(S.role)||'—'}</b>Role</div><div><b>${today()}</b>Date</div><div><b>45 minutes</b>Time</div></div><p class="note" style="margin-top:18px">Rialto Unified School District · AAC Services</p></div>`};
+$('stops').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b)return;S.done[b.dataset.d]=!S.done[b.dataset.d];store.set('pd-done',S.done);renderStops();renderQuiz()});
+$('quiz').addEventListener('change',e=>{const r=e.target;if(r.name&&r.name[0]==='q'){S.ans[+r.name.slice(1)]=+r.value;store.set('pd-ans',S.ans);if(S.checked){S.checked=false;renderQuiz()}}});
+$('quiz').addEventListener('click',e=>{if(e.target.closest('#check')){S.checked=true;renderQuiz();if(score()>=5){setTimeout(()=>{$('certwrap').scrollIntoView({behavior:'smooth',block:'start'});confetti($('certwrap'),110)},120)}}});
+$('certwrap').addEventListener('input',e=>{const id=e.target.id;if(id==='nm'){S.name=e.target.value;store.set('pd-name',S.name);$('cn').textContent=S.name||'Your Name'}if(id==='st'){S.site=e.target.value;store.set('pd-site',S.site);$('cs').textContent=S.site||'—'}if(id==='rl'){S.role=e.target.value;store.set('pd-role',S.role);$('cr').textContent=S.role||'—'}});
+$('certwrap').addEventListener('click',e=>{if(e.target.closest('#print')){try{window.print()}catch(err){}}});
+$('deco').innerHTML=[['grad',12,12,64,-8],['medal',48,56,56,8],['clipboard',80,14,52,-6],['star',30,62,40,10]].map(([n,x,y,z,r],i)=>`<img src="${sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
+renderStops();renderQuiz();
+}
+</script>
+</body>
+</html>

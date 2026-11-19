@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All About Me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE warm and personal, written in the student's own voice
+   IDEA a one-page passport a new teacher, sub or bus driver can read in a minute
+   PICTURE the live profile page itself, colourful sections with symbols, filling in as you type
+   COLOUR coral band; each profile section takes one Fitzgerald colour
+   TYPE Atkinson Hyperlegible
+   LAYOUT form left, live profile right on laptop; form then profile on phone; prints the profile only */
+:root{--band:#d9480f;--maxw:1180px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:start}
+.form{display:grid;gap:14px}
+.form label,.form fieldset{display:grid;gap:6px;font-weight:700;font-size:15px}
+.form fieldset{border:0;padding:0;margin:0}
+.form legend{font-weight:700;font-size:15px;margin-bottom:6px}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{display:inline-flex;flex-direction:row;align-items:center;gap:6px;font-weight:400;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;min-height:40px;cursor:pointer}
+.checks input{width:18px;height:18px}
+textarea.in{min-height:64px;resize:vertical}
+.prof{position:sticky;top:12px}
+.page{background:#fff;color:#16181d;border-radius:20px;padding:22px;box-shadow:0 1px 0 #e3e5ea inset}
+.ph{display:flex;gap:16px;align-items:center;margin-bottom:14px}
+.ph .av{width:96px;height:96px;border-radius:50%;background:#ffe066;display:grid;place-items:center;overflow:hidden;flex:none;border:4px solid #fff;box-shadow:0 0 0 3px #ffe066}
+.ph .av img{width:100%;height:100%;object-fit:cover}
+.ph .av img.sym{width:62%;height:62%;object-fit:contain}
+.ph h2{font-size:clamp(28px,4vw,40px);margin:0;color:#16181d}
+.ph p{margin:2px 0 0;color:#5b6170;font-weight:700}
+.secs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sec{border-radius:16px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.sec img{width:34px;flex:none}
+.sec h3{margin:0 0 2px;font-size:15px}
+.sec p,.sec ul{margin:0;font-size:15px}
+.sec ul{padding-left:18px}
+.sec.full{grid-column:1/-1}
+.s1{background:#fff3bf}.s2{background:#d3f9d8}.s3{background:#d0ebff}.s4{background:#eebefa}.s5{background:#ffdeeb}.s6{background:#ffe3e3}.s7{background:#f1f3f5}
+.empty{color:#868e96;font-style:italic}
+.note{font-size:14px;color:var(--soft);margin:0}
+@media(max-width:900px){.cols{grid-template-columns:1fr}.prof{position:static}}
+@media(max-width:520px){.secs{grid-template-columns:1fr}}
+@media print{.cols{display:block}.form,.formcard{display:none!important}.prof{position:static}.page{box-shadow:none;padding:0}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
+</div></header>
+<main class="wrap">
+  <div class="cols">
+    <section class="card formcard noprint"><div class="form" id="form"></div></section>
+    <section class="prof"><div class="card"><div class="page" id="page"></div><div class="row noprint" style="margin-top:14px"><button class="btn go" id="print"></button><p class="note" id="priv"></p></div></div></section>
+  </div>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+const {sym,esc,langToggle}=AAC;
+const TS='../talker/symbols/';
+const L={
+ en:{h1:'All About Me',sub:'A one-page profile in the student’s own voice, for new teachers, subs, aides and bus drivers.',print:'Print my page',priv:'Nothing you type is saved or sent. It stays on this screen until you print or close it.',
+  f:{name:'First name',photo:'Photo (optional, stays on this device)',comm:'I communicate by',dev:'My talker (app or device)',lives:'Where my talker lives',yes:'My yes looks like',no:'My no looks like',love:'I love',notfav:'Not my favorite',help:'Help me by',upset:'When I’m upset, I might',calm:'What helps me calm down',dont:'Please don’t',ask:'Ask me about'},
+  comm:['Talking','My talker','Signs','Gestures and pointing','Pictures','Writing or typing'],
+  help:['Waiting for me to answer','Modeling words on my talker','Keeping my talker with me','Talking to me, not about me','Giving me a heads-up before changes'],
+  dont:['Take my talker away','Move my hands for me','Answer for me','Turn my talker’s volume off'],
+  ph:{name:'e.g., Mia',dev:'e.g., Proloquo2Go on an iPad',lives:'e.g., In the blue case on my chair',yes:'e.g., I smile and nod',no:'e.g., I turn my head away',love:'e.g., Music, swings, pizza',notfav:'e.g., Loud bells, waiting in line',upset:'e.g., Cover my ears or walk away',calm:'e.g., Headphones and a quiet corner',ask:'e.g., My dog Coco and my favorite songs'},
+  p:{hi:'Hi! I’m',sub:'Here’s how to talk with me.',comm:'How I talk',dev:'My talker',yesno:'Yes and no',love:'I love',notfav:'Not my favorite',help:'You can help by',upset:'When I’m upset',dont:'Please don’t',ask:'Ask me about',yes:'Yes:',no:'No:',lives:'Find it:',calm:'What helps:',add:'Add this in the form'},
+  foot:'Fill this out together with the student whenever you can. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Todo sobre mí',sub:'Un perfil de una página en la voz del estudiante, para maestros nuevos, suplentes, asistentes y choferes del autobús.',print:'Imprimir mi página',priv:'Nada de lo que escriba se guarda ni se envía. Se queda en esta pantalla hasta que la imprima o la cierre.',
+  f:{name:'Nombre',photo:'Foto (opcional, se queda en este dispositivo)',comm:'Me comunico con',dev:'Mi comunicador (aplicación o aparato)',lives:'Dónde está mi comunicador',yes:'Mi sí se ve así',no:'Mi no se ve así',love:'Me encanta',notfav:'No me gusta mucho',help:'Ayúdame',upset:'Cuando estoy molesto, puedo',calm:'Lo que me ayuda a calmarme',dont:'Por favor no',ask:'Pregúntame sobre'},
+  comm:['Hablando','Mi comunicador','Señas','Gestos y señalar','Imágenes','Escribiendo'],
+  help:['Esperando mi respuesta','Modelando palabras en mi comunicador','Dejando mi comunicador conmigo','Hablándome a mí, no sobre mí','Avisándome antes de los cambios'],
+  dont:['Me quites el comunicador','Me muevas las manos','Contestes por mí','Le apagues el volumen a mi comunicador'],
+  ph:{name:'ej., Mia',dev:'ej., Proloquo2Go en un iPad',lives:'ej., En el estuche azul en mi silla',yes:'ej., Sonrío y digo que sí con la cabeza',no:'ej., Volteo la cabeza',love:'ej., Música, columpios, pizza',notfav:'ej., Timbres fuertes, hacer fila',upset:'ej., Me tapo los oídos o me voy',calm:'ej., Audífonos y un rincón tranquilo',ask:'ej., Mi perrita Coco y mis canciones favoritas'},
+  p:{hi:'¡Hola! Soy',sub:'Así puedes hablar conmigo.',comm:'Cómo hablo',dev:'Mi comunicador',yesno:'Sí y no',love:'Me encanta',notfav:'No me gusta mucho',help:'Puedes ayudarme',upset:'Cuando estoy molesto',dont:'Por favor no',ask:'Pregúntame sobre',yes:'Sí:',no:'No:',lives:'Dónde está:',calm:'Lo que ayuda:',add:'Agréguelo en el formulario'},
+  foot:'Siempre que se pueda, llénelo junto con el estudiante. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const S={lang:'en',v:{},comm:new Set(),help:new Set(),dont:new Set(),photo:''};
+const $=id=>document.getElementById(id);
+const txt=['name','dev','lives','yes','no','love','notfav','upset','calm','ask'];
+const area=new Set(['love','notfav','upset','calm','ask']);
+const drawForm=()=>{const t=L[S.lang],f=t.f;
+ const field=k=>`<label>${f[k]}${area.has(k)?`<textarea class="in" data-k="${k}" placeholder="${esc(t.ph[k])}">${esc(S.v[k]||'')}</textarea>`:`<input class="in" data-k="${k}" value="${esc(S.v[k]||'')}" placeholder="${esc(t.ph[k])}">`}</label>`;
+ const checks=(k,arr)=>`<fieldset><legend>${f[k]}</legend><div class="checks">${arr.map((a,i)=>`<label><input type="checkbox" data-c="${k}" value="${i}"${S[k].has(i)?' checked':''}>${a}</label>`).join('')}</div></fieldset>`;
+ $('form').innerHTML=field('name')+`<label>${f.photo}<input class="in" type="file" accept="image/*" id="photo"></label>`+checks('comm',t.comm)+field('dev')+field('lives')+field('yes')+field('no')+field('love')+field('notfav')+checks('help',t.help)+field('upset')+field('calm')+checks('dont',t.dont)+field('ask')};
+const val=k=>S.v[k]&&S.v[k].trim()?esc(S.v[k]):`<span class="empty">${L[S.lang].p.add}</span>`;
+const list=(k)=>{const a=[...S[k]].sort().map(i=>L[S.lang][k][i]);return a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:`<p class="empty">${L[S.lang].p.add}</p>`};
+const drawPage=()=>{const p=L[S.lang].p;
+ $('page').innerHTML=`<div class="ph"><div class="av">${S.photo?`<img src="${S.photo}" alt="">`:`<img class="sym" src="${sym('smile')}" alt="">`}</div><div><h2>${p.hi} ${S.v.name&&S.v.name.trim()?esc(S.v.name):'...'}</h2><p>${p.sub}</p></div></div>
+ <div class="secs">
+  <div class="sec s1"><img src="${TS}say.svg" alt=""><div><h3>${p.comm}</h3>${list('comm')}</div></div>
+  <div class="sec s3"><img src="${sym('phone')}" alt=""><div><h3>${p.dev}</h3><p>${val('dev')}</p><p><b>${p.lives}</b> ${val('lives')}</p></div></div>
+  <div class="sec s2 full"><img src="${TS}yes.svg" alt=""><div><h3>${p.yesno}</h3><p><b>${p.yes}</b> ${val('yes')}</p><p><b>${p.no}</b> ${val('no')}</p></div></div>
+  <div class="sec s5"><img src="${TS}like.svg" alt=""><div><h3>${p.love}</h3><p>${val('love')}</p></div></div>
+  <div class="sec s7"><img src="${TS}bad.svg" alt=""><div><h3>${p.notfav}</h3><p>${val('notfav')}</p></div></div>
+  <div class="sec s2 full"><img src="${TS}help.svg" alt=""><div><h3>${p.help}</h3>${list('help')}</div></div>
+  <div class="sec s4"><img src="${sym('calm')}" alt=""><div><h3>${p.upset}</h3><p>${val('upset')}</p><p><b>${p.calm}</b> ${val('calm')}</p></div></div>
+  <div class="sec s6"><img src="${TS}stop.svg" alt=""><div><h3>${p.dont}</h3>${list('dont')}</div></div>
+  <div class="sec s3 full"><img src="${TS}what.svg" alt=""><div><h3>${p.ask}</h3><p>${val('ask')}</p></div></div>
+ </div>`};
+const chrome=()=>{const t=L[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('print').textContent=t.print;$('priv').textContent=t.priv;$('foot').textContent=t.foot};
+$('form').addEventListener('input',e=>{const k=e.target.dataset.k;if(k){S.v[k]=e.target.value;drawPage()}});
+$('form').addEventListener('change',e=>{const c=e.target.dataset.c;if(c){const i=+e.target.value;e.target.checked?S[c].add(i):S[c].delete(i);drawPage()}
+ if(e.target.id==='photo'&&e.target.files&&e.target.files[0]){const r=new FileReader();r.onload=()=>{S.photo=r.result;drawPage()};r.readAsDataURL(e.target.files[0])}});
+$('print').addEventListener('click',()=>{try{window.print()}catch(e){}});
+langToggle($('langs'),()=>S.lang,l=>{S.lang=l;chrome();drawForm();drawPage()});
+$('deco').innerHTML=[['smile',12,12,60,-8],['star',48,58,44,8],['wave',80,14,52,-6]].map(([n,x,y,z,r],i)=>`<img src="${sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
+chrome();drawForm();drawPage();
+}
+</script>
+</body>
+</html>

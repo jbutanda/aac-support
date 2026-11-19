@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Walk in Their Shoes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE reflective but lively, a partner activity for trainings
+   IDEA an interview hot seat: one partner asks, the other may only answer with the talker
+   PICTURE the question in a big speech bubble with a shrinking countdown ring beside it
+   COLOUR deep plum band, charcoal device, warm amber timer
+   TYPE Atkinson Hyperlegible
+   LAYOUT question and timer row, message bar, board; phone scrolls the board sideways */
+:root{--band:#5f1e4f;--maxw:1080px}
+.qrow{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+.asks{font-weight:700;color:var(--soft);margin:0 0 6px}
+.bubble{background:#fbe9f3;color:#16181d;border-radius:22px;padding:16px 20px;font-size:clamp(21px,3vw,28px);font-weight:700;line-height:1.25;position:relative}
+:root[data-theme=dark] .bubble{background:#3a1c31;color:#f5e6ee}
+.ring{width:108px;height:108px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-variant-numeric:tabular-nums}
+.msg{display:flex;gap:8px;margin-bottom:12px}
+.bar{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:60px;padding:8px 12px;border-radius:14px;background:#f7f7f2;color:#16181d;border:0;font:inherit;text-align:left;cursor:pointer}
+.bar .ph{color:#7a7f8a}
+.chip{display:inline-flex;padding:4px 10px;border-radius:8px;font-weight:700;font-size:17px}
+.ctl{width:60px;border-radius:14px;border:0;background:#2a2e37;color:#eceef2;cursor:pointer;font:inherit;font-weight:700}
+.gw{overflow-x:auto}
+.grid{grid-template-columns:repeat(10,minmax(0,1fr))}
+.center{text-align:center}
+.center p{max-width:56ch;margin:8px auto 16px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.cmp div{background:var(--tint);border-radius:16px;padding:14px;text-align:center}
+.cmp b{display:block;font-size:40px;line-height:1.05;font-variant-numeric:tabular-nums}
+.take{display:grid;gap:10px;text-align:left;margin:16px 0}
+.take div{display:flex;gap:12px;align-items:flex-start;background:var(--tint);border-radius:16px;padding:14px}
+.take img{width:40px;flex:none}
+@media(max-width:640px){.grid{min-width:600px;gap:4px}.qrow{grid-template-columns:1fr}.ring{width:84px;height:84px;margin:0 auto}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card" id="top"></section>
+  <section class="card" id="dev"><div class="msg"><button class="bar" id="bar"></button><button class="ctl" id="del" aria-label="Delete">&#9003;</button><button class="ctl" id="clr" aria-label="Clear">&#10005;</button></div><div class="device"><div class="gw"><div class="grid" id="grid"></div></div></div></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+const {W,byId,sym,speak,hush,voiceSelect,langToggle,keyHtml,confetti}=AAC;
+const LIMIT=60;
+const Q={en:['What did you do last weekend?','What’s your favorite food, and why?','Tell me something funny that happened this week.','What do you need right now?','I think pizza is the worst food. Disagree with me!','Ask me a question about my day.','How are you feeling about today’s training?','Where do you want to go on vacation?'],
+ es:['¿Qué hiciste el fin de semana pasado?','¿Cuál es tu comida favorita y por qué?','Cuéntame algo chistoso que pasó esta semana.','¿Qué necesitas ahora mismo?','Creo que la pizza es la peor comida. ¡Llévame la contraria!','Hazme una pregunta sobre mi día.','¿Cómo te sientes con la capacitación de hoy?','¿A dónde quieres ir de vacaciones?']};
+const T={
+ en:{h1:'Walk in Their Shoes',sub:'A partner activity. One person asks. The other may only answer with the talker. Then talk about how it felt.',start:'Start',intro:'Pair up. The asker reads the question out loud. The answerer uses only this board, no speech, no gestures, and taps the message bar to say it. You have one minute per question.',
+  asks:'Your partner asks:',ph:'Answer using only the board...',done:'I’m done',next:'Next question',finish:'Finish and debrief',up:'Time’s up!',upP:'How did it feel to run out of time before you finished? Many students live this every day when partners move on too fast.',
+  took:'You took',sp:'Speaking takes about',secs:'seconds',reflect:'Talk about it: what was hard? What did your partner do that helped, or didn’t?',
+  debT:'What this shows',deb:[['../talker/symbols/wait.svg','Wait longer than feels natural. People using AAC communicate many times slower than speech, so count to 10 before you jump in.'],['../talker/symbols/look.svg','Model the words you want to hear. If the word you needed was hard to find, that is exactly why students need to see us use the board.'],['buddy','Be a patient partner. Don’t finish their sentence, guess, or walk away. Let them own their message.']],again:'Start over',
+  foot:'For staff trainings. Questions are samples; swap in your own. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'En sus zapatos',sub:'Actividad en parejas. Una persona pregunta. La otra solo puede contestar con el comunicador. Luego hablen de cómo se sintió.',start:'Empezar',intro:'Formen parejas. Quien pregunta lee la pregunta en voz alta. Quien contesta solo usa este tablero, sin hablar ni hacer gestos, y toca la barra para decirlo. Tienen un minuto por pregunta.',
+  asks:'Su pareja pregunta:',ph:'Conteste usando solo el tablero...',done:'Terminé',next:'Siguiente pregunta',finish:'Terminar y conversar',up:'¡Se acabó el tiempo!',upP:'¿Cómo se sintió quedarse sin tiempo antes de terminar? Muchos estudiantes viven esto todos los días cuando la otra persona sigue adelante muy rápido.',
+  took:'Usted tardó',sp:'Hablando se tarda unos',secs:'segundos',reflect:'Conversen: ¿qué fue difícil? ¿Qué hizo su pareja que ayudó, o que no ayudó?',
+  debT:'Lo que esto enseña',deb:[['../talker/symbols/wait.svg','Espere más de lo que parece natural. Las personas que usan CAA se comunican mucho más lento que hablando, así que cuente hasta 10 antes de intervenir.'],['../talker/symbols/look.svg','Modele las palabras que quiere escuchar. Si le costó encontrar la palabra que necesitaba, por eso los estudiantes necesitan vernos usar el tablero.'],['buddy','Sea un compañero paciente. No termine su frase, no adivine ni se vaya. Deje que el mensaje sea suyo.']],again:'Empezar de nuevo',
+  foot:'Para capacitaciones del personal. Las preguntas son ejemplos; cámbielas por las suyas. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const S={lang:'en',phase:'start',qi:0,msg:[],t0:0,left:LIMIT,timer:null,took:0};
+const $=id=>document.getElementById(id);
+const ring=()=>{const f=Math.max(0,S.left)/LIMIT,C=2*Math.PI*44;return `<div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="var(--tint)" stroke-width="10"/><circle id="arc" cx="50" cy="50" r="44" fill="none" stroke="${S.left<=10?'#e03131':'#f59f00'}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}"/></svg><b id="secs">${Math.ceil(S.left)}</b></div>`};
+const bar=()=>{$('bar').innerHTML=S.msg.length?S.msg.map(id=>{const w=byId[id];return `<span class="chip ${w.c}">${w[S.lang]}</span>`}).join(''):`<span class="ph">${T[S.lang].ph}</span>`};
+const stop=()=>{clearInterval(S.timer);S.timer=null};
+const render=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=S.lang==='es'?'Voz':'Voice';
+ $('dev').style.display=S.phase==='ask'?'':'none';
+ if(S.phase==='start'){$('top').innerHTML=`<div class="center"><h2>${t.h1}</h2><p>${t.intro}</p><button class="btn go" id="go">${t.start}</button></div>`;return}
+ if(S.phase==='ask'){$('top').innerHTML=`<div class="qrow"><div><p class="asks">${t.asks}</p><div class="bubble">${Q[S.lang][S.qi]}</div></div>${ring()}</div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn go" id="fin">${t.done}</button></div>`;bar();return}
+ if(S.phase==='reflect'){const up=S.took>=LIMIT;$('top').innerHTML=`<div class="center">${up?`<h2>${t.up}</h2><p>${t.upP}</p>`:''}<div class="cmp"><div><b>${S.took.toFixed(0)}</b>${t.took} (${t.secs})</div><div><b>2</b>${t.sp} ${t.secs}</div></div><p>${t.reflect}</p><div class="row" style="justify-content:center"><button class="btn go" id="nextq">${t.next}</button><button class="btn ghost" id="deb">${t.finish}</button></div></div>`;return}
+ $('top').innerHTML=`<div class="center"><h2>${t.debT}</h2><div class="take">${t.deb.map(([s,x])=>`<div><img src="${s.includes('/')?s:sym(s)}" alt=""><span>${x}</span></div>`).join('')}</div><button class="btn" id="again">${t.again}</button></div>`};
+const ask=()=>{S.phase='ask';S.msg=[];S.left=LIMIT;S.t0=performance.now();stop();
+ S.timer=setInterval(()=>{S.left=LIMIT-(performance.now()-S.t0)/1000;const a=$('arc'),s=$('secs');if(a){const C=2*Math.PI*44;a.setAttribute('stroke-dashoffset',C*(1-Math.max(0,S.left)/LIMIT));if(S.left<=10)a.setAttribute('stroke','#e03131')}if(s)s.textContent=Math.max(0,Math.ceil(S.left));if(S.left<=0)finish()},200);render()};
+const finish=()=>{if(S.phase!=='ask')return;stop();S.took=Math.min(LIMIT,(performance.now()-S.t0)/1000);S.phase='reflect';render()};
+$('top').addEventListener('click',e=>{if(e.target.closest('#go'))ask();else if(e.target.closest('#fin'))finish();else if(e.target.closest('#nextq')){S.qi=(S.qi+1)%Q.en.length;ask()}else if(e.target.closest('#deb')){S.phase='debrief';render();confetti($('top'),60)}else if(e.target.closest('#again')){S.phase='start';S.qi=0;render()}});
+$('grid').addEventListener('click',e=>{const b=e.target.closest('.k');if(!b||S.phase!=='ask')return;const w=byId[b.dataset.id];S.msg.push(w.id);bar();speak(w[S.lang],S.lang)});
+$('bar').addEventListener('click',()=>{if(S.msg.length)speak(S.msg.map(id=>byId[id][S.lang]).join(' '),S.lang)});
+$('del').addEventListener('click',()=>{S.msg.pop();bar()});
+$('clr').addEventListener('click',()=>{S.msg=[];bar()});
+const grid=()=>{$('grid').innerHTML=W.map(w=>keyHtml(w,S.lang)).join('')};
+langToggle($('langs'),()=>S.lang,l=>{S.lang=l;fill();grid();render()});
+const fill=voiceSelect($('voice'),()=>S.lang);
+$('deco').innerHTML=[['talk',12,12,62,-8],['wait',48,58,54,8],['buddy',80,14,56,-6],['say',30,60,40,10]].map(([n,x,y,z,r],i)=>`<img src="${n==='say'?'../talker/symbols/say.svg':n==='wait'?'../talker/symbols/wait.svg':sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
+grid();render();
+}
+</script>
+</body>
+</html>
