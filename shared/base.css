@@ -77,3 +77,9 @@ h2{font-size:clamp(22px,3vw,28px);line-height:1.15;margin:0 0 8px}
 .k.kb{background:#e9ecef;color:#16181d;font-size:clamp(16px,2vw,24px);aspect-ratio:1/.8}
 .k.kb.add{grid-column:span 2;background:#2b8a3e;color:#fff;aspect-ratio:auto}
 @media(max-width:640px){.dvroot{min-width:600px}.dgrid{gap:4px}.swipe{display:block}}
+/* header picture (shared/art). Add class has-hero to the band and an img.hero after .top */
+.band.has-hero .bandin{display:grid;grid-template-columns:minmax(0,1fr) min(40%,440px);gap:clamp(18px,3vw,36px);align-items:center}
+.band.has-hero .deco{display:none}
+.hero{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:22px;border:4px solid var(--heroline,rgba(255,255,255,.9));box-shadow:0 16px 34px rgba(0,0,0,.28);background:rgba(255,255,255,.15)}
+@media(max-width:760px){.band.has-hero .bandin{grid-template-columns:1fr}.band.has-hero .hero{order:-1;aspect-ratio:2/1;max-height:220px}}
+@media print{.hero{display:none}}

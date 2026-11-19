@@ -10,7 +10,7 @@
 <style>
 /* IDEA a vault with six locks. The only way out is to talk your way out on the AAC device
    LAYOUT dark vault: lock row with code letters, clue card, device; escape screen with team name and time */
-:root{--band:#1a1b1e;--maxw:1180px;--decol:70%;--gold:#fcc419}
+:root{--band:#1a1b1e;--maxw:1180px;--decol:70%;--gold:#fcc419;--heroline:#fcc419}
 body{background:radial-gradient(circle at 50% 0,#2b2d33,#111214 70%)}
 .wrap .card.vault{background:#1f2125;color:#f1f3f5;box-shadow:0 0 0 1px #3a3d44,0 30px 60px rgba(0,0,0,.5)}
 .vault h2{color:#fff}
@@ -68,9 +68,11 @@ body{background:radial-gradient(circle at 50% 0,#2b2d33,#111214 70%)}
 </style>
 </head>
 <body>
-<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+<header class="band has-hero"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
   <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+
+  <img class="hero" id="hero" src="../shared/art/escape-room.jpg" alt="Four staff members laugh around a tablet, surrounded by golden keys and padlocks." data-en="Four staff members laugh around a tablet, surrounded by golden keys and padlocks." data-es="Cuatro miembros del personal se ríen alrededor de una tableta, rodeados de llaves y candados dorados." width="960" height="540">
 </div></header>
 <main class="wrap">
   <section class="card vault" id="room"></section>
@@ -137,6 +139,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a
  if(k==='again'){stage='setup';lock=0;show()}});
 function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');if(stage==='play'&&lock===5)msg=[];show()}
 AAC.deco($('deco'),[['key',8,12,60,-20],['lock',46,58,44,8],['door',80,10,56,0],['oldkey',28,60,46,14]]);
+(function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);
 </script>
 <script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>

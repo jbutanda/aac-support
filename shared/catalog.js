@@ -4,7 +4,7 @@
 (function(){
 const s=n=>'../shared/symbols/'+n+'.svg';
 window.AAC_CATALOG=[
-{id:'start-here',en:'Start Here',es:'Empieza aquí',den:'Answer three questions and get the tools that fit you.',des:'Contesta tres preguntas y encuentra las herramientas para ti.',who:['family','teacher','para','slp','admin','peer'],want:['basics'],min:2,c:'#0b3d91',icon:s('compass')},
+{id:'start-here',en:'Start Here',es:'Empieza aquí',den:'Answer three questions and get the tools that fit you.',des:'Contesta tres preguntas y encuentra las herramientas para ti.',who:['family','teacher','para','slp','admin','peer'],want:['basics'],min:2,c:'#0c4b9d',icon:s('compass')},
 {id:'help-desk',en:'Device Help Desk',es:'Ayuda con el dispositivo',den:'No sound, stuck screen, words moved? Quick fixes, step by step.',des:'¿Sin sonido, pantalla trabada, palabras movidas? Soluciones paso a paso.',who:['family','teacher','para','slp'],want:['help'],min:3,c:'#1c7ed6',icon:s('wrench')},
 {id:'talk-at-home',en:'Talk at Home',es:'Hablemos en casa',den:'Pick a routine and get words to model at dinner, bath time, the car and more.',des:'Elija una rutina y reciba palabras para modelar en la cena, el baño, el carro y más.',who:['family'],want:['practice','print'],min:3,c:'#9c36b5',icon:s('home')},
 {id:'talker',en:'Try an AAC Device',es:'Prueba un dispositivo de CAA',den:'Talk with a real-feeling AAC device, take challenges or watch it model.',des:'Habla con un dispositivo de CAA, haz retos o mira cómo modela.',who:['family','teacher','para','slp','admin','peer'],want:['basics','fun'],min:5,c:'#5f3dc4',icon:s('speaking')},

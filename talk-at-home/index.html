@@ -46,9 +46,11 @@
 </style>
 </head>
 <body>
-<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+<header class="band has-hero"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
   <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+
+  <img class="hero" id="hero" src="../shared/art/families-dinner.jpg" alt="At dinner, a mother points to a word on a communication tablet while her daughter laughs and taps it herself." data-en="At dinner, a mother points to a word on a communication tablet while her daughter laughs and taps it herself." data-es="En la cena, una madre señala una palabra en la tableta de comunicación mientras su hija se ríe y la toca ella misma." width="960" height="540">
 </div></header>
 <main class="wrap">
   <section class="card">
@@ -108,6 +110,7 @@ document.addEventListener('click',e=>{
 });
 $('print').onclick=()=>print();
 AAC.deco($('deco'),[['home',8,10,62,-6],['plate',46,56,44,8],['bath',80,12,54,6],['car',28,60,44,-4]]);
+(function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);
 </script>
 <script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>

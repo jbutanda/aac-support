@@ -10,7 +10,7 @@
 <style>
 /* IDEA the front door: three taps and you get the right tools, plus the shelf of tools you saved
    LAYOUT My Tools shelf (if any), three-question picker, matches, then every tool with filters */
-:root{--band:#0b3d91;--maxw:1100px;--decol:70%}
+:root{--band:#0c4b9d;--maxw:1100px;--decol:70%}
 .shelf{margin-bottom:18px}
 .shelf h2,.all h2{display:flex;align-items:center;gap:10px}
 .shelf h2 img,.all h2 img{width:34px}
@@ -52,9 +52,11 @@
 </style>
 </head>
 <body>
-<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+<header class="band has-hero"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
   <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
+
+  <img class="hero" id="hero" src="../shared/art/start-here.jpg" alt="People arriving along paths at an open school door, including a student who uses a wheelchair and holds a communication tablet." data-en="People arriving along paths at an open school door, including a student who uses a wheelchair and holds a communication tablet." data-es="Personas llegando por caminos a la puerta abierta de una escuela, entre ellas un estudiante en silla de ruedas con una tableta de comunicación." width="960" height="540">
 </div></header>
 <main class="wrap">
   <section class="card shelf" id="shelf"></section>
@@ -106,6 +108,7 @@ document.addEventListener('click',e=>{
  const s=e.target.closest('[data-star]');if(s){MY.toggle(s.dataset.star);shelf();wiz();all()}});
 function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('foot').textContent=t('foot');document.title=t('h1');shelf();wiz();all()}
 AAC.deco($('deco'),[['compass',8,10,64,-8],['star',46,56,44,8],['map',80,12,56,6],['sparkles',28,60,40,0]]);
+(function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);
 </script>
 </body>
