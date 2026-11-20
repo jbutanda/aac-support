@@ -71,7 +71,7 @@ Try an AAC Device (`talker/`), Walk in Their Shoes, Find It Fast and AAC Buddy a
 
 ## Prototype tools (shared foundation)
 
-These ten load `shared/core.js` and `shared/base.css`, so the board words, voices, colors and symbols stay consistent. Each lives at `https://jbutanda.github.io/aac-support/<folder>/`.
+These nine load `shared/core.js` and `shared/base.css`, so the board words, voices, colors and symbols stay consistent. Each lives at `https://jbutanda.github.io/aac-support/<folder>/`.
 
 | Folder | For | What it does |
 | --- | --- | --- |
@@ -100,7 +100,6 @@ Ten more, on the same shared foundation, all English and Spanish.
 | `more-than-requesting/` | Staff, admin | Sort 18 AAC messages into six communication functions |
 | `escape-room/` | PD | Team game: six locks opened by talking on the device, timer, hints, printable certificate |
 | `core-games/` | Classrooms | Smartboard games (Bubbles, Race Car, Silly Monster) driven by six big core keys; full-screen button |
-| `voices/` | Admin, families | Gallery of student messages that replay word by word. Shows EXAMPLES ONLY until real ones are added with written family permission; optional `FORM_URL` |
 | `awareness-challenge/` | District | October word calendar with stamps and badges, plus a school leaderboard; sample data until `SHEET_CSV_URL` is set |
 
 ### Save to My Tools
