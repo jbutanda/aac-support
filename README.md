@@ -96,7 +96,7 @@ Ten more, on the same shared foundation, all English and Spanish.
 | `help-desk/` | Families, staff | Pick the problem (no sound, stuck, frozen, words moved, battery, voice, broken, won't use it) and try one fix at a time; makes a note for the team if it's still stuck |
 | `talk-at-home/` | Families | Ten home routines, four words each with a phrase and tip; prints as a fridge card |
 | `model-it/` | Staff, families | Ten real moments; build a model on the full device and get three quick checks (length, fit, function) plus team ideas |
-| `wait-for-it/` | Staff, families | Ask a question, then see if you wait long enough for the student to answer; results chart against the 5 to 10 second zone |
+| `wait-for-it/` | Staff, families | Ask a question, then choose what you would really do: wait, repeat the question, give a hint or the answer, or model on the device. Four students answer if you wait; two need a model after the pause. Coaching after each round and a chart of your choices |
 | `more-than-requesting/` | Staff, admin | Sort 18 AAC messages into six communication functions |
 | `escape-room/` | PD | Team game: six locks opened by talking on the device, timer, hints, printable certificate |
 | `core-games/` | Classrooms | Smartboard games (Bubbles, Race Car, Silly Monster) driven by six big core keys; full-screen button |
