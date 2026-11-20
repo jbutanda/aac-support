@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Featured AAC tools</title>
+<!-- Small strip of tool cards made to be embedded (for example in Google Sites).
+     Pick the tools with ?tools=talker,model-it,wait-for-it,myth-or-fact
+     and the language with ?lang=es. Cards read from shared/catalog.js. -->
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:transparent}
+body{font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#16181d;padding:6px 4px 10px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+a.tc{--c:#0c4b9d;--ink:#fff;display:flex;flex-direction:column;text-decoration:none;color:inherit;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1.5px #dde3ec,0 2px 6px rgba(16,20,30,.06);transition:transform .15s,box-shadow .15s}
+a.tc:hover,a.tc:focus-visible{transform:translateY(-3px);box-shadow:0 0 0 2px var(--c),0 14px 26px rgba(16,20,30,.14);outline:none}
+.hd{background:var(--c);color:var(--ink);padding:16px;display:flex;align-items:center;gap:12px;min-height:88px}
+.hd img{width:52px;height:52px;flex:none;background:#fff;border-radius:14px;padding:7px}
+.hd h3{margin:0;font-size:19px;line-height:1.15}
+.bd{padding:12px 16px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+.bd p{margin:0;flex:1;font-size:15px;color:#3d4452}
+.meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.min{font-size:13px;font-weight:700;color:#5b6475}
+.go{font-weight:700;font-size:15px;color:var(--ink);background:var(--c);border-radius:999px;padding:7px 14px;white-space:nowrap}
+@media (max-width:860px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .hd{padding:12px;min-height:0;flex-direction:column;align-items:flex-start;gap:8px}
+  .hd img{width:42px;height:42px;padding:5px;border-radius:12px}
+  .hd h3{font-size:16px}
+  .bd{padding:10px 12px 12px}
+  .bd p,.min{display:none}
+  .go{font-size:14px;padding:6px 12px}
+}
+@media (prefers-reduced-motion:reduce){a.tc{transition:none}a.tc:hover{transform:none}}
+</style>
+</head>
+<body>
+<div class="grid" id="grid"></div>
+<script src="../shared/catalog.js"></script>
+<script>
+(function(){
+const q=new URLSearchParams(location.search);
+const L=q.get('lang')==='es'?'es':'en';
+document.documentElement.lang=L;
+const want=(q.get('tools')||'talker,model-it,wait-for-it,myth-or-fact').split(',').map(s=>s.trim()).filter(Boolean);
+const CAT=window.AAC_CATALOG||[];
+const T={en:{open:'Open',min:'About {m} min'},es:{open:'Abrir',min:'Unos {m} min'}}[L];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const lum=h=>{const n=parseInt(h.slice(1),16),f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(n>>16&255)+.7152*f(n>>8&255)+.0722*f(n&255)};
+const tools=want.map(id=>CAT.find(x=>x.id===id)).filter(Boolean);
+document.getElementById('grid').innerHTML=tools.map(x=>{
+  const ink=lum(x.c)>.3?'#2b1d00':'#fff';
+  const href='../'+x.id+'/'+(L==='es'?'?lang=es':'');
+  return `<a class="tc" href="${href}" target="_blank" rel="noopener" style="--c:${x.c};--ink:${ink}">
+  <div class="hd"><img src="${x.icon}" alt=""><h3>${esc(x[L])}</h3></div>
+  <div class="bd"><p>${esc(L==='es'?x.des:x.den)}</p>
+  <div class="meta"><span class="min">${T.min.replace('{m}',x.min)}</span><span class="go">${T.open} →</span></div></div></a>`;
+}).join('');
+})();
+</script>
+</body>
+</html>

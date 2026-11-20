@@ -102,6 +102,10 @@ Ten more, on the same shared foundation, all English and Spanish.
 | `core-games/` | Classrooms | Smartboard games (Bubbles, Race Car, Silly Monster) driven by six big core keys; full-screen button |
 | `awareness-challenge/` | District | October word calendar with stamps and badges, plus a school leaderboard; sample data until `SHEET_CSV_URL` is set |
 
+### Featured tools strip (for embedding)
+
+`featured/` shows a row of tool cards made to be embedded on another page, like the Google Site home page. It reads `shared/catalog.js`, so names, colors and icons always match Start Here. Pick the tools with `?tools=talker,model-it,wait-for-it,myth-or-fact` (that set is the default) and Spanish with `?lang=es`. Four across on a computer, two by two on tablets and phones, about 320 px tall. Cards open each tool in a new tab.
+
 ### Save to My Tools
 
 Every tool now has a star button in its header (`shared/bookmark.js`, reading the list in `shared/catalog.js`). Saved tools appear on Start Here. They are kept in the visitor's browser only. When the tools are embedded in Google Sites, saves made on that site stay together. When you add a new tool, add one line for it to `shared/catalog.js`.
