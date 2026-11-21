@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Real Question or Test Question?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA two doors: every question an adult asks goes through one of them. Real questions open a conversation, test questions check an answer you already know
+   LAYOUT the moment and the question in a speech bubble, two big buttons below, coaching with a rewrite, then a tally of how you sorted */
+:root{--band:#0b7285;--maxw:900px;--decol:72%}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.hud b{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.ctx{font-size:16px;color:var(--soft);margin:0 0 10px;text-align:center}
+.bubble{position:relative;background:#fff;color:#16181d;border-radius:28px;padding:20px 26px;box-shadow:0 14px 30px rgba(11,114,133,.2),0 0 0 3px #99e9f2;text-align:center;max-width:620px;margin:0 auto 26px;animation:pop .35s}
+.bubble::after{content:'';position:absolute;left:50%;bottom:-16px;margin-left:-14px;border:14px solid transparent;border-top-color:#fff;border-bottom:0}
+.bubble p{font-size:clamp(26px,4.4vw,38px);font-weight:700;margin:0;line-height:1.15}
+.hear{font:inherit;font-weight:700;border:0;background:#e3fafc;color:#0b7285;border-radius:999px;padding:8px 14px;margin-top:10px;cursor:pointer;min-height:44px}
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.door{font:inherit;border:0;border-radius:24px;padding:18px 16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:150px;color:#1d2026;transition:transform .15s,box-shadow .15s}
+.door:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(0,0,0,.12)}
+.door img{width:60px}
+.door b{font-size:22px}
+.door span{font-size:15px;opacity:.85}
+.door.real{background:#c3fae8}.door.test{background:#ffe8cc}
+.door[disabled]{cursor:default;transform:none;box-shadow:none;opacity:.55}
+.door.pick{opacity:1;box-shadow:0 0 0 4px var(--ink)}
+.fb{border-radius:20px;padding:14px 18px;margin-top:16px;font-size:17px;animation:pop .3s}
+.fb.good{background:#ebfbee;color:#0b3d16}.fb.bad{background:#fff4e6;color:#4a2300}
+.fb p{margin:4px 0}
+.rw{display:block;margin-top:8px;background:rgba(255,255,255,.7);border-radius:14px;padding:10px 12px}
+.rw b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;display:block;opacity:.75}
+.next{margin-top:14px}
+.end{text-align:center}
+.end .big{font-size:clamp(34px,6vw,52px);font-weight:700;margin:6px 0}
+.take{background:var(--tint);border-radius:20px;padding:18px;text-align:left;margin:16px 0}
+.take h3{margin:0 0 6px}.take p{margin:0 0 8px}
+@media(max-width:560px){.doors{grid-template-columns:1fr}.door{min-height:0;flex-direction:row;justify-content:flex-start;text-align:left}.door img{width:46px}.door span{display:none}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card" id="game"></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+const {esc,sym,speak,confetti}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),order=[],i=0,score=0,picked=null;
+/* r: 1 real, 0 test. c: the moment. q: the question. w: why. x: a real-question rewrite for test questions */
+const Q=[
+ {r:0,en:{c:'Holding up a red ball during play.',q:'What color is the ball?',w:'You already know it\'s red, and so does the student. It checks a label instead of starting a conversation.',x:'"Which ball should we throw next?" and model "that one" or "big."'},
+      es:{c:'Muestra una pelota roja mientras juegan.',q:'¿De qué color es la pelota?',w:'Usted ya sabe que es roja, y el estudiante también. Revisa una palabra en vez de empezar una conversación.',x:'"¿Cuál pelota tiramos ahora?" y modele "esa" o "grande".'}},
+ {r:1,en:{c:'Building with blocks together.',q:'What should we build next?',w:'You don\'t know the answer. Any answer is a good one, and the student gets to steer.',x:''},
+      es:{c:'Construyen juntos con bloques.',q:'¿Qué construimos ahora?',w:'Usted no sabe la respuesta. Cualquier respuesta es buena, y el estudiante decide.',x:''}},
+ {r:0,en:{c:'Snack time, device on the table.',q:'Show me "eat."',w:'This asks the student to perform a word on command. It tests the button, not the message.',x:'"I\'m hungry. What should we eat?" and model "eat" yourself.'},
+      es:{c:'Hora de la merienda, el aparato en la mesa.',q:'Muéstrame "comer".',w:'Esto le pide al estudiante que toque una palabra cuando se lo ordenan. Prueba el botón, no el mensaje.',x:'"Tengo hambre. ¿Qué comemos?" y modele "comer" usted mismo.'}},
+ {r:1,en:{c:'Coming in from recess.',q:'What happened at recess?',w:'Only the student knows. That\'s what makes it worth answering.',x:''},
+      es:{c:'Regresan del recreo.',q:'¿Qué pasó en el recreo?',w:'Solo el estudiante lo sabe. Por eso vale la pena contestar.',x:''}},
+ {r:0,en:{c:'Pointing at a picture in a book.',q:'Where\'s the dog?',w:'You can see the dog. Pointing at it proves the student knows the word, and that\'s all.',x:'"What do you think the dog will do?" and model "go" or "eat."'},
+      es:{c:'Señala un dibujo en un libro.',q:'¿Dónde está el perro?',w:'Usted ve el perro. Señalarlo solo prueba que el estudiante sabe la palabra.',x:'"¿Qué crees que va a hacer el perro?" y modele "ir" o "comer".'}},
+ {r:1,en:{c:'Picking music for movement time.',q:'Which song do you want?',w:'A real choice the student gets to make, with a real result.',x:''},
+      es:{c:'Escogen música para moverse.',q:'¿Qué canción quieres?',w:'Una decisión real que el estudiante toma, con un resultado real.',x:''}},
+ {r:0,en:{c:'At the start of an activity.',q:'Say "more."',w:'Not really a question at all. It\'s a demand to copy a word, which is prompting, not talking.',x:'Model "more" yourself when it fits, then wait.'},
+      es:{c:'Al empezar una actividad.',q:'Di "más".',w:'Ni siquiera es una pregunta. Es una orden de copiar una palabra, y eso es apuntar, no conversar.',x:'Modele "más" usted mismo cuando venga al caso y luego espere.'}},
+ {r:1,en:{c:'After a classmate\'s presentation.',q:'Was that funny or scary?',w:'An opinion. The student\'s answer is the only right one.',x:''},
+      es:{c:'Después de la presentación de un compañero.',q:'¿Fue chistoso o daba miedo?',w:'Una opinión. La respuesta del estudiante es la única correcta.',x:''}},
+ {r:0,en:{c:'Holding up a cup.',q:'What\'s this?',w:'Naming a thing you\'re holding is a quiz. Most students who use AAC hear far too many of these.',x:'"Want a drink?" or "What should we drink?" and model "drink."'},
+      es:{c:'Muestra un vaso.',q:'¿Qué es esto?',w:'Nombrar algo que usted tiene en la mano es un examen. Muchos estudiantes que usan CAA escuchan demasiadas de estas.',x:'"¿Quieres tomar algo?" o "¿Qué tomamos?" y modele "tomar".'}},
+ {r:1,en:{c:'End of the school day.',q:'What do you want to tell your mom about today?',w:'Real news, from the student, for someone who wasn\'t there.',x:''},
+      es:{c:'Al final del día escolar.',q:'¿Qué le quieres contar a tu mamá de hoy?',w:'Noticias reales, del estudiante, para alguien que no estuvo.',x:''}},
+ {r:0,en:{c:'The device is on the home page.',q:'Can you find "go"?',w:'It\'s a scavenger hunt for a button. Finding words matters, but students learn that from your modeling, not a quiz.',x:'"Where should we go?" and model "go" plus a place.'},
+      es:{c:'El aparato está en la página principal.',q:'¿Puedes encontrar "ir"?',w:'Es una búsqueda de un botón. Encontrar palabras importa, pero se aprende viéndolo a usted modelar, no con un examen.',x:'"¿A dónde vamos?" y modele "ir" y un lugar.'}},
+ {r:1,en:{c:'Reading a story together.',q:'Why do you think he\'s sad?',w:'You\'re asking what the student thinks, and there\'s more than one good answer.',x:''},
+      es:{c:'Leen un cuento juntos.',q:'¿Por qué crees que está triste?',w:'Usted pregunta lo que el estudiante piensa, y hay más de una buena respuesta.',x:''}}];
+const T={
+ en:{h1:'Real Question or Test Question?',sub:'Real questions open a conversation. Test questions check an answer you already know. Sort each one.',vlab:'Voice',count:'Question {a} of {b}',hear:'Hear it',
+  real:'Real question',realS:'I don\'t know the answer',test:'Test question',testS:'I already know the answer',
+  right:'Right.',wrong:'Not quite.',try:'Try a real question instead',next:'Next',
+  endh:'All sorted!',endp:'{s} of {n} right.',takeh:'What to take from this',
+  take:['Test questions aren\'t banned. In a math lesson you\'ll ask some. But for many students who use AAC, test questions are almost all they hear, and that teaches them that talking means getting the answer right.','Try this for one day: notice your next three questions. If you already know the answer, turn it into a real one, then wait and model a possible answer.'],
+  again:'Play again',foot:'Part of AACademy PrAACtice, Module 4. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'¿Pregunta real o pregunta de examen?',sub:'Las preguntas reales abren una conversación. Las de examen revisan una respuesta que usted ya sabe. Clasifique cada una.',vlab:'Voz',count:'Pregunta {a} de {b}',hear:'Escuchar',
+  real:'Pregunta real',realS:'No sé la respuesta',test:'Pregunta de examen',testS:'Ya sé la respuesta',
+  right:'Correcto.',wrong:'Casi.',try:'Mejor pruebe una pregunta real',next:'Siguiente',
+  endh:'¡Todo clasificado!',endp:'{s} de {n} correctas.',takeh:'Lo que puede llevarse',
+  take:['Las preguntas de examen no están prohibidas. En una clase de matemáticas hará algunas. Pero muchos estudiantes que usan CAA casi solo escuchan preguntas de examen, y eso les enseña que hablar es contestar bien.','Pruebe esto por un día: fíjese en sus próximas tres preguntas. Si ya sabe la respuesta, conviértala en una pregunta real, luego espere y modele una posible respuesta.'],
+  again:'Jugar otra vez',foot:'Parte de AACademy PrAACtice, módulo 4. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const t=k=>T[L][k];
+const shuffle=a=>{for(let j=a.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[a[j],a[k]]=[a[k],a[j]]}return a};
+function show(){
+ if(i>=order.length){end();return}
+ const q=Q[order[i]],x=q[L],done=picked!==null,ok=done&&picked===q.r;
+ $('game').innerHTML=`<div class="hud"><b>${esc(t('count').replace('{a}',i+1).replace('{b}',Q.length))}</b><b>${score}</b></div>
+ <p class="ctx">${esc(x.c)}</p><div class="bubble"><p>${esc(x.q)}</p><button class="hear" data-a="hear">🔊 ${esc(t('hear'))}</button></div>
+ <div class="doors"><button class="door real${done&&picked===1?' pick':''}" data-p="1"${done?' disabled':''}><img src="${sym('speech')}" alt=""><b>${esc(t('real'))}</b><span>${esc(t('realS'))}</span></button>
+ <button class="door test${done&&picked===0?' pick':''}" data-p="0"${done?' disabled':''}><img src="${sym('test')}" alt=""><b>${esc(t('test'))}</b><span>${esc(t('testS'))}</span></button></div>
+ ${done?`<div class="fb ${ok?'good':'bad'}" aria-live="polite"><p><b>${esc(ok?t('right'):t('wrong'))}</b> ${esc(x.w)}</p>${x.x?`<span class="rw"><b>${esc(t('try'))}</b>${esc(x.x)}</span>`:''}</div><button class="btn go next" data-a="next">${esc(t('next'))}</button>`:''}`;
+ if(done){const n=document.querySelector('[data-a=next]');if(n)n.focus()}}
+function end(){
+ $('game').innerHTML=`<div class="end"><img src="${sym('trophy')}" alt="" width="84"><p class="big">${esc(t('endh'))}</p><p>${esc(t('endp').replace('{s}',score).replace('{n}',Q.length))}</p>
+ <div class="take"><h3>${esc(t('takeh'))}</h3>${t('take').map(p=>`<p>${esc(p)}</p>`).join('')}</div><button class="btn go" data-a="again">${esc(t('again'))}</button></div>`;confetti($('game'),80)}
+function start(){order=shuffle(Q.map((_,k)=>k));i=0;score=0;picked=null;show()}
+document.addEventListener('click',e=>{const p=e.target.closest('[data-p]');if(p&&picked===null&&i<order.length){picked=+p.dataset.p;if(picked===Q[order[i]].r)score++;show();return}
+ const a=e.target.closest('[data-a]');if(!a)return;
+ if(a.dataset.a==='hear')speak(Q[order[i]][L].q,L);
+ if(a.dataset.a==='next'){i++;picked=null;show()}
+ if(a.dataset.a==='again')start()});
+function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');if(order.length)show()}
+AAC.deco($('deco'),[['question',8,12,58,-8],['speech',46,58,44,8],['test',80,14,50,6],['bulb',28,62,40,-6]]);
+order=shuffle(Q.map((_,k)=>k));
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+<script src="../shared/keep-lang.js"></script>
+</body>
+</html>

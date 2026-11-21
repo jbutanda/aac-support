@@ -57,20 +57,24 @@
 <main class="wrap">
   <section class="card"><div class="hero"><div class="ring" id="ring"></div><div><button class="tap" id="tap"></button><div class="quick" id="quick"></div><div class="subrow"><label class="goal"><span id="gl"></span><input class="in" type="number" min="1" max="200" id="goal"></label><div class="row"><button class="btn ghost" id="undo"></button></div></div></div></div></section>
   <section class="card"><h2 id="wk"></h2><div class="bars" id="bars"></div><div class="stats" id="stats"></div></section>
-  <section class="card"><h2 id="tw"></h2><div class="top5" id="top5"></div><div class="row" style="margin-top:16px"><button class="btn ghost" id="copy"></button><span class="muted small" id="copied"></span></div></section>
+  <section class="card"><h2 id="tw"></h2><div class="top5" id="top5"></div><div class="row" style="margin-top:16px"><a class="btn go" id="send" target="_blank" rel="noopener" hidden></a><button class="btn ghost" id="copy"></button><span class="muted small" id="copied"></span></div></section>
   <p class="foot" id="foot"></p>
 </main>
 <script src="../shared/core.js"></script>
 <script>
 {
 const {byId,store,confetti,langToggle,sym,esc}=AAC;
+/* AACademy PrAACtice log. In the AACademy Check-In form: three dots > Get pre-filled link.
+   Pick "PrAACtice: today's log", answer "Yes", and type WORDS (all capitals) in "Words you modeled".
+   Click Get link, copy it, and paste it between the quotes below. The button stays hidden until then. */
+const CHECKIN_LOG_URL='';
 const QUICK=['more','go','stop','help','look','want','like','alldone','i','you','what','turn'];
 const T={
  en:{h1:'Modeling Tracker',sub:'Tap every time you model a word on a student’s device. Watch the ring fill toward today’s goal.',tap:'I modeled!',goal:'Daily goal',undo:'Undo',today:'today',of:(g)=>`of ${g}`,wk:'This week',tw:'Top words today',none:'Tap a word chip when you model it to see your top words here.',
-  st:['Today','Days goal met (7)','Day streak'],copy:'Copy my data',copied:'Copied. Paste it into a spreadsheet.',days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],hit:'Goal reached!',
+  st:['Today','Days goal met (7)','Day streak'],copy:'Copy my data',send:'Send today’s AACademy log',copied:'Copied. Paste it into a spreadsheet.',days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],hit:'Goal reached!',
   foot:'Counts are saved only in this browser, on this device. Nothing is sent anywhere. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
  es:{h1:'Registro de modelado',sub:'Toque cada vez que modele una palabra en el aparato de un estudiante. Vea cómo el anillo se llena hacia la meta del día.',tap:'¡Modelé!',goal:'Meta diaria',undo:'Deshacer',today:'hoy',of:(g)=>`de ${g}`,wk:'Esta semana',tw:'Palabras más usadas hoy',none:'Toque una palabra cuando la modele para ver aquí sus palabras más usadas.',
-  st:['Hoy','Días con meta (7)','Racha de días'],copy:'Copiar mis datos',copied:'Copiado. Péguelo en una hoja de cálculo.',days:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],hit:'¡Meta cumplida!',
+  st:['Hoy','Días con meta (7)','Racha de días'],copy:'Copiar mis datos',send:'Enviar el registro de AACademy de hoy',copied:'Copiado. Péguelo en una hoja de cálculo.',days:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],hit:'¡Meta cumplida!',
   foot:'Los conteos se guardan solo en este navegador, en este dispositivo. No se envía nada. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const $=id=>document.getElementById(id);
 const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||store.get('mt-lang','en'),log:store.get('mt-log',{}),goal:store.get('mt-goal',20),hist:[]};
@@ -82,7 +86,7 @@ const last7=()=>{const out=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate
 const streak=()=>{const met=i=>{const d=new Date();d.setDate(d.getDate()-i);return ((S.log[iso(d)]||{}).n||0)>=S.goal};let n=0,i=met(0)?0:1;while(i<366&&met(i)){n++;i++}return n};
 const add=w=>{const t=day(todayK());const was=t.n;t.n++;if(w)t.w[w]=(t.w[w]||0)+1;S.hist.push(w||null);save();render();if(was<S.goal&&t.n>=S.goal)confetti($('ring'),100)};
 const render=()=>{const t=T[S.lang],k=todayK(),n=(S.log[k]||{}).n||0,g=S.goal,C=2*Math.PI*84,f=Math.min(1,n/g);
- document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('tap').textContent=t.tap;$('gl').textContent=t.goal;$('undo').textContent=t.undo;$('wk').textContent=t.wk;$('tw').textContent=t.tw;$('copy').textContent=t.copy;$('goal').value=g;
+ document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('tap').textContent=t.tap;$('gl').textContent=t.goal;$('undo').textContent=t.undo;$('wk').textContent=t.wk;$('tw').textContent=t.tw;$('copy').textContent=t.copy;{const sb=$('send'),dw=(S.log[k]||{}).w||{},ws=Object.entries(dw).sort((a,b)=>b[1]-a[1]).map(([id])=>byId[id]?byId[id][S.lang]:id).slice(0,6).join(', ');sb.textContent=t.send;sb.hidden=!CHECKIN_LOG_URL;if(CHECKIN_LOG_URL)sb.href=CHECKIN_LOG_URL.replace('WORDS',encodeURIComponent(ws))}$('goal').value=g;
  $('ring').className='ring'+(n>=g?' hit':'');
  $('ring').innerHTML=`<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="84" fill="none" stroke="var(--tint)" stroke-width="22"/><circle cx="100" cy="100" r="84" fill="none" stroke="var(--go)" stroke-width="22" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}" style="transition:stroke-dashoffset .35s"/></svg><div class="ctr"><div><b>${n}</b><span>${n>=g?t.hit:t.of(g)}</span></div></div>`;
  $('quick').innerHTML=QUICK.map(id=>{const w=byId[id];return `<button class="${w.c}" data-w="${id}"><img src="${w.img}" alt="">${esc(w[S.lang])}</button>`}).join('');

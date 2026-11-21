@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Student's App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA one page per app, same four blocks each: learn the map, try it, do the check, go deeper
+   LAYOUT app tabs on top, then the four blocks as cards in a 2x2 (stacked on phone) */
+:root{--band:#364fc7;--maxw:1000px;--decol:72%}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px}
+.tabs button{font:inherit;font-weight:700;font-size:18px;border:0;border-radius:999px;padding:10px 20px;min-height:48px;cursor:pointer;background:var(--tint);color:var(--ink)}
+.tabs button[aria-pressed=true]{background:#364fc7;color:#fff}
+.maker{color:var(--soft);margin:6px 0 0}
+.blocks{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.blk{background:var(--tint);border-radius:22px;padding:18px}
+.blk h3{margin:0 0 6px;display:flex;gap:10px;align-items:center}
+.blk h3 img{width:34px}
+.blk p{margin:6px 0}
+.blk ol{margin:6px 0 0;padding-left:22px}
+.blk li{margin:4px 0}
+.links{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.links a{display:block;background:var(--bg);color:var(--ink);border-radius:14px;padding:10px 14px;text-decoration:none;box-shadow:0 0 0 2px var(--line) inset;font-weight:700}
+.links a small{display:block;font-weight:400;color:var(--soft)}
+.links a:hover{box-shadow:0 0 0 2px #364fc7 inset}
+.warn{background:#fff4e6;color:#4a2300;border-radius:14px;padding:10px 14px;margin-top:10px;font-size:15.5px}
+@media(max-width:700px){.blocks{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card" id="app"></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+/* Deep links: apps/#p2g, apps/#tdsnap, apps/#touchchat */
+const CHECKIN_URL='https://docs.google.com/forms/d/e/1FAIpQLSfgV1gc7jxy3Q9dfNgkHOOE7wCR0tsZ0K7zoqmxn2dd3iWfvQ/viewform';
+const STAFF='https://jbutanda.github.io/rusd_aac_staff/';
+const {esc,sym}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),cur=(location.hash||'#p2g').slice(1);
+const A={
+ p2g:{name:'Proloquo2Go',maker:{en:'Made by AssistiveWare. It\'s the app on Rialto\'s new classroom iPads.',es:'Hecha por AssistiveWare. Es la aplicación de los nuevos iPads de los salones de Rialto.'},
+  vocab:{en:'Most students use the Crescendo vocabulary. Grid sizes vary, so check with the SLP which one your student has.',es:'La mayoría de los estudiantes usan el vocabulario Crescendo. El tamaño de la cuadrícula varía; pregúntele al patólogo del habla cuál tiene su estudiante.'},
+  map:[['https://download.assistiveware.com/aac/Proloquo2Go_CWB_EN_USA_UK_v1.pdf',{en:'Proloquo2Go core word board',es:'Tablero de palabras clave de Proloquo2Go'},{en:'One page of core words plus an alphabet, from AssistiveWare.',es:'Una página de palabras clave y el alfabeto, de AssistiveWare.'}],
+   ['https://download.assistiveware.com/aac/quick-communication-boards.pdf',{en:'Crescendo quick boards',es:'Tableros rápidos Crescendo'},{en:'Core words plus topic boards for food, places, feelings and help.',es:'Palabras clave y tableros de comida, lugares, sentimientos y ayuda.'}],
+   [STAFF+'Basics_for_Proloquo2Go.pdf',{en:'RUSD basics for Proloquo2Go',es:'Lo básico de Proloquo2Go (RUSD)'},{en:'Our one-page quick guide.',es:'Nuestra guía rápida de una página.'}]],
+  try:{en:'Proloquo2Go has no free version. Use your classroom or teacher iPad if it has the app, ask your student before using theirs, or ask your SLP or the AAC Specialist for a loaner.',es:'Proloquo2Go no tiene versión gratis. Use el iPad del salón o del maestro si tiene la aplicación, pídale permiso a su estudiante antes de usar el suyo, o pídale uno prestado al patólogo del habla o al Especialista de CAA.'},
+  more:[['https://www.assistiveware.com/learn-aac',{en:'Learn AAC, from AssistiveWare',es:'Aprenda sobre CAA, de AssistiveWare'},{en:'Free articles and videos on modeling and core words.',es:'Artículos y videos gratis sobre modelar y palabras clave (en inglés).'}]]},
+ tdsnap:{name:'TD Snap',maker:{en:'Made by Tobii Dynavox.',es:'Hecha por Tobii Dynavox.'},
+  vocab:{en:'Students may use Core First or Motor Plan, and they look different. Check with the SLP which page set your student has.',es:'Los estudiantes pueden usar Core First o Motor Plan, y se ven diferentes. Pregúntele al patólogo del habla cuál tiene su estudiante.'},
+  map:[['https://us.tobiidynavox.com/pages/td-snap-core-first',{en:'Core First printable books and boards',es:'Libros y tableros imprimibles de Core First'},{en:'Free, from Tobii Dynavox. Some downloads ask for a quick sign-up.',es:'Gratis, de Tobii Dynavox. Algunas descargas piden un registro rápido.'}],
+   ['https://tobiidynavox.com/pages/printable-aac',{en:'Printable AAC, including Motor Plan boards',es:'CAA imprimible, incluidos los tableros Motor Plan'},{en:'For students who use the Motor Plan page set.',es:'Para estudiantes que usan Motor Plan.'}],
+   [STAFF+'Basics_for_TD_Snap.pdf',{en:'RUSD basics for TD Snap',es:'Lo básico de TD Snap (RUSD)'},{en:'Our one-page quick guide.',es:'Nuestra guía rápida de una página.'}]],
+  try:{en:'The TD Snap app is free to download on an iPad. It won\'t speak without a paid subscription, but you can find every word and learn the layout without the voice.',es:'La aplicación TD Snap se descarga gratis en un iPad. No habla sin una suscripción pagada, pero puede encontrar todas las palabras y aprender la distribución sin la voz.'},
+  more:[['https://us.tobiidynavox.com/pages/td-snap-core-first',{en:'TD Snap Core First resources',es:'Recursos de TD Snap Core First'},{en:'Word lists, training and the free companion resources.',es:'Listas de palabras, capacitación y recursos gratis (en inglés).'}]]},
+ touchchat:{name:'TouchChat',maker:{en:'Made by PRC-Saltillo.',es:'Hecha por PRC-Saltillo.'},
+  vocab:{en:'Most students use a WordPower vocabulary, such as WordPower 60 or 108. Check with the SLP which one your student has.',es:'La mayoría de los estudiantes usan un vocabulario WordPower, como WordPower 60 o 108. Pregúntele al patólogo del habla cuál tiene su estudiante.'},
+  map:[['https://saltillo.com/chatcorner/content/29Benefits%20of%20Light-tech%20AAC',{en:'WordPower light-tech boards',es:'Tableros de baja tecnología WordPower'},{en:'Printable boards and flipbooks for WordPower 42, 60 and 108, including Spanish.',es:'Tableros y libritos imprimibles para WordPower 42, 60 y 108, incluido español.'}],
+   [STAFF+'Basics_for_TouchChat.pdf',{en:'RUSD basics for TouchChat',es:'Lo básico de TouchChat (RUSD)'},{en:'Our one-page quick guide.',es:'Nuestra guía rápida de una página.'}]],
+  try:{en:'TouchChat Discover is a free 30-day trial of the full app on an iPad. That\'s enough time to learn the layout and finish AACtivate.',es:'TouchChat Discover es una prueba gratis de 30 días de la aplicación completa en un iPad. Es tiempo suficiente para aprender la distribución y terminar AACtivate.'},
+  more:[['https://saltillo.com/products/option/wordpower',{en:'About WordPower, from PRC-Saltillo',es:'Sobre WordPower, de PRC-Saltillo'},{en:'How the WordPower vocabularies are built.',es:'Cómo están hechos los vocabularios WordPower (en inglés).'}]]}};
+const T={
+ en:{h1:'Your Student\'s App',sub:'Learn where words live on the app your student uses, then show it with a quick check.',
+  mapH:'Learn the map',mapP:'Every app has a paper version of its own layout, with words in the same spots. Look it over before you touch the real device.',
+  tryH:'Try it on your own',checkH:'The app check',
+  check:['Ask your student: "Can I use your talker for a minute?"','Build "I want more," "I don\'t like it," and one word from inside a folder. Say each one out loud as you go. That\'s modeling.','Type your name on the keyboard.','Take a phone photo of the message bar, with no student in the photo. Hand the device right back.','Find the paper backup board in your room.'],
+  checkP:'Email the photo to jbutanda@rialtousd.org with "App check" in the subject, then send your AACademy check-in.',send:'AACademy Check-In',
+  moreH:'Go deeper',
+  foot:'Proloquo2Go, TD Snap and TouchChat belong to their makers. Links go to their own free materials. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'La aplicación de su estudiante',sub:'Aprenda dónde están las palabras en la aplicación de su estudiante y demuéstrelo con una revisión rápida.',
+  mapH:'Aprenda el mapa',mapP:'Cada aplicación tiene una versión en papel de su propia distribución, con las palabras en los mismos lugares. Revísela antes de tocar el aparato real.',
+  tryH:'Pruébela por su cuenta',checkH:'La revisión de la aplicación',
+  check:['Pregúntele a su estudiante: "¿Puedo usar tu aparato un minuto?"','Forme "Quiero más", "No me gusta" y una palabra de adentro de una carpeta. Diga cada una en voz alta. Eso es modelar.','Escriba su nombre en el teclado.','Tome una foto con su teléfono de la barra de mensajes, sin el estudiante en la foto. Devuelva el aparato de inmediato.','Busque el tablero de papel de respaldo en su salón.'],
+  checkP:'Envíe la foto a jbutanda@rialtousd.org con "App check" en el asunto y luego envíe su registro de AACademy.',send:'Registro de AACademy',
+  moreH:'Para saber más',
+  foot:'Proloquo2Go, TD Snap y TouchChat pertenecen a sus creadores. Los enlaces van a sus propios materiales gratis. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const t=k=>T[L][k];
+const lk=([u,n,d])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(n[L])}<small>${esc(d[L])}</small></a>`;
+function render(){
+ if(!A[cur])cur='p2g';const a=A[cur];
+ $('h1').textContent=t('h1');$('sub').textContent=t('sub');$('foot').textContent=t('foot');document.title=t('h1')+': '+a.name;
+ $('app').innerHTML=`<div class="tabs">${Object.entries(A).map(([k,v])=>`<button data-app="${k}" aria-pressed="${k===cur}">${esc(v.name)}</button>`).join('')}</div>
+ <h2 style="margin:12px 0 0">${esc(a.name)}</h2><p class="maker">${esc(a.maker[L])}</p>
+ <div class="blocks">
+  <div class="blk"><h3><img src="${sym('map')}" alt="">${esc(t('mapH'))}</h3><p>${esc(t('mapP'))}</p><div class="warn">${esc(a.vocab[L])}</div><div class="links">${a.map.map(lk).join('')}</div></div>
+  <div class="blk"><h3><img src="${sym('phone')}" alt="">${esc(t('tryH'))}</h3><p>${esc(a.try[L])}</p></div>
+  <div class="blk"><h3><img src="${sym('clipboard')}" alt="">${esc(t('checkH'))}</h3><ol>${t('check').map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p>${esc(t('checkP'))}</p><div class="links"><a href="${esc(CHECKIN_URL)}" target="_blank" rel="noopener">${esc(t('send'))}</a></div></div>
+  <div class="blk"><h3><img src="${sym('book')}" alt="">${esc(t('moreH'))}</h3><div class="links">${a.more.map(lk).join('')}</div></div>
+ </div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-app]');if(b){cur=b.dataset.app;try{history.replaceState(null,'','#'+cur)}catch(err){}render()}});
+addEventListener('hashchange',()=>{cur=(location.hash||'#p2g').slice(1);render()});
+AAC.deco($('deco'),[['phone',8,12,56,-8],['map',46,58,44,8],['search',80,14,50,6],['key',28,62,40,-6]]);
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+<script src="../shared/keep-lang.js"></script>
+</body>
+</html>
