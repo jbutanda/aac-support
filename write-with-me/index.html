@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Write With Me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA a big talking alphabet a student can write with, on a classroom iPad or the Smartboard
+   LAYOUT the writing strip on top, then the action buttons, then big letter keys; adult tips fold away below */
+:root{--band:#c2255c;--maxw:1100px;--decol:72%}
+.strip{min-height:92px;background:#fff;color:#16181d;border-radius:22px;box-shadow:0 0 0 3px #fcc2d7 inset;padding:14px 20px;font-size:clamp(34px,6vw,60px);font-weight:700;letter-spacing:.06em;line-height:1.2;word-break:break-all;display:flex;align-items:center;flex-wrap:wrap}
+.strip .ph{font-size:20px;letter-spacing:0;color:#868e96;font-weight:400}
+.strip .cur{display:inline-block;width:4px;height:.9em;background:#c2255c;margin-left:4px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.acts button{font:inherit;font-weight:700;font-size:18px;border:0;border-radius:16px;padding:12px 18px;min-height:56px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.acts .read{background:#c2255c;color:#fff}
+.acts .spell{background:#fff0f6;color:#a61e4d}
+.acts .del,.acts .clr{background:var(--tint);color:var(--ink)}
+.acts .opt{margin-left:auto;background:transparent;color:var(--ink);box-shadow:0 0 0 2px var(--line) inset}
+.keys{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:8px}
+.keys button{font:inherit;font-weight:700;font-size:clamp(26px,4.6vw,46px);border:0;border-radius:18px;background:#fff;color:#16181d;box-shadow:0 4px 0 #dee2e6,0 0 0 2px #e9ecef inset;aspect-ratio:1/1;cursor:pointer;transition:transform .08s}
+.keys button:active,.keys button.lit{transform:translateY(3px);box-shadow:0 1px 0 #dee2e6,0 0 0 3px #c2255c inset;background:#fff0f6}
+.keys .vow{color:#c2255c}
+.keys .space{grid-column:span var(--sp,3);aspect-ratio:auto;min-height:72px;font-size:22px}
+details.tips{margin-top:6px}
+details.tips summary{font-weight:700;font-size:18px;cursor:pointer}
+.tipgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.tipgrid div{background:var(--tint);border-radius:18px;padding:14px 16px}
+.tipgrid b{display:block;font-size:17px;margin-bottom:4px}
+@media(max-width:720px){.tipgrid{grid-template-columns:1fr}.acts .opt{margin-left:0}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card"><div class="strip" id="strip" aria-live="polite"></div><div class="acts" id="acts"></div><div class="keys" id="keys"></div></section>
+  <section class="card"><details class="tips" id="tips"></details></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+const {esc,sym,speak}=AAC,$=id=>document.getElementById(id);
+let L=AAC.pageLang(),txt='',upper=AAC.store.get('wwm-upper',false),qwerty=AAC.store.get('wwm-qwerty',false);
+const ABC='abcdefghijklmnopqrstuvwxyz'.split(''),QW='qwertyuiopasdfghjklzxcvbnm'.split('');
+const T={
+ en:{h1:'Write With Me',sub:'A big talking alphabet. Every letter says its name. Every student can write.',vlab:'Voice',ph:'Tap letters to write...',read:'Read it',spell:'Spell it',del:'Delete',clr:'Clear',space:'space',
+  up:'ABC',low:'abc',qw:'QWERTY',ab:'A to Z',tipsH:'For adults: how to write together',
+  tips:[['Model spelling','Say each letter out loud as you tap it, then read the word. "C, A, T. Cat." Do it whenever a word isn\'t on the student\'s device.'],['Scribbles count','Letters that don\'t spell anything yet are how every writer starts. Respond like it\'s writing: "You wrote B, M, T. Tell me about it."'],['Write every day','A few minutes a day, about anything the student picks. Use the keyboard on the student\'s own device too, so the alphabet is always one tap away.']],
+  foot:'Part of AACademy TeAACh, Module 5. Free for every classroom. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Escribe conmigo',sub:'Un alfabeto grande que habla. Cada letra dice su nombre. Todos los estudiantes pueden escribir.',vlab:'Voz',ph:'Toca las letras para escribir...',read:'Léelo',spell:'Deletréalo',del:'Borrar',clr:'Limpiar',space:'espacio',
+  up:'ABC',low:'abc',qw:'QWERTY',ab:'A a Z',tipsH:'Para adultos: cómo escribir juntos',
+  tips:[['Modele el deletreo','Diga cada letra en voz alta al tocarla y luego lea la palabra. "G, A, T, O. Gato." Hágalo cuando una palabra no esté en el aparato del estudiante.'],['Los garabatos cuentan','Las letras que todavía no forman palabras son el comienzo de todo escritor. Responda como si fuera escritura: "Escribiste B, M, T. Cuéntame."'],['Escriban todos los días','Unos minutos al día, sobre lo que el estudiante escoja. Use también el teclado del aparato del estudiante, para que el alfabeto siempre esté a un toque.']],
+  foot:'Parte de AACademy TeAACh, módulo 5. Gratis para todos los salones. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const t=k=>T[L][k];
+const letters=()=>{let a=(qwerty?QW:ABC).slice();if(L==='es'){const n=a.indexOf('n');a.splice(n+1,0,'ñ')}return a};
+const show=c=>upper?c.toUpperCase():c;
+const drawStrip=()=>{$('strip').innerHTML=txt?`<span>${esc(show(txt)).replace(/ /g,'&nbsp;')}</span><span class="cur"></span>`:`<span class="ph">${esc(t('ph'))}</span><span class="cur"></span>`};
+function render(){
+ $('h1').textContent=t('h1');$('sub').textContent=t('sub');$('vlab').textContent=t('vlab');$('foot').textContent=t('foot');document.title=t('h1');
+ drawStrip();
+ $('acts').innerHTML=`<button class="read" data-a="read">🔊 ${esc(t('read'))}</button><button class="spell" data-a="spell">${esc(t('spell'))}</button><button class="del" data-a="del">⌫ ${esc(t('del'))}</button><button class="clr" data-a="clr">${esc(t('clr'))}</button>
+ <button class="opt" data-a="case" aria-pressed="${upper}">${esc(upper?t('low'):t('up'))}</button><button class="opt" style="margin-left:0" data-a="lay">${esc(qwerty?t('ab'):t('qw'))}</button>`;
+ const ls=letters(),cols=qwerty?10:7;$('keys').style.setProperty('--cols',cols);
+ $('keys').innerHTML=ls.map(c=>`<button data-k="${c}" class="${'aeiou'.includes(c)?'vow':''}" aria-label="${c.toUpperCase()}">${esc(show(c))}</button>`).join('')+`<button class="space" style="--sp:${(()=>{const r=cols-(ls.length%cols);return r>=2&&r<cols?r:Math.min(4,cols)})()}" data-k=" ">${esc(t('space'))}</button>`;
+ $('tips').innerHTML=`<summary>${esc(t('tipsH'))}</summary><div class="tipgrid">${t('tips').map(([b,p])=>`<div><b>${esc(b)}</b>${esc(p)}</div>`).join('')}</div>`}
+const spellOut=()=>{const ch=txt.replace(/ /g,'').split('');let n=0;const step=()=>{if(n>=ch.length)return;speak(ch[n].toUpperCase(),L,()=>{n++;setTimeout(step,150)})};step()};
+document.addEventListener('click',e=>{const k=e.target.closest('[data-k]');if(k){const c=k.dataset.k;txt+=c;drawStrip();if(c!==' ')speak(c.toUpperCase(),L);k.classList.add('lit');setTimeout(()=>k.classList.remove('lit'),160);return}
+ const a=e.target.closest('[data-a]');if(!a)return;const x=a.dataset.a;
+ if(x==='read'&&txt.trim())speak(txt,L);
+ if(x==='spell'&&txt.trim())spellOut();
+ if(x==='del'){txt=txt.slice(0,-1);drawStrip()}
+ if(x==='clr'){txt='';drawStrip()}
+ if(x==='case'){upper=!upper;AAC.store.set('wwm-upper',upper);render()}
+ if(x==='lay'){qwerty=!qwerty;AAC.store.set('wwm-qwerty',qwerty);render()}});
+document.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea'))return;const c=e.key.toLowerCase();if(/^[a-zñ]$/.test(c)){txt+=c;drawStrip();speak(c.toUpperCase(),L)}else if(e.key==='Backspace'){txt=txt.slice(0,-1);drawStrip()}else if(e.key===' '){e.preventDefault();txt+=' ';drawStrip()}});
+AAC.deco($('deco'),[['memo',8,12,56,-8],['book',46,58,44,8],['sparkles',80,14,50,6],['star',28,62,40,-6]]);
+AAC.page(()=>L,l=>L=l,render);
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+<script src="../shared/keep-lang.js"></script>
+</body>
+</html>

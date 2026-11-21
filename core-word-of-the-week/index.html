@@ -35,6 +35,23 @@
 .idea p{margin:0}
 @media(max-width:640px){.poster{grid-template-columns:1fr;justify-items:center;text-align:center}.ideas{grid-template-columns:1fr}.poster .row{justify-content:center}}
 @media print{.weeknav{display:none}.bigkey{box-shadow:none;border:2px solid #999}.mini{background:#333}}
+
+.hn-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.hn-chips button{font:inherit;font-weight:700;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 14px 6px 8px;display:inline-flex;gap:6px;align-items:center;cursor:pointer;min-height:44px}
+.hn-chips button img{width:26px}
+.hn-chips button[aria-pressed=true]{border-color:#a61e4d;background:#fff0f6;color:#a61e4d}
+.hn-f{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}
+.hn-f label{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:15px}
+.note{background:#fff;color:#16181d;border-radius:20px;padding:24px;margin-top:16px;box-shadow:0 0 0 2px #e9ecef}
+.note h2{margin:0 0 4px;color:#a61e4d}
+.note .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.note .nw{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;border-top:1px solid #e9ecef;padding:10px 0}
+.note .nw img{width:56px}
+.note .nw b{font-size:22px}
+.note p{margin:4px 0}
+.note small{color:#495057}
+@media(max-width:620px){.hn-f,.note .cols{grid-template-columns:1fr}}
+@media print{body:not(.print-note) #note{display:none!important}body.print-note .band,body.print-note main>section:not(#note),body.print-note .foot{display:none!important}body.print-note .note{box-shadow:none;margin:0}}
 </style>
 </head>
 <body>
@@ -49,6 +66,8 @@
     <div class="mini" id="mini" aria-hidden="true"></div><p class="muted small" id="where"></p>
   </section>
   <section class="card"><div class="ideas" id="ideas"></div></section>
+  <section class="card noprint" id="hn"></section>
+  <section class="note" id="note" hidden></section>
   <p class="foot" id="foot"></p>
 </main>
 <script src="../shared/core.js"></script>
@@ -76,9 +95,9 @@ const LIST=[
 ['where','Where is it?','¿Dónde está?','Hide and seek with toys: WHERE is teddy?','Esconder juguetes: ¿DÓNDE está el osito?','Lost items and maps: WHERE did it go?','Cosas perdidas y mapas: ¿DÓNDE quedó?'],
 ['make','Let’s make it.','Vamos a hacerlo.','Cooking and crafts: MAKE a sandwich, MAKE a card.','Cocinar y manualidades: HACER un sándwich, HACER una tarjeta.','Art and building: what will you MAKE?','Arte y construcción: ¿qué vas a HACER?']];
 const T={
- en:{h1:'Core Word of the Week',sub:'One word, all week, at home and at school. Model it every chance you get.',week:'Week of',model:'Show me',say:'Hear it',print:'Print poster',home:'At home',school:'At school',where:'Where it lives on the RUSD demo board. Your child’s app may put it somewhere else.',
+ en:{h1:'Core Word of the Week',sub:'One word, all week, at home and at school. Model it every chance you get.',week:'Week of',model:'Show me',say:'Hear it',print:'Print poster',home:'At home',school:'At school',hn:'Make a home note',hnP:'Pick up to three words you’re modeling at school. You’ll get a note for families in English and Spanish, with an idea for each word at home.',hnR:'Routine (optional)',hnN:'From (optional)',hnNp:'Ms. Garcia, Room 12',hnGo:'Make the note',hnPr:'Print the note',where:'Where it lives on the RUSD demo board. Your child’s app may put it somewhere else.',
   foot:'Words rotate every week. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
- es:{h1:'Palabra de la semana',sub:'Una palabra, toda la semana, en casa y en la escuela. Modélela cada vez que pueda.',week:'Semana del',model:'Muéstrame',say:'Escuchar',print:'Imprimir cartel',home:'En casa',school:'En la escuela',where:'Dónde está en el tablero de demostración de RUSD. La aplicación de su hijo puede tenerla en otro lugar.',
+ es:{h1:'Palabra de la semana',sub:'Una palabra, toda la semana, en casa y en la escuela. Modélela cada vez que pueda.',week:'Semana del',model:'Muéstrame',say:'Escuchar',print:'Imprimir cartel',home:'En casa',school:'En la escuela',hn:'Hacer una nota para casa',hnP:'Escoja hasta tres palabras que modela en la escuela. Recibirá una nota para las familias en inglés y español, con una idea para cada palabra en casa.',hnR:'Rutina (opcional)',hnN:'De parte de (opcional)',hnNp:'Sra. García, Salón 12',hnGo:'Hacer la nota',hnPr:'Imprimir la nota',where:'Dónde está en el tablero de demostración de RUSD. La aplicación de su hijo puede tenerla en otro lugar.',
   foot:'Las palabras cambian cada semana. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const $=id=>document.getElementById(id);
 const DAY=864e5,[sy,sm,sd]=START.split('-').map(Number),startD=new Date(sy,sm-1,sd);
@@ -90,8 +109,26 @@ const render=()=>{const t=T[S.lang],es=S.lang==='es',e=LIST[((S.wk%LIST.length)+
  $('bigkey').className='bigkey '+w.c;$('bigkey').innerHTML=`<img src="${w.img}" alt=""><span>${esc(w[S.lang])}</span>`;
  $('word').textContent=w[S.lang];$('ex').textContent=`“${es?e[2]:e[1]}”`;
  $('model').textContent=t.model;$('say').textContent=t.say;$('print').textContent=t.print;
- $('mini').innerHTML=W.map(x=>`<i class="${x.c}${x.id===w.id?' on':''}"></i>`).join('');$('where').textContent=t.where;
+ $('mini').innerHTML=W.map(x=>`<i class="${x.c}${x.id===w.id?' on':''}"></i>`).join('');$('where').textContent=t.where;hnRender();
  $('ideas').innerHTML=`<div class="idea"><img src="${sym('home')}" alt=""><div><h3>${t.home}</h3><p>${esc(es?e[4]:e[3])}</p></div></div><div class="idea"><img src="${sym('school')}" alt=""><div><h3>${t.school}</h3><p>${esc(es?e[6]:e[5])}</p></div></div>`};
+
+const RT=[['',''],['arrival','la llegada'],['morning meeting','la reunión de la mañana'],['snack','la merienda'],['read-aloud','la lectura en voz alta'],['centers','los centros'],['transitions','las transiciones'],['lunch','el almuerzo'],['recess','el recreo']];
+const HN={pick:[],routine:0,from:''};
+const hnRender=()=>{const t=T[S.lang];
+ $('hn').innerHTML=`<h2>${t.hn}</h2><p>${t.hnP}</p><div class="hn-chips">${LIST.map(e=>{const w=byId[e[0]];return `<button data-hw="${e[0]}" aria-pressed="${HN.pick.includes(e[0])}"><img src="${w.img}" alt="">${esc(w[S.lang])}</button>`}).join('')}</div>
+ <div class="hn-f"><label>${t.hnR}<select class="in" id="hnR">${RT.map((r,i)=>`<option value="${i}"${i===HN.routine?' selected':''}>${esc(i?(S.lang==='es'?r[1]:r[0]):'—')}</option>`).join('')}</select></label><label>${t.hnN}<input class="in" id="hnN" value="${esc(HN.from)}" placeholder="${esc(t.hnNp)}"></label></div>
+ <div class="row"><button class="btn go" id="hnGo"${HN.pick.length?'':' disabled'}>${t.hnGo}</button>${$('note').hidden?'':`<button class="btn ghost" id="hnPr">${t.hnPr}</button>`}</div>`};
+const noteHtml=()=>{const es=e=>LIST.find(x=>x[0]===e),f=HN.from.trim();
+ const col=(lang)=>{const E=lang==='en',r=HN.routine?RT[HN.routine][E?0:1]:'';return `<div><h2>${E?'Words we’re practicing at school':'Palabras que practicamos en la escuela'}</h2>
+  <p>${E?`For the next two weeks, we’re modeling these words every day${r?' during '+esc(r):''}. Try them at home too: touch the word on the device while you say it. You don’t need to ask your child to copy you.`:`Durante las próximas dos semanas, modelamos estas palabras todos los días${r?' durante '+esc(r):''}. Pruébelas en casa también: toque la palabra en el aparato mientras la dice. No hace falta pedirle a su hijo que lo copie.`}</p>
+  ${HN.pick.map(id=>{const e=es(id),w=byId[id];return `<div class="nw"><img src="${w.img}" alt=""><div><b>${esc(w[lang])}</b><p>${esc(E?e[3]:e[4])}</p></div></div>`}).join('')}
+  ${f?`<p><small>${E?'From':'De parte de'}: ${esc(f)}</small></p>`:''}</div>`};
+ return `<div class="cols">${col('en')}${col('es')}</div><p><small>Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.</small></p>`};
+$('hn').addEventListener('click',e=>{const b=e.target.closest('[data-hw]');if(b){const id=b.dataset.hw,i=HN.pick.indexOf(id);if(i>-1)HN.pick.splice(i,1);else if(HN.pick.length<3)HN.pick.push(id);hnRender();return}
+ if(e.target.closest('#hnGo')){$('note').innerHTML=noteHtml();$('note').hidden=false;hnRender();$('note').scrollIntoView({behavior:AAC.reduced()?'auto':'smooth'});return}
+ if(e.target.closest('#hnPr')){document.body.classList.add('print-note');try{window.print()}catch(err){}setTimeout(()=>document.body.classList.remove('print-note'),500)}});
+$('hn').addEventListener('change',e=>{if(e.target.id==='hnR'){HN.routine=+e.target.value;if(!$('note').hidden)$('note').innerHTML=noteHtml()}});
+$('hn').addEventListener('input',e=>{if(e.target.id==='hnR')HN.routine=+e.target.value;if(e.target.id==='hnN')HN.from=e.target.value;if(!$('note').hidden)$('note').innerHTML=noteHtml()});
 const cur=()=>LIST[((S.wk%LIST.length)+LIST.length)%LIST.length];
 $('prev').addEventListener('click',()=>{S.wk--;render()});
 $('next').addEventListener('click',()=>{S.wk++;render()});

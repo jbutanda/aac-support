@@ -49,6 +49,8 @@ Embed in Google Sites the same way as the AAC device page (Insert > Embed > By U
 
 ## VOICE Check (voice-check/)
 
+Remembers the dates it was finished on that device (last 10) and shows them at the end, so teachers can copy three dates into the AACtivate check-in.
+
 Five-step daily device check for teachers and paras (Visible, On, In reach, Charged, Every setting), English and Spanish, with a one-line fix for every "not yet." About 650 px tall when embedded.
 
     https://jbutanda.github.io/aac-support/voice-check/
@@ -77,14 +79,17 @@ These nine load `shared/core.js` and `shared/base.css`, so the board words, voic
 | --- | --- | --- |
 | `find-it-fast/` | Staff | Timed 10-word hunt on the full device: core words plus folder words, with folder hints; best time saved |
 | `walk-in-their-shoes/` | Staff trainings | Partner answers questions using only the AAC device against a 60-second timer, then a debrief |
-| `pd-path/` | Staff | Five stops, a six-question check, printable certificate; set `FORM_URL` to log completions |
-| `modeling-tracker/` | Staff | "I modeled!" counter with a daily goal ring, quick word chips, week bars; data stays in the browser |
-| `core-word-of-the-week/` | Families, staff | Auto-rotating weekly word with home and school ideas and a printable poster; set `START` to the school calendar |
+| `pd-path/` | Staff | AACademy front door (replaced the old PD Path at the same address): four levels, Sign-Up and Check-In buttons; links set at the top of the page |
+| `real-question/` | Staff, families | Real Question or Test Question? Twelve questions to sort, with a real-question rewrite for every test question (AACademy PrAACtice, Module 4) |
+| `write-with-me/` | Students, staff | Big talking alphabet (A to Z or QWERTY, abc or ABC, Ñ in Spanish) with Read it and Spell it; adult tips for modeling spelling (AACademy TeAACh, Module 5) |
+| `apps/` | Staff, families | Your Student's App: Proloquo2Go, TD Snap and TouchChat pages with paper layouts, free ways to try each one, and the AACtivate app check. Deep links `apps/#p2g`, `#tdsnap`, `#touchchat` |
+| `modeling-tracker/` | Staff | "I modeled!" counter with a daily goal ring, quick word chips, week bars; data stays in the browser. "Send today's AACademy log" button appears once `CHECKIN_LOG_URL` holds a pre-filled Check-In link with WORDS as the placeholder |
+| `core-word-of-the-week/` | Families, staff | Auto-rotating weekly word with home and school ideas and a printable poster, and a bilingual home-note maker (pick up to three words); set `START` to the school calendar |
 | `all-about-me/` | Families, teams | One-page student communication profile that prints; nothing is saved |
 | `aac-buddy/` | Classmates | Six read-aloud pages, a three-question check and a printable buddy badge |
 | `calm-boards/` | Students | Tap-to-talk regulation boards for TK-2, 3-5 and 6-12, with Spanish -o/-a endings |
 | `core-board-maker/` | SLPs, teachers | Printable 12/24/36/60-word core boards in English, Spanish or both |
-| `program-at-a-glance/` | Admin | Program dashboard; shows sample numbers until `SHEET_CSV_URL` points to a published Google Sheet |
+| `program-at-a-glance/` | Admin | Program dashboard; shows sample numbers until `SHEET_CSV_URL` points to a published Google Sheet; optional columns aactivate, praactice, teaach, coaach add the AACademy tiles |
 
 ## Second set of tools (November 2026)
 

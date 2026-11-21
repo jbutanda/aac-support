@@ -41,6 +41,12 @@ th:first-child,td:first-child{text-align:left}
 details summary{cursor:pointer;font-weight:700;min-height:40px;display:flex;align-items:center}
 .scroll{overflow-x:auto}
 @media(max-width:760px){.charts{grid-template-columns:1fr}.col b{font-size:10.5px}}
+.lvs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+.lvk{border-radius:18px;padding:14px 16px;color:#fff;background:var(--lc)}
+.lvk b{display:block;font-size:clamp(30px,4vw,40px);line-height:1.05;font-variant-numeric:tabular-nums}
+.lvk span{font-weight:700;font-size:15px}
+.lvk small{display:block;font-size:13px;opacity:.9;margin-top:2px}
+@media(max-width:640px){.lvs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -49,9 +55,10 @@ details summary{cursor:pointer;font-weight:700;min-height:40px;display:flex;alig
 </div></header>
 <main class="wrap">
   <section class="card"><span class="flag" id="flag">Sample numbers for layout only</span><h2 id="head"></h2><div class="kpis" id="kpis"></div></section>
+  <section class="card" id="acad"></section>
   <div class="charts" style="margin-top:18px"><section class="card chart" id="c1"></section><section class="card chart" id="c2"></section></div>
   <section class="card"><details><summary>Show the numbers</summary><div class="scroll" id="tbl"></div></details></section>
-  <p class="foot">To show real numbers, publish a Google Sheet tab to the web as CSV with the columns month, staff_trained, trainings, requests, median_days, classrooms_with_ipads, then paste its link into SHEET_CSV_URL in this page. The page reads it each time it opens. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.</p>
+  <p class="foot">To show real numbers, publish a Google Sheet tab to the web as CSV with the columns month, staff_trained, trainings, requests, median_days, classrooms_with_ipads, aactivate, praactice, teaach, coaach (the last four are AACademy completions that month), then paste its link into SHEET_CSV_URL in this page. The page reads it each time it opens. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.</p>
 </main>
 <div class="tip" id="tip"></div>
 <script src="../shared/core.js"></script>
@@ -61,12 +68,12 @@ details summary{cursor:pointer;font-weight:700;min-height:40px;display:flex;alig
 const SHEET_CSV_URL='';
 const {sym,esc}=AAC;
 const SAMPLE=[
- {month:'Aug',staff_trained:6,trainings:1,requests:4,median_days:9,classrooms_with_ipads:0},
- {month:'Sep',staff_trained:18,trainings:3,requests:7,median_days:8,classrooms_with_ipads:2},
- {month:'Oct',staff_trained:31,trainings:5,requests:11,median_days:7,classrooms_with_ipads:5},
- {month:'Nov',staff_trained:40,trainings:6,requests:9,median_days:6,classrooms_with_ipads:8},
- {month:'Dec',staff_trained:12,trainings:2,requests:5,median_days:6,classrooms_with_ipads:10},
- {month:'Jan',staff_trained:55,trainings:7,requests:8,median_days:5,classrooms_with_ipads:12}];
+ {month:'Aug',aactivate:0,praactice:0,teaach:0,coaach:0,staff_trained:6,trainings:1,requests:4,median_days:9,classrooms_with_ipads:0},
+ {month:'Sep',aactivate:0,praactice:0,teaach:0,coaach:0,staff_trained:18,trainings:3,requests:7,median_days:8,classrooms_with_ipads:2},
+ {month:'Oct',aactivate:0,praactice:0,teaach:0,coaach:0,staff_trained:31,trainings:5,requests:11,median_days:7,classrooms_with_ipads:5},
+ {month:'Nov',aactivate:0,praactice:0,teaach:0,coaach:0,staff_trained:40,trainings:6,requests:9,median_days:6,classrooms_with_ipads:8},
+ {month:'Dec',aactivate:9,praactice:0,teaach:0,coaach:0,staff_trained:12,trainings:2,requests:5,median_days:6,classrooms_with_ipads:10},
+ {month:'Jan',aactivate:14,praactice:6,teaach:0,coaach:0,staff_trained:55,trainings:7,requests:8,median_days:5,classrooms_with_ipads:12}];
 const $=id=>document.getElementById(id);
 const parse=t=>{const rows=t.trim().split(/\r?\n/).map(r=>r.split(',').map(c=>c.replace(/^"|"$/g,'').trim()));const h=rows.shift().map(x=>x.toLowerCase());return rows.filter(r=>r.length>=h.length&&r[0]).map(r=>Object.fromEntries(h.map((k,i)=>[k,k==='month'?r[i]:+r[i]||0])))};
 const sum=(d,k)=>d.reduce((a,r)=>a+(+r[k]||0),0);
@@ -78,7 +85,11 @@ const draw=(d,sample)=>{$('flag').style.display=sample?'':'none';
  $('kpis').innerHTML=[[last.classrooms_with_ipads||0,'Classrooms with iPads','classroom AAC rollout'],[st,'Staff trained','teachers, paras, BSAs, SLPs'],[rq,'AAC requests','from site teams'],[last.median_days||0,'Median days to respond',`in ${esc(last.month||'')}`]].map(([v,l,s])=>`<div class="kpi"><b>${v}</b><span>${l}</span><small>${s}</small></div>`).join('');
  bars($('c1'),d,'staff_trained','Staff trained each month','People who attended an AAC training.','staff');
  bars($('c2'),d,'requests','AAC requests each month','New requests for AAC support from site teams.','requests');
- const cols=['month','staff_trained','trainings','requests','median_days','classrooms_with_ipads'],lab=['Month','Staff trained','Trainings','Requests','Median days','Classrooms with iPads'];
+
+ const lv=[['aactivate','AACtivate','#1c7ed6','90 minutes plus a classroom task'],['praactice','PrAACtice','#2b8a3e','two weeks of daily modeling'],['teaach','TeAACh','#7048e8','a lesson and a coaching visit'],['coaach','CoAACh','#e67700','site go-to people']];
+ const tot=lv.map(([k])=>sum(d,k));
+ $('acad').innerHTML=`<h2 style="margin:0">AACademy</h2><p style="margin:4px 0 0">${tot[0]} staff have finished AACtivate this year${tot[1]?`, and ${tot[1]} have gone on to finish PrAACtice`:''}.</p><div class="lvs">${lv.map(([k,n,c,x],i)=>`<div class="lvk" style="--lc:${c}"><b>${tot[i]}</b><span>${n}</span><small>${x}</small></div>`).join('')}</div>`;
+ const cols=['month','staff_trained','trainings','requests','median_days','classrooms_with_ipads','aactivate','praactice','teaach','coaach'],lab=['Month','Staff trained','Trainings','Requests','Median days','Classrooms with iPads','AACtivate','PrAACtice','TeAACh','CoAACh'];
  $('tbl').innerHTML=`<table><thead><tr>${lab.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${d.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table>`};
 const tip=$('tip');
 document.addEventListener('mouseover',e=>{const c=e.target.closest('.col');if(!c){tip.style.display='none';return}tip.textContent=c.dataset.t;tip.style.display='block'});

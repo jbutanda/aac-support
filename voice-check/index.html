@@ -96,6 +96,7 @@ body{background:light-dark(#f2f4f7,#0e0f12)}
 @keyframes launch{from{transform:translateY(60px) scale(.6);opacity:0}}
 .cf{position:fixed;z-index:50;border-radius:2px;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.tile.cur,.tile.ok,.allgo .tile.ok,.done .rocket{animation:none}}
+.hist{margin:16px auto 0;max-width:560px;background:#f1f3f5;color:#212529;border-radius:16px;padding:12px 16px;text-align:center}.hist p{margin:4px 0;font-weight:700}.hist small{color:#495057}
 </style>
 </head>
 <body>
@@ -131,24 +132,28 @@ const K=[
 const T={
  en:{h1:'VOICE Check',sub:'Five quick checks before the day starts. Every student deserves a VOICE.',step:(i)=>`Check ${i} of 5`,yes:'Yes',no:'Not yet',back:'Back',
   why:'Why it matters: the Communication Bill of Rights includes the right to a working AAC system at all times.',
-  allT:'Ready to talk!',allP:'All five checks passed. The device is out, on, in reach, charged and going everywhere today.',someT:(n)=>`${n} quick fix${n>1?'es':''} and you’re ready`,someP:'Here’s what to do. Most take less than a minute.',again:'Check again',
+  allT:'Ready to talk!',allP:'All five checks passed. The device is out, on, in reach, charged and going everywhere today.',someT:(n)=>`${n} quick fix${n>1?'es':''} and you’re ready`,someP:'Here’s what to do. Most take less than a minute.',again:'Check again',hist:'Your VOICE Checks on this device',histP:'AACtivate asks for three school days. Copy these dates into your AACademy check-in.',
   foot:'Sample page. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0. VOICE check: Visible, On, In reach, Charged, Every setting.'},
  es:{h1:'Revisión VOICE',sub:'Cinco revisiones rápidas antes de empezar el día. Cada estudiante merece su voz (VOICE).',step:(i)=>`Revisión ${i} de 5`,yes:'Sí',no:'Todavía no',back:'Atrás',
   why:'Por qué importa: la Carta de Derechos de la Comunicación incluye el derecho a un sistema de CAA que funcione en todo momento.',
-  allT:'¡Listo para hablar!',allP:'Pasó las cinco revisiones. El aparato está a la vista, encendido, al alcance, cargado y va a todas partes hoy.',someT:(n)=>`${n} arreglo${n>1?'s':''} rápido${n>1?'s':''} y listo`,someP:'Esto es lo que hay que hacer. La mayoría toma menos de un minuto.',again:'Revisar otra vez',
+  allT:'¡Listo para hablar!',allP:'Pasó las cinco revisiones. El aparato está a la vista, encendido, al alcance, cargado y va a todas partes hoy.',someT:(n)=>`${n} arreglo${n>1?'s':''} rápido${n>1?'s':''} y listo`,someP:'Esto es lo que hay que hacer. La mayoría toma menos de un minuto.',again:'Revisar otra vez',hist:'Sus revisiones VOICE en este aparato',histP:'AACtivate pide tres días de clase. Copie estas fechas en su registro de AACademy.',
   foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. VOICE: Visible, On (encendido), In reach (al alcance), Charged (cargado), Every setting (en todo lugar).'}};
 const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||'en',i:0,a:Array(5).fill(null)};
 const $=id=>document.getElementById(id);
 const confetti=(el,n=100)=>{try{if(matchMedia('(prefers-reduced-motion: reduce)').matches||!el)return;const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+60;const cols=['#ffe066','#8ce99a','#8fc7ff','#d0b3ff','#ffb3d1','#69db7c'];for(let i=0;i<n;i++){const p=document.createElement('i');p.className='cf';p.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[i%cols.length]};width:${6+Math.random()*6}px;height:${8+Math.random()*9}px`;document.body.appendChild(p);const a=Math.random()*Math.PI*2,v=120+Math.random()*300,dx=Math.cos(a)*v,dy=Math.sin(a)*v-220;p.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},{transform:`translate(${dx}px,${dy+440}px) rotate(${Math.random()*720-360}deg)`,opacity:0}],{duration:1200+Math.random()*800,easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish=()=>p.remove()}}catch(e){}};
+const VD={get:()=>{try{return JSON.parse(localStorage.getItem('voice-dates')||'[]')}catch(e){return []}},
+ add:()=>{try{const d=new Date(),k=new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),a=VD.get().filter(x=>x!==k);a.push(k);localStorage.setItem('voice-dates',JSON.stringify(a.slice(-10)))}catch(e){}},
+ html:(t,lang)=>{const a=VD.get();if(!a.length)return '';const f=k=>{try{return new Date(k+'T12:00:00').toLocaleDateString(lang==='es'?'es-US':'en-US',{weekday:'short',month:'short',day:'numeric'})}catch(e){return k}};
+  return `<div class="hist"><b>${t.hist}</b><p>${a.slice(-5).reverse().map(f).join(' · ')}</p><small>${t.histP}</small></div>`}};
 const render=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;
  document.querySelectorAll('[data-l]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.lang));
  $('tiles').innerHTML=K.map((k,j)=>`<div class="tile${S.a[j]===true?' ok':S.a[j]===false?' no':''}${j===S.i&&S.i<5?' cur':''}"><b>${k.l}</b><span>${k[S.lang].w}</span></div>`).join('');
  if(S.i<5){const k=K[S.i],L=k[S.lang];
   $('card').innerHTML=`<p class="step">${t.step(S.i+1)}</p><div class="qrow"><div class="sym"><img src="symbols/${k.s}.svg" alt=""></div><div><h2>${k.l}: ${L.w}</h2></div></div><p class="q">${L.q}</p><div class="yn"><button class="yes" data-a="1">${t.yes}</button><button class="no" data-a="0">${t.no}</button></div>${S.i>0?`<button class="back" id="back">← ${t.back}</button>`:''}<p class="why">${t.why}</p>`}
  else{const miss=K.map((k,j)=>({k,j})).filter(x=>S.a[x.j]===false);
-  $('card').innerHTML=miss.length?`<div class="done"><h2>${t.someT(miss.length)}</h2><p>${t.someP}</p></div><div class="fixes">${miss.map(({k})=>`<div class="fx"><b class="l">${k.l}</b><div><strong>${k[S.lang].w}</strong>${k[S.lang].fix}</div></div>`).join('')}</div><div class="done"><button class="again" id="again">${t.again}</button></div>`
-  :`<div class="done"><img class="rocket" src="symbols/rocket.svg" alt=""><h2>${t.allT}</h2><p>${t.allP}</p><button class="again" id="again">${t.again}</button></div>`}};
-$('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){S.a[S.i]=b.dataset.a==='1';S.i++;render();const all=S.i>=5&&S.a.every(x=>x);$('tiles').classList.toggle('allgo',all);if(all)setTimeout(()=>confetti($('card')),250);return}
+  $('card').innerHTML=miss.length?`<div class="done"><h2>${t.someT(miss.length)}</h2><p>${t.someP}</p></div><div class="fixes">${miss.map(({k})=>`<div class="fx"><b class="l">${k.l}</b><div><strong>${k[S.lang].w}</strong>${k[S.lang].fix}</div></div>`).join('')}</div>${VD.html(t,S.lang)}<div class="done"><button class="again" id="again">${t.again}</button></div>`
+  :`<div class="done"><img class="rocket" src="symbols/rocket.svg" alt=""><h2>${t.allT}</h2><p>${t.allP}</p><button class="again" id="again">${t.again}</button></div>${VD.html(t,S.lang)}`}};
+$('card').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){S.a[S.i]=b.dataset.a==='1';S.i++;if(S.i>=5)VD.add();render();const all=S.i>=5&&S.a.every(x=>x);$('tiles').classList.toggle('allgo',all);if(all)setTimeout(()=>confetti($('card')),250);return}
  if(e.target.closest('#back')){S.i=Math.max(0,S.i-1);render();return}
  if(e.target.closest('#again')){S.i=0;S.a=Array(5).fill(null);$('tiles').classList.remove('allgo');render()}});
 document.querySelector('.ctrls').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(b){S.lang=b.dataset.l;render()}});
