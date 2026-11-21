@@ -73,7 +73,7 @@ const T={
   st:['Hoy','Días con meta (7)','Racha de días'],copy:'Copiar mis datos',copied:'Copiado. Péguelo en una hoja de cálculo.',days:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],hit:'¡Meta cumplida!',
   foot:'Los conteos se guardan solo en este navegador, en este dispositivo. No se envía nada. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const $=id=>document.getElementById(id);
-const S={lang:store.get('mt-lang','en'),log:store.get('mt-log',{}),goal:store.get('mt-goal',20),hist:[]};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||store.get('mt-lang','en'),log:store.get('mt-log',{}),goal:store.get('mt-goal',20),hist:[]};
 const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
 const day=k=>S.log[k]||(S.log[k]={n:0,w:{}});
 const todayK=()=>iso(new Date());
@@ -103,5 +103,6 @@ render();
 }
 </script>
 <script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+<script src="../shared/keep-lang.js"></script>
 </body>
 </html>

@@ -111,5 +111,6 @@ AAC.deco($('deco'),[['compass',8,10,64,-8],['star',46,56,44,8],['map',80,12,56,6
 (function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);
 </script>
+<script src="../shared/keep-lang.js"></script>
 </body>
 </html>
