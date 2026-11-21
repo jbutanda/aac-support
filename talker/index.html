@@ -100,7 +100,7 @@ const PH=[
  {ids:['your','turn'],en:'Your turn.',es:'Tu turno.'},
  {ids:['stop','alldone'],en:'Stop. All done.',es:'Para. Terminé.'},
  {ids:['help','please'],en:'Help, please.',es:'Ayuda, por favor.'}];
-const S={mode:'free',lang:'en',msg:[],ch:0,stars:0,fb:'',phr:-1,busy:false};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={mode:'free',lang:QL()||'en',msg:[],ch:0,stars:0,fb:'',phr:-1,busy:false};
 const $=id=>document.getElementById(id);
 const lbl=w=>w[S.lang];
 const dev=AAC.Device($('dv'),{lang:()=>S.lang,onPick:w=>{if(S.busy)return;S.msg.push(w.id);S.fb='';renderMsg();speak(lbl(w),S.lang)}});

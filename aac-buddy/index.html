@@ -73,7 +73,7 @@ const T={
   foot:'For classmates in any grade. Read it together as a class or one-on-one. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
  es:{h1:'Amigo CAA',sub:'Aprende a ser un gran amigo de los niños que hablan con un dispositivo de CAA. ¡Luego gana tu insignia!',back:'Atrás',next:'Siguiente',read:'Léemelo',quiz:'Repaso rápido',got:'¡Muy bien!',try:'Prueba la otra.',badge:'Ver mi insignia',name:'Tu nombre',bb:'AMIGO CAA',print:'Imprimir mi insignia',again:'Empezar de nuevo',
   foot:'Para compañeros de cualquier grado. Léanlo juntos en clase o uno a uno. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
-const S={lang:'en',i:0,qi:0,picked:null,name:''};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||'en',i:0,qi:0,picked:null,name:''};
 const $=id=>document.getElementById(id);
 const total=P.length+Q.length+1;
 const render=()=>{const t=T[S.lang],es=S.lang==='es';document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=es?'Voz':'Voice';

@@ -117,7 +117,7 @@ const T={
   foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. Las palabras coinciden con el tablero Try an AAC Device de RUSD; el aparato de su hijo puede tenerlas en otro lugar.'}};
 const LINES=[[0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],[0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],[0,6,12,18,24],[4,8,12,16,20]];
 const load=()=>{try{return JSON.parse(localStorage.getItem('mbingo')||'null')}catch(e){return null}};
-const S=Object.assign({lang:'en',order:null,on:[],sel:-1},load()||{});
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S=Object.assign({lang:'en',order:null,on:[],sel:-1},load()||{});if(QL())S.lang=QL();
 const save=()=>{try{localStorage.setItem('mbingo',JSON.stringify({lang:S.lang,order:S.order,on:S.on}))}catch(e){}};
 const shuffle=()=>{const a=Q.map((_,i)=>i);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}a.splice(12,0,-1);return a};
 if(!Array.isArray(S.order)||S.order.length!==25)S.order=shuffle();

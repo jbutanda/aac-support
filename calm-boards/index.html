@@ -67,7 +67,7 @@ const T={
   foot:'Sample boards. Swap in the words from your own regulation boards. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
  es:{h1:'Tableros de calma',sub:'Tableros que hablan para sentimientos fuertes, por grado. Déjelo abierto en un iPad o Chromebook del rincón de calma.',tabs:{k2:'TK–2',g35:'3.º a 5.º',g612:'6.º a 12.º'},ph:'Toca una palabra para decirla.',gl:'Terminación en español:',
   foot:'Tableros de muestra. Cambie las palabras por las de sus propios tableros de regulación. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
-const S={lang:'en',b:'k2',g:'o',last:null};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||'en',b:'k2',g:'o',last:null};
 const $=id=>document.getElementById(id);
 const txt=x=>S.lang==='es'?x[3].replace('{o}',S.g):x[2];
 const render=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=S.lang==='es'?'Voz':'Voice';
