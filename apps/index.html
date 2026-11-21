@@ -42,6 +42,8 @@
 <script src="../shared/core.js"></script>
 <script>
 /* Deep links: apps/#p2g, apps/#tdsnap, apps/#touchchat */
+/* Hides the AACademy check-in line until launch. Change to true with pd-path's OPEN. */
+const OPEN=false;
 const CHECKIN_URL='https://docs.google.com/forms/d/e/1FAIpQLSfgV1gc7jxy3Q9dfNgkHOOE7wCR0tsZ0K7zoqmxn2dd3iWfvQ/viewform';
 const STAFF='https://jbutanda.github.io/rusd_aac_staff/';
 const {esc,sym}=AAC,$=id=>document.getElementById(id);
@@ -92,7 +94,7 @@ function render(){
  <div class="blocks">
   <div class="blk"><h3><img src="${sym('map')}" alt="">${esc(t('mapH'))}</h3><p>${esc(t('mapP'))}</p><div class="warn">${esc(a.vocab[L])}</div><div class="links">${a.map.map(lk).join('')}</div></div>
   <div class="blk"><h3><img src="${sym('phone')}" alt="">${esc(t('tryH'))}</h3><p>${esc(a.try[L])}</p></div>
-  <div class="blk"><h3><img src="${sym('clipboard')}" alt="">${esc(t('checkH'))}</h3><ol>${t('check').map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p>${esc(t('checkP'))}</p><div class="links"><a href="${esc(CHECKIN_URL)}" target="_blank" rel="noopener">${esc(t('send'))}</a></div></div>
+  <div class="blk"><h3><img src="${sym('clipboard')}" alt="">${esc(t('checkH'))}</h3><ol>${t('check').map(s=>`<li>${esc(s)}</li>`).join('')}</ol>${OPEN?`<p>${esc(t('checkP'))}</p><div class="links"><a href="${esc(CHECKIN_URL)}" target="_blank" rel="noopener">${esc(t('send'))}</a></div>`:''}</div>
   <div class="blk"><h3><img src="${sym('book')}" alt="">${esc(t('moreH'))}</h3><div class="links">${a.more.map(lk).join('')}</div></div>
  </div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-app]');if(b){cur=b.dataset.app;try{history.replaceState(null,'','#'+cur)}catch(err){}render()}});

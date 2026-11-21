@@ -37,7 +37,9 @@
 .bar.today i{outline:3px solid var(--ink);outline-offset:2px}
 .bar b{font-size:14px;font-variant-numeric:tabular-nums}
 .bar span{font-size:13px;color:var(--soft);font-weight:700}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.said{font:inherit;font-weight:700;font-size:18px;width:100%;min-height:56px;margin-top:10px;border-radius:18px;border:0;background:#7048e8;color:#fff;cursor:pointer;box-shadow:0 5px 0 #4c2fb0;transition:transform .07s,box-shadow .07s}
+.said:active{transform:translateY(4px);box-shadow:0 1px 0 #4c2fb0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
 .stats div{background:var(--tint);border-radius:16px;padding:12px;text-align:center}
 .stats b{display:block;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
 .stats span{font-size:13px;font-weight:700;color:var(--soft)}
@@ -46,7 +48,8 @@
 .top5 img{width:30px}
 .top5 i{display:block;height:14px;border-radius:7px;background:var(--go)}
 .top5 b{text-align:right;font-variant-numeric:tabular-nums}
-@media(max-width:620px){.hero{grid-template-columns:1fr;justify-items:center}.ring{width:190px;height:190px}.tap{min-height:96px}}
+.stats div.st b{color:#7048e8}
+@media(max-width:620px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr;justify-items:center}.ring{width:190px;height:190px}.tap{min-height:96px}}
 </style>
 </head>
 <body>
@@ -55,7 +58,7 @@
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
 </div></header>
 <main class="wrap">
-  <section class="card"><div class="hero"><div class="ring" id="ring"></div><div><button class="tap" id="tap"></button><div class="quick" id="quick"></div><div class="subrow"><label class="goal"><span id="gl"></span><input class="in" type="number" min="1" max="200" id="goal"></label><div class="row"><button class="btn ghost" id="undo"></button></div></div></div></div></section>
+  <section class="card"><div class="hero"><div class="ring" id="ring"></div><div><button class="tap" id="tap"></button><button class="said" id="said"></button><div class="quick" id="quick"></div><div class="subrow"><label class="goal"><span id="gl"></span><input class="in" type="number" min="1" max="200" id="goal"></label><div class="row"><button class="btn ghost" id="undo"></button></div></div></div></div></section>
   <section class="card"><h2 id="wk"></h2><div class="bars" id="bars"></div><div class="stats" id="stats"></div></section>
   <section class="card"><h2 id="tw"></h2><div class="top5" id="top5"></div><div class="row" style="margin-top:16px"><a class="btn go" id="send" target="_blank" rel="noopener" hidden></a><button class="btn ghost" id="copy"></button><span class="muted small" id="copied"></span></div></section>
   <p class="foot" id="foot"></p>
@@ -70,16 +73,16 @@ const {byId,store,confetti,langToggle,sym,esc}=AAC;
 const CHECKIN_LOG_URL='';
 const QUICK=['more','go','stop','help','look','want','like','alldone','i','you','what','turn'];
 const T={
- en:{h1:'Modeling Tracker',sub:'Tap every time you model a word on a student’s device. Watch the ring fill toward today’s goal.',tap:'I modeled!',goal:'Daily goal',undo:'Undo',today:'today',of:(g)=>`of ${g}`,wk:'This week',tw:'Top words today',none:'Tap a word chip when you model it to see your top words here.',
+ en:{h1:'Modeling Tracker',sub:'Tap every time you model a word on a student’s device. Watch the ring fill toward today’s goal. When your student says something with AAC, tap the purple button.',tap:'I modeled!',said:n=>`My student said something with AAC${n?` (${n} today)`:''}`,sw:'Student messages (7 days)',goal:'Daily goal',undo:'Undo',today:'today',of:(g)=>`of ${g}`,wk:'This week',tw:'Top words today',none:'Tap a word chip when you model it to see your top words here.',
   st:['Today','Days goal met (7)','Day streak'],copy:'Copy my data',send:'Send today’s AACademy log',copied:'Copied. Paste it into a spreadsheet.',days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],hit:'Goal reached!',
   foot:'Counts are saved only in this browser, on this device. Nothing is sent anywhere. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
- es:{h1:'Registro de modelado',sub:'Toque cada vez que modele una palabra en el aparato de un estudiante. Vea cómo el anillo se llena hacia la meta del día.',tap:'¡Modelé!',goal:'Meta diaria',undo:'Deshacer',today:'hoy',of:(g)=>`de ${g}`,wk:'Esta semana',tw:'Palabras más usadas hoy',none:'Toque una palabra cuando la modele para ver aquí sus palabras más usadas.',
+ es:{h1:'Registro de modelado',sub:'Toque cada vez que modele una palabra en el aparato de un estudiante. Vea cómo el anillo se llena hacia la meta del día. Cuando su estudiante diga algo con CAA, toque el botón morado.',tap:'¡Modelé!',said:n=>`Mi estudiante dijo algo con CAA${n?` (${n} hoy)`:''}`,sw:'Mensajes del estudiante (7 días)',goal:'Meta diaria',undo:'Deshacer',today:'hoy',of:(g)=>`de ${g}`,wk:'Esta semana',tw:'Palabras más usadas hoy',none:'Toque una palabra cuando la modele para ver aquí sus palabras más usadas.',
   st:['Hoy','Días con meta (7)','Racha de días'],copy:'Copiar mis datos',send:'Enviar el registro de AACademy de hoy',copied:'Copiado. Péguelo en una hoja de cálculo.',days:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],hit:'¡Meta cumplida!',
   foot:'Los conteos se guardan solo en este navegador, en este dispositivo. No se envía nada. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const $=id=>document.getElementById(id);
 const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||store.get('mt-lang','en'),log:store.get('mt-log',{}),goal:store.get('mt-goal',20),hist:[]};
 const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
-const day=k=>S.log[k]||(S.log[k]={n:0,w:{}});
+const day=k=>S.log[k]||(S.log[k]={n:0,w:{},s:0});
 const todayK=()=>iso(new Date());
 const save=()=>store.set('mt-log',S.log);
 const last7=()=>{const out=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);out.push({k:iso(d),d})}return out};
@@ -93,14 +96,16 @@ const render=()=>{const t=T[S.lang],k=todayK(),n=(S.log[k]||{}).n||0,g=S.goal,C=
  const L=last7(),mx=Math.max(g,...L.map(x=>(S.log[x.k]||{}).n||0));
  $('bars').innerHTML=L.map((x,i)=>{const v=(S.log[x.k]||{}).n||0;return `<div class="bar${v>=g?' met':''}${i===6?' today':''}"><b>${v}</b><i style="height:${Math.max(3,v/mx*100)}%"></i><span>${t.days[x.d.getDay()]}</span></div>`}).join('');
  const met=L.filter(x=>((S.log[x.k]||{}).n||0)>=g).length;
- $('stats').innerHTML=[[n,t.st[0]],[met,t.st[1]],[streak(),t.st[2]]].map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join('');
+ const sw=L.reduce((a,x)=>a+((S.log[x.k]||{}).s||0),0);$('said').textContent=t.said((S.log[k]||{}).s||0);
+ $('stats').innerHTML=[[n,t.st[0]],[met,t.st[1]],[streak(),t.st[2]]].map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join('')+`<div class="st"><b>${sw}</b><span>${t.sw}</span></div>`;
  const w=Object.entries((S.log[k]||{}).w||{}).sort((a,b)=>b[1]-a[1]).slice(0,5),wm=w.length?w[0][1]:1;
  $('top5').innerHTML=w.length?w.map(([id,v])=>{const x=byId[id];return `<div><img src="${x.img}" alt=""><span>${esc(x[S.lang])}</span><i style="width:${v/wm*100}%"></i><b>${v}</b></div>`}).join(''):`<p class="muted">${t.none}</p>`};
 $('tap').addEventListener('click',()=>add(null));
+$('said').addEventListener('click',()=>{const t=day(todayK());t.s=(t.s||0)+1;S.hist.push('#s');save();render()});
 $('quick').addEventListener('click',e=>{const b=e.target.closest('[data-w]');if(b)add(b.dataset.w)});
-$('undo').addEventListener('click',()=>{const t=S.log[todayK()];if(!t||!t.n)return;t.n--;const w=S.hist.pop();if(w&&t.w[w]){t.w[w]--;if(!t.w[w])delete t.w[w]}save();render()});
+$('undo').addEventListener('click',()=>{const t=S.log[todayK()];if(!t)return;if(S.hist[S.hist.length-1]==='#s'){S.hist.pop();if(t.s)t.s--;save();render();return}if(!t.n)return;t.n--;const w=S.hist.pop();if(w&&t.w[w]){t.w[w]--;if(!t.w[w])delete t.w[w]}save();render()});
 $('goal').addEventListener('change',e=>{const v=Math.max(1,Math.min(200,parseInt(e.target.value)||20));S.goal=v;store.set('mt-goal',v);render()});
-$('copy').addEventListener('click',async()=>{const rows=[['date','models','words']].concat(Object.keys(S.log).sort().map(k=>[k,S.log[k].n,Object.entries(S.log[k].w).map(([a,b])=>a+':'+b).join(' ')]));const txt=rows.map(r=>r.join('\t')).join('\n');try{await navigator.clipboard.writeText(txt);$('copied').textContent=T[S.lang].copied}catch(e){$('copied').textContent=''}});
+$('copy').addEventListener('click',async()=>{const rows=[['date','models','student_messages','words']].concat(Object.keys(S.log).sort().map(k=>[k,S.log[k].n,S.log[k].s||0,Object.entries(S.log[k].w).map(([a,b])=>a+':'+b).join(' ')]));const txt=rows.map(r=>r.join('\t')).join('\n');try{await navigator.clipboard.writeText(txt);$('copied').textContent=T[S.lang].copied}catch(e){$('copied').textContent=''}});
 langToggle($('langs'),()=>S.lang,l=>{S.lang=l;store.set('mt-lang',l);render()});
 $('deco').innerHTML=[['target',12,12,60,-8],['chart',48,56,56,8],['fire',80,14,50,-6],['star',30,62,40,10]].map(([n,x,y,z,r],i)=>`<img src="${sym(n)}" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i}s">`).join('');
 render();
