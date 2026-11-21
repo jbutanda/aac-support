@@ -65,7 +65,7 @@ const T={
   intro:'Saber dónde está cada palabra le permite modelar en el momento. Toque la palabra que aparece arriba. Si está en una carpeta, abra la carpeta primero. Después de cada palabra correcta el dispositivo regresa al inicio, como la mayoría de los dispositivos reales. Con dos errores se ilumina una pista.',
   doneT:'¡Listo!',doneP:(t,b)=>`${t} segundos. ${b?'¡Nuevo récord personal!':'Su mejor tiempo se guarda en este dispositivo.'}`,pdone:'Buena práctica. Intente contra el reloj la próxima vez.',again:'Jugar otra vez',
   foot:'Usa el mismo dispositivo de CAA de demostración que todas las herramientas de RUSD, no una aplicación específica. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
-const S={lang:'en',mode:'timed',scope:'all',phase:'start',round:0,targets:[],miss:0,t0:0,elapsed:0,timer:null,newBest:false};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||'en',mode:'timed',scope:'all',phase:'start',round:0,targets:[],miss:0,t0:0,elapsed:0,timer:null,newBest:false};
 const $=id=>document.getElementById(id);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const pick=()=>{const core=shuffle(W.map(w=>w.id));if(S.scope==='core')return core.slice(0,10);

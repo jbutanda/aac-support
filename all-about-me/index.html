@@ -81,7 +81,7 @@ const L={
   ph:{name:'ej., Mia',dev:'ej., Proloquo2Go en un iPad',lives:'ej., En el estuche azul en mi silla',yes:'ej., Sonrío y digo que sí con la cabeza',no:'ej., Volteo la cabeza',love:'ej., Música, columpios, pizza',notfav:'ej., Timbres fuertes, hacer fila',upset:'ej., Me tapo los oídos o me voy',calm:'ej., Audífonos y un rincón tranquilo',ask:'ej., Mi perrita Coco y mis canciones favoritas'},
   p:{hi:'¡Hola! Soy',sub:'Así puedes hablar conmigo.',comm:'Cómo hablo',dev:'Mi dispositivo de CAA',yesno:'Sí y no',love:'Me encanta',notfav:'No me gusta mucho',help:'Puedes ayudarme',upset:'Cuando estoy molesto',dont:'Por favor no',ask:'Pregúntame sobre',yes:'Sí:',no:'No:',lives:'Dónde está:',calm:'Lo que ayuda:',add:'Agréguelo en el formulario'},
   foot:'Siempre que se pueda, llénelo junto con el estudiante. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
-const S={lang:'en',v:{},comm:new Set(),help:new Set(),dont:new Set(),photo:''};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||'en',v:{},comm:new Set(),help:new Set(),dont:new Set(),photo:''};
 const $=id=>document.getElementById(id);
 const txt=['name','dev','lives','yes','no','love','notfav','upset','calm','ask'];
 const area=new Set(['love','notfav','upset','calm','ask']);

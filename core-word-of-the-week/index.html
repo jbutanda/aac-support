@@ -83,7 +83,7 @@ const T={
 const $=id=>document.getElementById(id);
 const DAY=864e5,[sy,sm,sd]=START.split('-').map(Number),startD=new Date(sy,sm-1,sd);
 const now=Math.max(0,Math.floor(Math.round((Date.now()-startD)/DAY)/7));
-const S={lang:'en',wk:now};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||'en',wk:now};
 const render=()=>{const t=T[S.lang],es=S.lang==='es',e=LIST[((S.wk%LIST.length)+LIST.length)%LIST.length],w=byId[e[0]];
  document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=es?'Voz':'Voice';
  const d=new Date(startD);d.setDate(d.getDate()+S.wk*7);$('wlabel').textContent=`${t.week} ${d.toLocaleDateString(es?'es-US':'en-US',{month:'long',day:'numeric'})}`;

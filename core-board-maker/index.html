@@ -57,7 +57,7 @@ const T={
   foot:'Words and colors match the RUSD demo board. Extra words print as text only. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
  es:{h1:'Creador de tableros',sub:'Cree un tablero de palabras clave, con colores, para imprimir en inglés, español o ambos. Ideal como respaldo mientras el aparato se carga.',size:'Tamaño',words:'palabras',lab:'Etiquetas',en:'Inglés',es:'Español',both:'Ambos',title:'Título del tablero',titleph:'ej., El tablero de Mia',fr:'Palabras extra (separadas por comas)',frph:'ej., columpio, abuela, pizza',sym:'Mostrar símbolos',col:'Con colores',print:'Imprimir tablero',tip:'Se imprime horizontal. Enmíquelo y tenga uno donde el aparato no puede ir.',
   foot:'Las palabras y los colores coinciden con el tablero de demostración de RUSD. Las palabras extra se imprimen solo con texto. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
-const S=Object.assign({lang:'en',size:24,lab:'en',sym:true,col:true,title:'',fr:''},store.get('cbm',{}));
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S=Object.assign({lang:'en',size:24,lab:'en',sym:true,col:true,title:'',fr:''},store.get('cbm',{}));if(QL())S.lang=QL();
 const $=id=>document.getElementById(id);
 const save=()=>store.set('cbm',S);
 const words=()=>{const ids=S.size===60?W.map(w=>w.id):PRI.slice(0,S.size);const idx=Object.fromEntries(W.map((w,i)=>[w.id,i]));return ids.slice().sort((a,b)=>idx[a]-idx[b]).map(id=>byId[id])};

@@ -201,7 +201,7 @@ const T={
  es:{h1:'¿Mito o realidad?',sub:'Doce cosas que la gente suele escuchar sobre la CAA. Adivine y luego voltee la tarjeta.',of:(i,n)=>`Tarjeta ${i} de ${n}`,ask:'¿Mito o realidad?',myth:'Mito',fact:'Realidad',MYTH:'MITO',FACT:'REALIDAD',right:'¡Correcto!',wrong:'Buen intento, pero no.',tip:'Pruebe esto',res:'Lo que dicen las investigaciones',read:'Léamelo',next:'Siguiente',last:'Ver mi puntaje',score:(a,b)=>`${a} de ${b} correctas hasta ahora`,
   endT:'¡Muy bien!',endP:(a,n)=>`Acertó ${a} de ${n}. A la mayoría se le escapan algunas, y por eso vale la pena hablar de estos mitos.`,again:'Jugar otra vez',talker:'Probar un dispositivo de CAA',ask2:'¿Preguntas sobre la CAA para su hijo? Pregúntele al patólogo del habla y lenguaje de su hijo.',
   foot:'Página de muestra. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0. La voz usa las voces del dispositivo.',vlab:'Voz',vdef:'Voz del dispositivo'}};
-const S={lang:'en',i:0,res:Array(C.length).fill(null),flip:false,done:false};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||'en',i:0,res:Array(C.length).fill(null),flip:false,done:false};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 let voices=[];
