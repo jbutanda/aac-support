@@ -32,6 +32,7 @@
 .free img{width:44px;flex:none}
 .go-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
 .go-row .btn{min-height:52px;font-size:18px;padding:12px 24px;text-decoration:none;display:inline-flex;align-items:center}
+.soon{display:inline-flex;align-items:center;min-height:52px;padding:12px 24px;border-radius:999px;font-size:18px;font-weight:700;background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line)}
 .note{font-size:14px;color:var(--soft);margin-top:10px}
 @media(max-width:900px){.levels{grid-template-columns:repeat(2,minmax(0,1fr))}.lv::after{display:none}}
 @media(max-width:560px){.levels,.asks{grid-template-columns:1fr}.lv{min-height:0}}
@@ -53,6 +54,8 @@
 <script>
 /* Links. SIGNUP_URL is the AACademy Sign-Up form. Paste the AACademy Check-In link into CHECKIN_URL once it exists;
    until then that button stays hidden. This page lives at the old PD Path address so old links still land here. */
+/* AACademy isn't open yet. Change false to true on launch day and the sign-up and check-in buttons come back. */
+const OPEN=false;
 const SIGNUP_URL='https://docs.google.com/forms/d/e/1FAIpQLSdV8TxNrIFUcIBIQgvfbFfFzZ09WVMHHUuN4C9zvKd6DljwBw/viewform';
 const CHECKIN_URL='https://docs.google.com/forms/d/e/1FAIpQLSfgV1gc7jxy3Q9dfNgkHOOE7wCR0tsZ0K7zoqmxn2dd3iWfvQ/viewform';
 const {esc,sym}=AAC,$=id=>document.getElementById(id);
@@ -73,7 +76,7 @@ const T={
   lvh:'The four levels',n:'Level',done:'Done when',howh:'What it asks of you',
   asks:[[sym('stopwatch'),'Real time','Each level takes days or weeks of classroom use, so nobody finishes in one sitting.'],[sym('target'),'Real practice','You model with your own students and log it. That\'s where the learning happens.'],[sym('medal'),'Real recognition','A certificate and email badge at each level, listing what you showed you can do.']],
   free:'Every tool and printable on this site is free to use with students right now, with or without AACademy. AACademy is for you.',
-  signup:'Sign up for AACademy',checkin:'Send a check-in',note:'Both forms ask you to sign in with your RUSD account.',
+  soon:'Coming soon',soonP:'Sign-up isn’t open yet. Check back here.',signup:'Sign up for AACademy',checkin:'Send a check-in',note:'Both forms ask you to sign in with your RUSD account.',
   foot:'AACademy is run by the District AAC Specialist. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
  es:{h1:'AACademy',sub:'La ruta de capacitación en CAA de Rialto para el personal del salón. Cuatro niveles, práctica real con sus estudiantes.',
   lede:'AACademy lo lleva de saber qué es la CAA a ser la persona a quien otros en su escuela acuden. Cada nivel le pide probar algo con sus estudiantes, no solo ver un video.',
@@ -81,7 +84,7 @@ const T={
   lvh:'Los cuatro niveles',n:'Nivel',done:'Termina cuando',howh:'Lo que le pide',
   asks:[[sym('stopwatch'),'Tiempo real','Cada nivel toma días o semanas de uso en el salón, así que nadie termina en una sola sesión.'],[sym('target'),'Práctica real','Usted modela con sus propios estudiantes y lo registra. Ahí es donde se aprende.'],[sym('medal'),'Reconocimiento real','Un certificado y una insignia para su correo en cada nivel, con lo que demostró que puede hacer.']],
   free:'Todas las herramientas e imprimibles de este sitio son gratis para usar con los estudiantes ahora mismo, con o sin AACademy. AACademy es para usted.',
-  signup:'Inscribirse en AACademy',checkin:'Enviar un registro',note:'Los dos formularios le piden entrar con su cuenta de RUSD.',
+  soon:'Próximamente',soonP:'La inscripción aún no está abierta. Vuelva a visitar esta página.',signup:'Inscribirse en AACademy',checkin:'Enviar un registro',note:'Los dos formularios le piden entrar con su cuenta de RUSD.',
   foot:'AACademy está a cargo del Especialista de CAA del distrito. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const t=k=>T[L][k];
 function render(){
@@ -90,7 +93,7 @@ function render(){
  $('lv').innerHTML=`<h2 style="margin:0">${esc(t('lvh'))}</h2><div class="levels">${LV.map((v,i)=>{const x=v[L];return `<article class="lv" style="--lc:${v.c}"><div class="ic"><img src="${v.ic}" alt=""></div><span class="n">${esc(t('n'))} ${i+1}</span><h2>${esc(x.h)}</h2><span class="time">${esc(x.t)}</span><p>${esc(x.p)}</p><div class="done"><b>${esc(t('done'))}</b>${esc(x.d)}</div></article>`}).join('')}</div>`;
  $('how').innerHTML=`<h2 style="margin:0">${esc(t('howh'))}</h2><div class="asks">${t('asks').map(([i,b,s])=>`<div class="ask"><img src="${i}" alt=""><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join('')}</div>
  <div class="free"><img src="${sym('heart')}" alt=""><span>${esc(t('free'))}</span></div>
- <div class="go-row"><a class="btn go" href="${esc(SIGNUP_URL)}" target="_blank" rel="noopener">${esc(t('signup'))}</a>${CHECKIN_URL?`<a class="btn ghost" href="${esc(CHECKIN_URL)}" target="_blank" rel="noopener">${esc(t('checkin'))}</a>`:''}</div><p class="note">${esc(t('note'))}</p>`}
+ ${OPEN?`<div class="go-row"><a class="btn go" href="${esc(SIGNUP_URL)}" target="_blank" rel="noopener">${esc(t('signup'))}</a>${CHECKIN_URL?`<a class="btn ghost" href="${esc(CHECKIN_URL)}" target="_blank" rel="noopener">${esc(t('checkin'))}</a>`:''}</div><p class="note">${esc(t('note'))}</p>`:`<div class="go-row"><span class="soon">${esc(t('soon'))}</span></div><p class="note">${esc(t('soonP'))}</p>`}`}
 AAC.deco($('deco'),[['rocket',8,12,56,-8],['star',48,60,40,8],['trophy',82,14,52,6],['grad',30,66,42,-6]]);
 (function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);

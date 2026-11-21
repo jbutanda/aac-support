@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Words to Stay Safe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE steady and protective, never alarming; written for the adults who keep students safe
+   IDEA the board a student can point to when it matters most, made with the SLP and printed for the desk and the go-bag
+   PICTURE the board itself, large keys, a message strip that shows the words even when sound is off
+   COLOUR deep red band; stop/no keys in soft red, help and hurt in yellow, body words in blue
+   TYPE Atkinson Hyperlegible, large
+   LAYOUT board tabs and the board first, then the make-and-print card, then the short guide; print shows only the board */
+:root{--band:#a61e1e;--maxw:960px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+.tabs .sp{flex:1}
+.said{display:flex;align-items:center;gap:14px;min-height:92px;border-radius:20px;background:#fff5f5;color:#5c1010;padding:12px 18px;margin-bottom:14px}
+:root[data-theme=dark] .said{background:#2b1414;color:#ffe3e3}
+.said img{width:62px;height:62px}
+.said b{font-size:clamp(24px,4vw,36px);line-height:1.1}
+.said .ph{color:#9a5a5a;font-size:18px}
+.sheet h2{display:none;text-align:center;margin:0 0 10px;font-size:26px;color:#16181d}
+.cb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ck{border:0;border-radius:18px;font:inherit;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 6px;min-height:clamp(110px,17vw,150px);color:#16181d;transition:transform .1s;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ck img{width:clamp(44px,8vw,64px)}
+.ck span{font-size:clamp(14px,1.9vw,19px);line-height:1.15;text-align:center}
+.ck span.w2{font-size:clamp(12px,1.5vw,15px);font-weight:400;opacity:.85}
+.ck:active{transform:scale(.96)}
+.ck.on{box-shadow:0 0 0 4px #a61e1e}
+.stopk{background:#ffc9c9}.ask{background:#fff3bf}.feel{background:#e5dbff}.need{background:#d3f9d8}.ok{background:#d0ebff}.body{background:#c5f6fa}.extra{background:#f1f3f5;box-shadow:inset 0 0 0 2px #ced4da}
+.extra span{font-size:clamp(16px,2.2vw,24px)}
+.cred{display:none;font-size:11px;color:#495057;margin:8px 0 0;text-align:center}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:6px}
+.opts label{display:grid;gap:6px;font-weight:700;font-size:15px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.pick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pick button{font:inherit;font-weight:700;font-size:14px;min-height:40px;padding:4px 12px 4px 6px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.pick button img{width:26px;height:26px}
+.pick button[aria-pressed=false]{opacity:.45;text-decoration:line-through}
+.guide p{margin:0 0 12px;max-width:68ch}
+.guide p:last-child{margin-bottom:0}
+.guide b{color:var(--ink)}
+.callout{border-left:6px solid #a61e1e;background:var(--tint);border-radius:12px;padding:12px 16px;margin:14px 0}
+@page{size:portrait;margin:10mm}
+@media print{.noprint,.said,.tabs{display:none!important}.card{box-shadow:none!important;border:0!important;padding:0!important;background:#fff!important}.sheet h2,.cred{display:block}.cb{gap:6px}.ck{min-height:0;aspect-ratio:1/.9;border-radius:12px}.ck img{width:52%;max-width:90px}.ck span{font-size:16px}.ck span.w2{font-size:12px}.ck.on{box-shadow:none}.extra{box-shadow:inset 0 0 0 2px #868e96}.cb.c5{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:560px){.cb{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.ck{border-radius:14px;min-height:100px}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card"><div class="tabs" id="tabs"></div><div class="said" id="said" aria-live="polite"></div><div class="sheet"><h2 id="ptitle"></h2><div class="cb" id="cb"></div><p class="cred" id="cred"></p></div></section>
+  <section class="card noprint" id="make"></section>
+  <section class="card noprint guide" id="guide"></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+const {sym,speak,hush,esc,store}=AAC;
+const TS='../talker/symbols/';
+const im=n=>n.startsWith('t:')?TS+n.slice(2)+'.svg':sym(n);
+/* [id, symbol, colour group, English, Spanish] */
+const K={
+ stop:['t:stop','stopk','Stop','Para'],no:['t:no','stopk','No','No'],touch:['notouch','stopk','Don’t touch me','No me toques'],
+ help:['t:help','ask','Help','Ayuda'],hurts:['hurt','ask','It hurts','Me duele'],hurtme:['bandage','ask','Someone hurt me','Alguien me lastimó'],
+ tell:['talk','ask','I want to tell you something','Quiero decirte algo'],adult:['teacher','ask','I need a grown-up','Necesito a un adulto'],
+ scared:['scared','feel','I’m scared','Tengo miedo'],sick:['sick','feel','I feel sick','Me siento mal'],bath:['toilet','need','Bathroom','Baño'],water:['water','need','Water','Agua'],
+ okay:['okay','ok','I’m okay','Estoy bien'],
+ head:['head','body','Head','Cabeza'],eye:['eye','body','Eye','Ojo'],ear:['ear','body','Ear','Oreja'],mouth:['mouth','body','Mouth','Boca'],tooth:['tooth','body','Tooth','Diente'],
+ arm:['arm','body','Arm','Brazo'],hand:['hand','body','Hand','Mano'],tummy:['tummy','body','Tummy','Panza'],leg:['leg','body','Leg','Pierna'],foot:['foot','body','Foot','Pie'],
+ loud:['loud','stopk','Too loud','Mucho ruido'],quiet:['shush','ok','Shh, quiet','Shh, silencio'],holdhand:['hand','need','Hold my hand','Toma mi mano'],wait:['t:wait','ok','Wait','Espera'],
+ where:['compass','ask','Where are we going?','¿A dónde vamos?'],over:['finish','ask','Is it over?','¿Ya terminó?'],sit:['chair','need','Sit with me','Siéntate conmigo'],home:['home','need','I want to go home','Quiero ir a casa']};
+const BOARDS={
+ safe:['stop','no','touch','help','hurts','hurtme','tell','adult','scared','sick','bath','okay','head','eye','ear','mouth','tooth','arm','hand','tummy','leg','foot'],
+ drill:['scared','loud','quiet','holdhand','wait','where','over','adult','hurts','help','stop','bath','water','sit','home','okay']};
+const T={
+ en:{h1:'Words to Stay Safe',sub:'A board for the words that matter most: stop, no, hurt, help, and words for the body. Make it with your SLP, then print one for the desk and one for the emergency bag.',
+  tabs:{safe:'Safety words',drill:'Drills and emergencies'},snd:['Sound on','Sound off'],ph:'Tap a word. It shows here even with the sound off.',
+  mk:'Make and print your board',tl:'Title on the board',tph:{safe:'My safety words',drill:'My emergency board'},lab:'Labels',lb:{en:'English',es:'Spanish',both:'Both'},
+  ex:'Extra words (comma separated)',exph:'e.g., Mom, nurse, my name',pk:'Tap a word to leave it off this board. Tap again to bring it back.',pr:'Print board',tip:'Prints on one page. Laminate it.',reset:'Start over',
+  cred:'Point to talk. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.',
+  g:[['Make it with your SLP.',' Sit down together and check that these words are on the student’s device too, in a spot they can reach fast. Any change to the device vocabulary goes through the SLP. The paper board is the team’s backup.'],
+   ['Model the words when things are calm.',' “Stop, that tickles.” “My knee hurts.” “I need a grown-up to open this.” A word your student has seen a hundred times on an ordinary day is a word they can find when it counts.'],
+   ['Honor them every time.',' When a student says stop or no, stop, then talk about it. That’s how they learn their words work.'],
+   ['Body words.',' Talk with your SLP and the family about adding the correct names for private body parts. Many body-safety programs teach the real names so a student can be understood if they ever need to tell. The extra words box is there for words like these.']],
+  call:['In a lockdown, the room has to be silent.',' Mute the student’s device or turn the volume all the way down, and hand them the paper board so they can still point to talk. Turn the sound back on as soon as it’s over. Practice this during drills, so the first time isn’t the real one.'],
+  rep:['If a student tells you someone hurt them,',' stay calm, believe them, and thank them for telling you. Don’t quiz them for details. Follow your site’s mandated reporting steps right away.'],
+  foot:'Words and symbols are a starting point. Your SLP and the family know your student’s words best. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Palabras para estar seguro',sub:'Un tablero con las palabras más importantes: para, no, me duele, ayuda y palabras del cuerpo. Háganlo con su SLP y luego imprima uno para el escritorio y otro para la bolsa de emergencia.',
+  tabs:{safe:'Palabras de seguridad',drill:'Simulacros y emergencias'},snd:['Con sonido','Sin sonido'],ph:'Toca una palabra. Aparece aquí aunque el sonido esté apagado.',
+  mk:'Haga e imprima su tablero',tl:'Título del tablero',tph:{safe:'Mis palabras de seguridad',drill:'Mi tablero de emergencia'},lab:'Etiquetas',lb:{en:'Inglés',es:'Español',both:'Ambos'},
+  ex:'Palabras extra (separadas por comas)',exph:'ej., mamá, enfermera, mi nombre',pk:'Toque una palabra para quitarla de este tablero. Tóquela otra vez para regresarla.',pr:'Imprimir tablero',tip:'Se imprime en una página. Enmíquelo.',reset:'Empezar de nuevo',
+  cred:'Señala para hablar. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.',
+  g:[['Háganlo con su SLP.',' Siéntense juntos y revisen que estas palabras también estén en el aparato del estudiante, en un lugar donde las encuentre rápido. Cualquier cambio al vocabulario del aparato pasa por el SLP. El tablero de papel es el respaldo del equipo.'],
+   ['Modele las palabras cuando todo esté tranquilo.',' “Para, me haces cosquillas.” “Me duele la rodilla.” “Necesito a un adulto para abrir esto.” Una palabra que el estudiante ha visto cien veces en un día normal es una palabra que puede encontrar cuando importa.'],
+   ['Respételas siempre.',' Cuando un estudiante dice para o no, deténgase y luego hablen de eso. Así aprende que sus palabras funcionan.'],
+   ['Palabras del cuerpo.',' Hable con su SLP y la familia sobre agregar los nombres correctos de las partes privadas del cuerpo. Muchos programas de seguridad corporal enseñan los nombres reales para que el estudiante pueda hacerse entender si alguna vez necesita contar algo. El espacio de palabras extra sirve para palabras como estas.']],
+  call:['En un encierro, el salón tiene que estar en silencio.',' Silencie el aparato del estudiante o baje el volumen por completo, y dele el tablero de papel para que pueda seguir señalando para hablar. Vuelva a subir el sonido en cuanto termine. Practíquelo en los simulacros, para que la primera vez no sea la de verdad.'],
+  rep:['Si un estudiante le dice que alguien lo lastimó,',' mantenga la calma, créale y agradézcale por contárselo. No le haga muchas preguntas. Siga de inmediato los pasos de denuncia obligatoria de su escuela.'],
+  foot:'Las palabras y los símbolos son un punto de partida. Su SLP y la familia conocen mejor las palabras del estudiante. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};
+const saved=store.get('sw-state',{});
+const S={lang:QL()||AAC.pageLang(),b:'safe',last:null,snd:{safe:true,drill:false},off:Object.assign({safe:[],drill:[]},saved.off||{}),extra:Object.assign({safe:'',drill:''},saved.extra||{}),title:Object.assign({safe:'',drill:''},saved.title||{}),lab:saved.lab||''};
+const keep=()=>store.set('sw-state',{off:S.off,extra:S.extra,title:S.title,lab:S.lab});
+const $=id=>document.getElementById(id);
+const lab=()=>S.lab||S.lang;
+const keys=()=>{const ids=BOARDS[S.b].filter(id=>!S.off[S.b].includes(id)).map(id=>({id,s:K[id][0],c:K[id][1],en:K[id][2],es:K[id][3]}));
+ S.extra[S.b].split(',').map(x=>x.trim()).filter(Boolean).slice(0,8).forEach((x,i)=>ids.push({id:'x'+i,s:'',c:'extra',en:x,es:x}));return ids};
+const keyHtml=(k,i)=>{const L=lab(),top=L==='both'?k.en:k[L],sub=L==='both'&&k.es!==k.en?`<span class="w2">${esc(k.es)}</span>`:'';
+ return `<button class="ck ${k.c}${S.last===i?' on':''}" data-i="${i}">${k.s?`<img src="${im(k.s)}" alt="">`:''}<span>${esc(top)}</span>${sub}</button>`};
+const render=()=>{const t=T[S.lang],ks=keys();document.documentElement.lang=S.lang;
+ $('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=S.lang==='es'?'Voz':'Voice';$('cred').textContent=t.cred;
+ $('ptitle').textContent=S.title[S.b].trim()||t.tph[S.b];
+ $('tabs').innerHTML=Object.keys(BOARDS).map(k=>`<button class="pill" data-b="${k}" aria-pressed="${S.b===k}">${t.tabs[k]}</button>`).join('')+`<span class="sp"></span><button class="pill" id="snd" aria-pressed="${!S.snd[S.b]}">${t.snd[S.snd[S.b]?0:1]}</button>`;
+ $('cb').innerHTML=ks.map(keyHtml).join('');$('cb').classList.toggle('c5',ks.length>20);
+ const x=S.last!=null?ks[S.last]:null;
+ $('said').innerHTML=x?`${x.s?`<img src="${im(x.s)}" alt="">`:''}<b>${esc(x[S.lang])}</b>`:`<span class="ph">${t.ph}</span>`;
+ $('make').innerHTML=`<h2>${t.mk}</h2><div class="opts"><label>${t.tl}<input class="in" id="ttl" value="${esc(S.title[S.b])}" placeholder="${esc(t.tph[S.b])}"></label>
+  <label>${t.ex}<input class="in" id="ext" value="${esc(S.extra[S.b])}" placeholder="${esc(t.exph)}"></label>
+  <div><b style="font-size:15px">${t.lab}</b><div class="seg" style="margin-top:6px">${['en','es','both'].map(l=>`<button class="pill" data-lab="${l}" aria-pressed="${lab()===l}">${t.lb[l]}</button>`).join('')}</div></div></div>
+  <p class="muted small" style="margin:14px 0 0">${t.pk}</p><div class="pick">${BOARDS[S.b].map(id=>`<button data-pk="${id}" aria-pressed="${!S.off[S.b].includes(id)}"><img src="${im(K[id][0])}" alt="">${esc(K[id][S.lang==='es'?3:2])}</button>`).join('')}</div>
+  <div class="row" style="margin-top:16px"><button class="btn go" id="pr">${t.pr}</button><button class="btn ghost" id="rs">${t.reset}</button><span class="muted small">${t.tip}</span></div>`;
+ const P=([a,b])=>`<p><b>${a}</b>${b}</p>`;
+ $('guide').innerHTML=P(t.g[0])+P(t.g[1])+P(t.g[2])+`<div class="callout">${P(t.call)}</div>`+P(t.g[3])+`<div class="callout">${P(t.rep)}</div>`};
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){S.b=b.dataset.b;S.last=null;hush();render();return}
+ if(e.target.closest('#snd')){S.snd[S.b]=!S.snd[S.b];if(!S.snd[S.b])hush();render()}});
+$('cb').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;S.last=+b.dataset.i;const k=keys()[S.last];render();if(S.snd[S.b])speak(k[S.lang],S.lang)});
+$('make').addEventListener('click',e=>{const pk=e.target.closest('[data-pk]');if(pk){const id=pk.dataset.pk,o=S.off[S.b],i=o.indexOf(id);if(i>-1)o.splice(i,1);else o.push(id);S.last=null;keep();render();return}
+ const lb=e.target.closest('[data-lab]');if(lb){S.lab=lb.dataset.lab;keep();render();return}
+ if(e.target.closest('#pr')){S.last=null;render();try{window.print()}catch(err){}return}
+ if(e.target.closest('#rs')){S.off[S.b]=[];S.extra[S.b]='';S.title[S.b]='';S.last=null;keep();render()}});
+$('make').addEventListener('change',e=>{if(e.target.id==='ttl'){S.title[S.b]=e.target.value;keep();render()}if(e.target.id==='ext'){S.extra[S.b]=e.target.value;S.last=null;keep();render()}});
+$('make').addEventListener('input',e=>{if(e.target.id==='ttl'){S.title[S.b]=e.target.value;keep();$('ptitle').textContent=S.title[S.b].trim()||T[S.lang].tph[S.b]}});
+AAC.page(()=>S.lang,l=>{S.lang=l},render);
+AAC.deco($('deco'),[['stop',12,12,58,-8],['t:help'.replace('t:','../talker/symbols/')+'.svg',48,58,50,8],['sos',80,14,52,-6]]);
+}
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+<script src="../shared/keep-lang.js"></script>
+</body>
+</html>

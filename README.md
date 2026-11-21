@@ -79,14 +79,16 @@ These nine load `shared/core.js` and `shared/base.css`, so the board words, voic
 | --- | --- | --- |
 | `find-it-fast/` | Staff | Timed 10-word hunt on the full device: core words plus folder words, with folder hints; best time saved |
 | `walk-in-their-shoes/` | Staff trainings | Partner answers questions using only the AAC device against a 60-second timer, then a debrief |
-| `pd-path/` | Staff | AACademy front door (replaced the old PD Path at the same address): four levels, Sign-Up and Check-In buttons; links set at the top of the page |
+| `pd-path/` | Staff | AACademy front door (replaced the old PD Path at the same address): four levels, Sign-Up and Check-In buttons; links set at the top of the page. Shows "Coming soon" until `OPEN` is set to `true` (set the same flag in `apps/` to show the app check's Check-In line) |
 | `real-question/` | Staff, families | Real Question or Test Question? Twelve questions to sort, with a real-question rewrite for every test question (AACademy PrAACtice, Module 4) |
 | `write-with-me/` | Students, staff | Big talking alphabet (A to Z or QWERTY, abc or ABC, Ñ in Spanish) with Read it and Spell it; adult tips for modeling spelling (AACademy TeAACh, Module 5) |
 | `apps/` | Staff, families | Your Student's App: Proloquo2Go, TD Snap and TouchChat pages with paper layouts, free ways to try each one, and the AACtivate app check. Deep links `apps/#p2g`, `#tdsnap`, `#touchchat` |
-| `modeling-tracker/` | Staff | "I modeled!" counter with a daily goal ring, quick word chips, week bars; data stays in the browser. "Send today's AACademy log" button appears once `CHECKIN_LOG_URL` holds a pre-filled Check-In link with WORDS as the placeholder |
-| `core-word-of-the-week/` | Families, staff | Auto-rotating weekly word with home and school ideas and a printable poster, and a bilingual home-note maker (pick up to three words); set `START` to the school calendar |
+| `modeling-tracker/` | Staff | "I modeled!" counter with a daily goal ring, quick word chips, week bars, and a purple "My student said something with AAC" counter with a 7-day total for the PrAACtice wrap-up; data stays in the browser. "Send today's AACademy log" button appears once `CHECKIN_LOG_URL` holds a pre-filled Check-In link with WORDS as the placeholder |
+| `core-word-of-the-week/` | Families, staff | Auto-rotating weekly word with home and school ideas and a printable poster, and a bilingual home-note maker (pick up to three words; a classroom-iPad option swaps in the Proloquo2Go paper core board); set `START` to the school calendar |
 | `all-about-me/` | Families, teams | One-page student communication profile that prints; nothing is saved |
 | `aac-buddy/` | Classmates | Six read-aloud pages, a three-question check and a printable buddy badge |
+| `safety-words/` | Teams, students | Words to Stay Safe: talking and printable boards for safety words (stop, no, hurt, help, body words) and for drills and emergencies, with a sound-off mode, extra words, EN/ES/both labels, and staff guidance on lockdowns and reporting (AACademy TeAACh, Module 8) |
+| `reasons-to-talk/` | Staff, families | Communication temptations for six routines, each tagged by what it invites and paired with tappable words to model; prints one routine per page (AACademy PrAACtice) |
 | `calm-boards/` | Students | Tap-to-talk regulation boards for TK-2, 3-5 and 6-12, with Spanish -o/-a endings |
 | `core-board-maker/` | SLPs, teachers | Printable 12/24/36/60-word core boards in English, Spanish or both |
 | `program-at-a-glance/` | Admin | Program dashboard; shows sample numbers until `SHEET_CSV_URL` points to a published Google Sheet; optional columns aactivate, praactice, teaach, coaach add the AACademy tiles |

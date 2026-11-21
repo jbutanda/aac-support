@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reasons to Talk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE practical, a colleague passing on tricks that work; playful setups, never withholding what a student needs
+   IDEA a recipe card per routine: small setups that make a word worth saying
+   PICTURE the setup cards, each tagged with what kind of talk it invites and the words to model, tappable
+   COLOUR warm orange band; function tags in four distinct tints; Fitzgerald colours on word chips
+   TYPE Atkinson Hyperlegible
+   LAYOUT routine pills, then a grid of setup cards, then the three rules; print gives a one-page card for the routine */
+:root{--band:#c2410c;--maxw:1000px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tabs img{width:26px;height:26px;vertical-align:-7px;margin-right:4px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+.su{border-radius:18px;background:var(--card);box-shadow:inset 0 0 0 2px var(--line);padding:16px 18px;display:flex;flex-direction:column;gap:10px;break-inside:avoid}
+.su p{margin:0;font-size:17px}
+.tag{align-self:flex-start;font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px;color:#16181d}
+.t-req{background:#d3f9d8}.t-com{background:#d0ebff}.t-pro{background:#ffe3e3}.t-ask{background:#fff3bf}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:inherit;font-weight:700;font-size:15px;min-height:42px;padding:4px 12px 4px 6px;border-radius:999px;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:#16181d;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.chips img{width:28px;height:28px}
+.chips span{font-size:13px;font-weight:700;color:var(--soft);align-self:center;margin-right:2px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.rules div{background:var(--tint);border-radius:16px;padding:14px 16px}
+.rules h3{margin:0 0 4px;font-size:17px}
+.rules p{margin:0}
+.ptitle{display:none}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+@media print{.tabs,.noprint{display:none!important}.ptitle{display:block;margin:0 0 6px}.card{box-shadow:none!important;border:0!important;padding:0!important}.grid2{gap:8px}.su{padding:10px 12px;box-shadow:inset 0 0 0 1.5px #adb5bd}.su p{font-size:14px}.rules div{background:#f1f3f5!important}}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button><label class="vc"><span id="vlab">Voice</span><select id="voice"></select></label></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card"><div class="tabs" id="tabs"></div><h2 class="ptitle" id="ptitle"></h2><div class="grid2" id="cards"></div>
+    <div class="row noprint" style="margin-top:16px"><button class="btn go" id="pr"></button><a class="btn ghost" id="wf" href="../wait-for-it/"></a><a class="btn ghost" id="mt" href="../modeling-tracker/"></a></div></section>
+  <section class="card"><h2 id="rh"></h2><div class="rules" id="rules"></div></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+const {byId,sym,speak,esc}=AAC;
+/* Each routine: [symbol, en, es, setups]. Each setup: [function, English, Spanish, [core word ids]].
+   Functions: req = asking for something, com = commenting, pro = saying no or something's wrong, ask = asking a question. */
+const R={
+ snack:['plate','Snack','Merienda',[
+  ['req','Hand out the snack one small piece at a time.','Reparta la merienda de a un pedacito a la vez.',['more','want','eat']],
+  ['req','Put it in a clear container with the lid on tight, and hand it over.','Póngala en un recipiente transparente con la tapa bien cerrada y entréguela.',['open','help','please']],
+  ['pro','Offer something they don’t like, or a spoon for crackers, on purpose.','Ofrezca a propósito algo que no le gusta, o una cuchara para las galletas.',['no','different','that']],
+  ['com','Take a bite yourself, make a big face, and wait.','Dé una mordida usted, haga una cara exagerada y espere.',['like','good','bad']]]],
+ circle:['chair','Circle time','Círculo',[
+  ['req','Start a favorite song and stop in the middle of a line.','Empiece una canción favorita y pare a mitad de una línea.',['more','again','go']],
+  ['ask','Bring a mystery bag and peek inside, slowly, before you show it.','Traiga una bolsa misteriosa y mire adentro, despacio, antes de enseñarla.',['what','look','see']],
+  ['pro','Get the day of the week or a classmate’s name wrong on purpose.','Diga mal a propósito el día de la semana o el nombre de un compañero.',['no','different','that']],
+  ['req','Pass turns around the circle and skip right over them.','Pase los turnos por el círculo y sáltese al estudiante.',['turn','me','wait']]]],
+ art:['sparkles','Art','Arte',[
+  ['req','Keep the glue and markers in sight but out of reach.','Deje el pegamento y los marcadores a la vista pero fuera de su alcance.',['want','that','get']],
+  ['req','Hand out paper and forget the crayons.','Reparta el papel y “olvide” los crayones.',['need','give','help']],
+  ['com','Paint something silly on your own picture, like a purple sun.','Pinte algo chistoso en su propio dibujo, como un sol morado.',['look','different','no']],
+  ['com','When they finish, hold up their work next to yours.','Cuando termine, ponga su trabajo junto al suyo.',['mine','like','same']]]],
+ play:['balloon','Play and recess','Juego y recreo',[
+  ['req','Push the swing a few times, then hold it still.','Empuje el columpio unas veces y luego deténgalo.',['more','go','again']],
+  ['req','Wind up a toy and let it stop. Hand it back wound down.','Dele cuerda a un juguete y déjelo parar. Devuélvalo sin cuerda.',['help','make','again']],
+  ['req','Play with a fun toy near them without inviting them in.','Juegue con un juguete divertido cerca del estudiante sin invitarlo.',['play','turn','want']],
+  ['req','Blow bubbles, then twist the lid on tight.','Haga burbujas y luego cierre bien la tapa.',['open','more','up']]]],
+ story:['book','Story time','Hora del cuento',[
+  ['pro','Start reading with the book upside down.','Empiece a leer con el libro al revés.',['no','turn','up']],
+  ['req','Pause before every page turn and wait.','Haga una pausa antes de pasar cada página y espere.',['turn','read','more']],
+  ['pro','Point to the wrong picture when you name something.','Señale el dibujo equivocado cuando nombre algo.',['no','that','different']],
+  ['com','React big to a picture, then go quiet and wait.','Reaccione con mucha emoción a un dibujo, luego quédese callado y espere.',['look','like','happy']]]],
+ arrive:['backpack','Arrival and getting ready','Llegada y prepararse',[
+  ['req','Hand over the backpack zipped shut.','Entregue la mochila con el cierre cerrado.',['open','help','please']],
+  ['com','Say hi to a few classmates first, then pause in front of them.','Salude primero a algunos compañeros y luego haga una pausa frente al estudiante.',['hi','me','you']],
+  ['ask','Put their item somewhere they can see but can’t reach.','Ponga su cosa donde la vea pero no la alcance.',['where','get','up']],
+  ['pro','Hand them a jacket that isn’t theirs.','Dele una chamarra que no es suya.',['no','mine','different']]]]};
+const T={
+ en:{h1:'Reasons to Talk',sub:'Modeling shows the words. These small setups make the words worth using. Pick a routine and try one or two this week.',
+  tag:{req:'Asking for something',com:'Commenting',pro:'Saying no or something’s wrong',ask:'Asking a question'},mod:'Model:',pr:'Print this routine',wf:'Practice waiting',mt:'Count what they say',
+  rh:'Three rules that keep it fair',
+  rules:[['Wait first','Set it up, then wait. Count to ten in your head before you say anything. Most adults jump in way too early.'],
+   ['Any way counts','A reach, a look, a sound, a sign or the device. Answer it right away, then model the word on the device as you give them what they asked for.'],
+   ['Keep it light','If your student gets upset, give it and model the word. Never hold back water, the bathroom, a break or anything they need.']],
+  ptitle:r=>`Reasons to talk: ${r}`,
+  foot:'Ideas adapted from communication temptations used in AAC practice. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+ es:{h1:'Razones para hablar',sub:'Modelar muestra las palabras. Estas pequeñas preparaciones hacen que valga la pena usarlas. Escoja una rutina y pruebe una o dos esta semana.',
+  tag:{req:'Pedir algo',com:'Comentar',pro:'Decir que no o que algo está mal',ask:'Hacer una pregunta'},mod:'Modele:',pr:'Imprimir esta rutina',wf:'Practicar la espera',mt:'Contar lo que dice',
+  rh:'Tres reglas para que sea justo',
+  rules:[['Primero espere','Prepare la situación y espere. Cuente hasta diez en su mente antes de decir algo. Casi todos los adultos hablan demasiado pronto.'],
+   ['Toda forma cuenta','Estirar la mano, una mirada, un sonido, una seña o el aparato. Responda de inmediato y modele la palabra en el aparato mientras le da lo que pidió.'],
+   ['Que sea divertido','Si el estudiante se molesta, déselo y modele la palabra. Nunca le niegue agua, el baño, un descanso ni nada que necesite.']],
+  ptitle:r=>`Razones para hablar: ${r}`,
+  foot:'Ideas adaptadas de las “tentaciones de comunicación” usadas en la práctica de la CAA. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};
+const S={lang:QL()||AAC.pageLang(),r:'snack'};
+const $=id=>document.getElementById(id);
+const render=()=>{const t=T[S.lang],es=S.lang==='es',r=R[S.r];document.documentElement.lang=S.lang;
+ $('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;$('vlab').textContent=es?'Voz':'Voice';
+ $('pr').textContent=t.pr;$('wf').textContent=t.wf;$('mt').textContent=t.mt;$('rh').textContent=t.rh;$('ptitle').textContent=t.ptitle(es?r[2]:r[1]);
+ $('tabs').innerHTML=Object.entries(R).map(([k,x])=>`<button class="pill" data-r="${k}" aria-pressed="${S.r===k}"><img src="${sym(x[0])}" alt="">${esc(es?x[2]:x[1])}</button>`).join('');
+ $('cards').innerHTML=r[3].map(([f,en,sp,ws])=>`<div class="su"><span class="tag t-${f}">${t.tag[f]}</span><p>${esc(es?sp:en)}</p><div class="chips"><span>${t.mod}</span>${ws.map(id=>{const w=byId[id];return `<button class="${w.c}" data-w="${id}"><img src="${w.img}" alt="">${esc(w[S.lang])}</button>`}).join('')}</div></div>`).join('');
+ $('rules').innerHTML=t.rules.map(([h,p])=>`<div><h3>${h}</h3><p>${p}</p></div>`).join('')};
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-r]');if(b){S.r=b.dataset.r;render()}});
+$('cards').addEventListener('click',e=>{const b=e.target.closest('[data-w]');if(b)speak(byId[b.dataset.w][S.lang],S.lang)});
+$('pr').addEventListener('click',()=>{try{window.print()}catch(e){}});
+AAC.page(()=>S.lang,l=>{S.lang=l},render);
+AAC.deco($('deco'),[['bubbles',12,12,58,-8],['speech',48,58,50,8],['plate',80,14,50,-6]]);
+}
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+<script src="../shared/keep-lang.js"></script>
+</body>
+</html>
