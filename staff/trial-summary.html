@@ -51,6 +51,16 @@
   input[type=checkbox]:checked::after{content:"";position:absolute;left:5px;top:1.5px;width:4px;height:9px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
   input[type=radio]:checked::after{content:"";position:absolute;left:4.5px;top:4.5px;width:6px;height:6px;border-radius:50%;background:#fff}
   input[type=checkbox]:focus-visible,input[type=radio]:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  #iepSec .row3{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  #iepSec .go{background:var(--blue);color:#fff;border:0;border-radius:6px;padding:10px 16px;font-weight:600;margin:4px 0 14px}
+  .iblock{background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:14px;overflow:hidden}
+  .iblock-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;background:var(--blue);color:#fff;padding:8px 12px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  .iblock-h .where{margin-left:auto;font-weight:400;text-transform:none;letter-spacing:0;opacity:.9}
+  .iblock textarea{border:0;border-radius:0;min-height:110px;padding:10px 12px;font-size:13.5px;line-height:1.5}
+  .iblock-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 10px;background:var(--tint-2);border-top:1px solid var(--line)}
+  .iblock-f button{background:var(--blue);color:#fff;border:0;border-radius:6px;padding:6px 12px;font-size:13px}
+  .iblock-f select{width:auto;max-width:60%;padding:5px 8px;font-size:13px}
+  .iblock-f .tip{font-size:12px;color:var(--mute)}
   .trial{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px;background:var(--tint-2)}
   .trial h3{font-size:13px;color:var(--blue);margin-bottom:8px}
   .hint{font-size:12px;color:var(--mute);margin:-4px 0 10px}
@@ -98,7 +108,7 @@
   <div class="actions">
     <button class="ghost" type="button" onclick="togglePreview()" id="pvBtn">Preview</button>
     <button class="ghost" type="button" onclick="clearForm()">Clear</button>
-    <button class="ghost" type="button" onclick="sendToIEP()">Send to IEP Generator</button>
+    <button class="ghost" type="button" onclick="document.getElementById('iepSec').scrollIntoView({behavior:'smooth'})">IEP language</button>
 <button type="button" onclick="generate()">Save as PDF</button>
   </div>
 </header>
@@ -269,6 +279,26 @@
       <label><input type="checkbox" value="SLP follow-up check-in in 4 to 6 weeks">SLP follow-up check-in in 4 to 6 weeks</label>
     </div>
     <div class="row one"><div><label>Other next steps <span class="opt">(optional)</span></label><textarea data-k="next_steps"></textarea></div></div>
+  </fieldset>
+
+  <fieldset id="iepSec">
+    <legend>6. IEP language <span class="opt">(optional)</span></legend>
+    <p class="hint">Drafts the Special Factors statement, present levels, goals, accommodations and Other Supports from everything above. Add these few details and press Build IEP language. None of this prints on the summary.</p>
+    <div class="row3"><div><label>Pronouns</label><select data-k="iep_pron"><option value="he">he / him / his</option><option value="she">she / her / her</option><option value="they">they / them / their</option></select></div>
+      <div><label>Device</label><select data-k="iep_device"><option>district-managed iPad</option><option>shared classroom iPad</option><option>dedicated speech-generating device</option><option>iPad with keyguard and case</option></select></div></div>
+    <div class="row3"><div><label>Access method</label><select data-k="iep_access"><option>direct touch</option><option>direct touch with keyguard</option><option>direct touch with stylus</option><option>eye gaze</option><option>switch scanning</option><option>partner-assisted scanning</option></select></div>
+      <div><label>Communicates with</label><select data-k="iep_partners"><option>familiar adults only</option><option>familiar adults and some peers</option><option>familiar and less familiar adults</option><option>a range of adults and peers</option></select></div></div>
+    <div class="row3"><div><label>Speech-language report date</label><input data-k="iep_slp_date" placeholder="e.g., 3/14/2025"></div>
+      <div><label>Psychoeducational report date</label><input data-k="iep_psych_date" placeholder="e.g., 2/2/2024"></div></div>
+    <div class="row3"><div><label>Mean utterance length <span class="opt">(elements)</span></label><input type="number" min="1" step="0.5" data-k="iep_mlu" placeholder="1"></div>
+      <div><label>Different words or symbols used</label><input type="number" min="0" data-k="iep_words"></div></div>
+    <div class="row one"><div><label>One strength, in your own words</label><textarea data-k="iep_strength" placeholder="e.g., M.A. initiates with peers at recess by bringing them the device and pressing PLAY."></textarea></div></div>
+    <div class="row one"><div><label>One concern or barrier, in your own words</label><textarea data-k="iep_concern" placeholder="e.g., Device use drops when the device stays at the desk during whole-group lessons."></textarea></div></div>
+    <div class="row3"><div><label>Home and community access</label><select data-k="iep_home"><option value="yes">Necessary for FAPE; device goes home</option><option value="no">Not necessary at this time</option></select></div>
+      <div><label>Behavior plan</label><select data-k="iep_bip"><option value="no">No behavior plan</option><option value="yes">Student has a behavior plan</option></select></div></div>
+    <button class="go" type="button" onclick="buildIEP()">Build IEP language</button>
+    <div id="iepStatus" class="status"></div>
+    <div id="iepOut"></div>
   </fieldset>
 
   <div class="status" id="status"></div>
@@ -451,16 +481,12 @@ function fitPreview(){
 }
 function togglePreview(){const p=document.getElementById('previewpane');p.classList.toggle('show');document.getElementById('entry').style.display=p.classList.contains('show')?'none':'';document.getElementById('pvBtn').textContent=p.classList.contains('show')?'Back to form':'Preview';render();fitPreview();window.scrollTo(0,0);}
 window.addEventListener('resize',fitPreview);fitPreview();
-function clearForm(){if(!confirm('Clear everything on this page?'))return;document.querySelectorAll('[data-k]').forEach(el=>{if(el.classList.contains('checks'))el.querySelectorAll('input').forEach(i=>i.checked=false);else el.value='';});render();}
+function clearForm(){if(!confirm('Clear everything on this page?'))return;document.querySelectorAll('[data-k]').forEach(el=>{if(el.classList.contains('checks'))el.querySelectorAll('input').forEach(i=>i.checked=false);else if(el.tagName==='SELECT')el.selectedIndex=0;else el.value='';});document.getElementById('iepOut').innerHTML='';iepSay('');render();}
 
 // Printing is blocked inside the claude.ai artifact viewer, so the page builds the PDF itself there
 // (via the downloads capability). In any normal browser it falls back to the print dialog.
 let _dl; async function getDownloads(){ if(_dl===undefined){ try{_dl=(window.claude&&claude.use)?await Promise.race([claude.use('downloads'),new Promise(r=>setTimeout(()=>r(null),4000))]):null;}catch(e){_dl=null;} } return _dl; }
 function loadHtml2pdf(){ return new Promise((res,rej)=>{ if(window.html2pdf)return res(); const sc=document.createElement('script'); sc.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'; sc.onload=res; sc.onerror=rej; document.head.appendChild(sc); }); }
-// Hands the trial to the IEP Language Generator in a new tab. The generator reads it once and deletes it.
-function sendToIEP(){const d=read();if(!d.student||!d.t1_app){say('Student name and Trial 1 app are needed before sending.');return;}
-  try{localStorage.setItem('rusd_aac_trial',JSON.stringify(d));}catch(e){say('This browser would not hand the data over. Open the IEP Generator and type the trial details in.');return;}
-  const w=window.open('iep-generator.html?import=1','_blank');if(!w)location.href='iep-generator.html?import=1';}
 function say(msg,ok){const s=document.getElementById('status');s.className='status'+(ok?' ok':'');s.textContent=msg;s.scrollIntoView({block:'nearest'});}
 
 async function generate(){
@@ -504,6 +530,137 @@ function sendToForm(d){
   Object.keys(FORM_ENTRY).forEach(k=>{let v=d[k]||'';if(k==='recommendation'&&v==='__other')v=d.recommendation_other;fd.append(FORM_ENTRY[k],v);});
   fetch(FORM_ACTION,{method:'POST',mode:'no-cors',body:fd}).then(()=>{const s=document.getElementById('status');s.className='status ok';s.textContent='Copy sent to the district response sheet.';}).catch(()=>{});
 }
+
+// ================= IEP LANGUAGE (section 6) =================
+// Builds draft IEP wording from this trial, using the passages in language-bank.json.
+const IEP_FN=[
+  ['request','requesting','requests preferred items by [describe]'],
+  ['protest','protesting','[describe: e.g., crying or pushing materials away]'],
+  ['comment','commenting','[describe: e.g., by showing items to an adult]'],
+  ['question','asking questions','does not ask questions in any modality'],
+  ['social','greetings and social closeness','[describe: e.g., waves when greeted]'],
+  ['direct','directing others','[describe: e.g., pulls an adult toward the desired action]'],
+  ['repair','repairing breakdowns','[describe: e.g., repeats the same vocalization or gives up]'],
+  ['academic','answering and contributing in instruction','[describe: e.g., responds to yes/no by nodding]'],
+  ['operational','managing the device','[describe: e.g., uses the device only when it is placed in front of them]']
+];
+const IEP_FROM_TRIAL={'Request':'request','Comment':'comment','Protest / reject':'protest','Question':'question','Social / greeting':'social','Direct others':'direct'};
+const IEP_GOAL={request:'Goal: Requesting (Any Modality)',protest:'Goal: Protesting and Refusing (Any Modality)',comment:'Goal: Commenting and Sharing Information (Any Modality)',question:'Goal: Asking Questions (Any Modality)',social:'Goal: Social Communication and Greetings (Any Modality)',direct:'Goal: Directing Others (Any Modality)',repair:'Goal: Communication Repair and Persistence',academic:'Goal: Participation in Academic Instruction (Answering and Contributing)',operational:'Goal: Operational Competence and Device Management'};
+let IEP_BANK=null;
+function iepLoad(){
+  if(IEP_BANK)return Promise.resolve(IEP_BANK);
+  return fetch('language-bank.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(d=>{IEP_BANK=d;return d;});
+}
+function iepSay(m,ok){const s=document.getElementById('iepStatus');s.className='status'+(ok?' ok':'');s.textContent=m;}
+function iepList(a){a=a.filter(Boolean);if(!a.length)return'';if(a.length===1)return a[0];if(a.length===2)return a.join(' and ');return a.slice(0,-1).join(', ')+', and '+a[a.length-1];}
+function iepSplit(v){return (v||'').split(', ').map(x=>x.trim()).filter(Boolean);}
+function iepCap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+function iepSentence(v){v=(v||'').trim();return v?v.replace(/([^.!?])$/,'$1.'):'';}
+function iepEntry(label){const e=IEP_BANK.find(x=>x.label===label);if(!e||!(e.template||e.short))throw new Error('Missing passage in language-bank.json: '+label);return e;}
+function iepFill(tpl,t){return tpl.replace(/\{\{(\w+)\}\}/g,(m,k)=>k in t?t[k]:m).split('\n').map(l=>l.replace(/\s{2,}/g,' ').replace(/\s+\./g,'.').trim()).join('\n').trim();}
+
+// Turns the Trial Summary into what the IEP passages need.
+function iepFromTrial(d){
+  const screen=[d.vision,d.hearing,d.motor,d.position,d.attention].join(' ')+' '+(d.screen_result||'');
+  const rec=d.recommendation||'';
+  let pathway='tier2trial';
+  if(rec.startsWith('Refer')||/Concern/.test(screen))pathway='tier3pre';
+  else if(rec.startsWith('Continue'))pathway='tier1';
+  let n=1;for(let i=1;i<=3;i++){if(d.best_fit&&d[`t${i}_app`]&&d[`t${i}_app`].toLowerCase()===d.best_fit.toLowerCase())n=i;}
+  const g=k=>d[`t${n}_${k}`]||'';
+  const fn={};IEP_FN.forEach(([k])=>fn[k]='not');
+  for(let i=1;i<=3;i++)iepSplit(d[`t${i}_functions`]).forEach(f=>{const k=IEP_FROM_TRIAL[f];if(k)fn[k]='emerging';});
+  iepSplit(d.cur_functions).forEach(f=>{const k=IEP_FROM_TRIAL[f];if(k)fn[k]='observed';});
+  const nav=g('nav');fn.operational=/independently/.test(nav)?'observed':/with modeling/.test(nav)?'emerging':'not';
+  const mods=iepSplit(d.modes);if(pathway==='tier2trial')mods.push('__device');
+  const settings=iepSplit(g('settings').replace('Specials (PE, art, music)','specials (PE/art/music)')).map(x=>x.replace(' (parent report)','').replace(' / ',' and ').replace('specials (PE/art/music)','specials such as PE, art and music').replace(/^[A-Z][a-z]/,m=>m.toLowerCase()));
+  const sessions=[1,2,3].map(i=>+d[`t${i}_sessions`]||0).reduce((a,b)=>a+b,0);
+  const sources=iepSplit(d.sources).map(x=>x.toLowerCase());
+  const tier1=d.tier1||'';
+  const lang={'Spanish':'Spanish','English and Spanish':'Spanish and English','Other':'__other'}[d.language]||'English';
+  return {
+    pathway,fn,pron:d.iep_pron||'he',student:d.student,grade:d.grade,app:d.best_fit||d.t1_app,
+    devicekind:d.iep_device,access:d.iep_access,partners:d.iep_partners,modalities:mods,settings,
+    bl_spont:g('spont'),bl_prompt:g('prompt'),mlu:d.iep_mlu||'1',words:d.iep_words,
+    data_source:'the AAC Trial Summary ('+(d.trial_dates||'trial dates')+(sessions?`, ${sessions} sessions`:'')+')'+(sources.length?' and review of the '+iepList(sources):''),
+    strength:d.iep_strength,concern:d.iep_concern,home_lang:lang,home:d.iep_home||'yes',
+    slp_date:d.iep_slp_date,psych_date:d.iep_psych_date,
+    trial_apps:iepList([d.t1_app,d.t2_app,d.t3_app]),trial_dates:(d.trial_dates||'').replace(/\s+(to|-|–)\s+/,' and '),
+    interim:/No AAC/.test(tier1)||!tier1?'core boards and adult modeling':'the classroom AAC system, core boards and adult modeling',
+    review_date:d.iep_date?fmtDate(d.iep_date):'',bip:d.iep_bip==='yes',shared:/Proloquo2Go|core board|Other classroom/.test(tier1)
+  };
+}
+function iepTokens(d){
+  const P={he:{he:'he',him:'him',his:'his',himself:'himself'},she:{he:'she',him:'her',his:'her',himself:'herself'},they:{he:'they',him:'them',his:'their',himself:'themselves'}}[d.pron];
+  const app=d.app||'[app]';
+  const mods=d.modalities.map(m=>m==='__device'?`${app} on a ${d.devicekind}`:m);
+  const obs=IEP_FN.filter(([k])=>d.fn[k]==='observed'&&k!=='operational').map(([,l])=>l);
+  const gap=IEP_FN.filter(([k])=>d.fn[k]!=='observed'&&k!=='operational').map(([,l])=>l);
+  const bl=[];
+  if(d.bl_spont!==''||d.bl_prompt!=='')bl.push(`${d.bl_spont||0} spontaneous and ${d.bl_prompt||0} messages after a model per session`);
+  if(d.mlu)bl.push(`a mean utterance length of ${d.mlu} element${d.mlu==1?'':'s'}`);
+  if(d.words)bl.push(`${d.words} different words or symbols in use`);
+  const t={
+    S:d.student||'[Student]',He:iepCap(P.he),he:P.he,him:P.him,his:P.his,himself:P.himself,
+    app,devicekind:d.devicekind,access:d.access,access_notes:'',
+    modalities:iepList(mods)||'[modalities]',settings:iepList(d.settings)||'[settings]',
+    settings_all:iepList(['general education','specialized academic instruction','recess','lunch','assemblies','field trips','school transportation']),
+    partners:d.partners,functions_observed:iepList(obs)||'[functions observed]',functions_gap:iepList(gap)||'none identified',
+    baseline_sentence:iepList(bl)||'[baseline data]',data_source:d.data_source,
+    strength_sentence:iepSentence(d.strength),concern_sentence:iepSentence(d.concern),
+    home_lang:d.home_lang==='__other'?'[home language]':d.home_lang,
+    home_lang_sentence:(d.home_lang!=='English'&&d.home_lang!=='__other')?`The family's home language is ${d.home_lang}; family communication and training are provided in ${d.home_lang}, and bilingual vocabulary has been considered for ${P.his} system.`:'',
+    home_determination:d.home==='yes'?'that access at home and in the community is necessary for FAPE; the device will go home daily under the district AT home-use agreement (EC 56040.3)':'that access outside of school is not necessary at this time; this will be revisited at the next review (EC 56040.3)',
+    family_home_clause:d.home==='yes'?' and within 30 days of the device going home':'',
+    slp_date:d.slp_date||'[date]',psych_date:d.psych_date||'[date]',trial_apps:d.trial_apps||'[systems trialed]',trial_dates:d.trial_dates||'[dates]',
+    eval_date:'[date]',ap_date:'[date]',evaluator:'[evaluator, credentials, role]',interim:d.interim,
+    review_date:d.review_date||'[annual review date]',
+    mlu:d.mlu||'1',mlu_target:Math.min(4,Math.max(2,Math.ceil((+d.mlu||1)+1))),words:d.words||'[number]',words_target:d.words?Math.max(10,Math.round((+d.words)*1.5)):'[target number]'
+  };
+  const BL={request:'bl_request',protest:'bl_protest',comment:'bl_comment',question:'bl_question',social:'bl_social',direct:'bl_direct',repair:'bl_repair',academic:'bl_academic',operational:'bl_operational'};
+  IEP_FN.forEach(([k,,def])=>{t[BL[k]]=d.fn[k]==='observed'?'[describe current level, this function is observed]':d.fn[k]==='emerging'?'[describe emerging use]':def;});
+  return t;
+}
+async function buildIEP(){
+  const raw=read();
+  const missing=[];
+  if(!raw.student)missing.push('student name');if(!raw.t1_app)missing.push('Trial 1 app');if(!raw.recommendation)missing.push('a recommendation in section 5');
+  if(!raw.iep_strength)missing.push('one strength');if(!raw.iep_concern)missing.push('one concern');
+  if(missing.length){iepSay('Still needed: '+missing.join(', ')+'.');return;}
+  try{await iepLoad();}catch(e){iepSay('Could not load the IEP passages. Check your connection and try again.');return;}
+  try{
+    const d=iepFromTrial(raw),t=iepTokens(d),B=[];
+    const SF={tier1:'AT Special Factors: AAC Considered and Required',tier2trial:'AT Special Factors: Device Provided Following Review of Existing Data and Trial (No Assessment Plan)',tier3pre:'AT Special Factors: Formal Evaluation Recommended'}[d.pathway];
+    const PL={tier1:'Present Levels: Communication, Classroom AAC',tier2trial:'Present Levels: Device Provided Following Review of Existing Data and Trial',tier3pre:'Present Levels: Communication, Device in Place'}[d.pathway];
+    B.push({title:'AT Special Factors',where:'Special Factors page, Assistive Technology',text:iepFill(iepEntry(SF).template,t)+(d.pathway==='tier2trial'?'\n\nAttach: AAC Trial Summary.':'')});
+    B.push({title:'Present Levels: Communication',where:'Present Levels page, Communication Development',text:iepFill(iepEntry(PL).template,t)});
+    const ks=IEP_FN.map(([k])=>k);
+    const pick=ks.filter(k=>d.fn[k]==='not').concat(ks.filter(k=>d.fn[k]==='emerging')).filter(k=>k!=='operational'||d.pathway==='tier2trial').slice(0,3);
+    if(!pick.length)pick.push('comment','question');
+    pick.forEach((k,i)=>B.push({title:`Goal ${i+1}: ${IEP_GOAL[k].replace('Goal: ','')}`,where:'Goals page',text:iepFill(iepEntry(IEP_GOAL[k]).template,t),goal:true}));
+    if(d.pathway!=='tier3pre'){
+      const acc=['Accommodation: Device Access Across All Settings','Accommodation: Wait Time and Partner Responsiveness'];
+      if(['3','4','5','6','7','8','9','10','11','12'].includes(d.grade))acc.push('Accommodation: Testing and Assessment Access');
+      if(d.home==='yes'||d.shared)acc.push('Accommodation: Vocabulary Consistency Across Environments');
+      if(d.bip)acc.push('Accommodation: Communication Supports During Behavior Incidents and Discipline');
+      B.push({title:'Accommodations',where:'Supplementary Aids and Services',text:acc.map(l=>iepFill(iepEntry(l).short,t)).join('\n')});
+      B.push({title:'Other Supports',where:'FAPE page, Other Supports (not a service line)',text:iepFill(iepEntry('Other Supports: Assistive Technology Services (Training, Customization, Maintenance)').short,t)});
+    } else {
+      B.push({title:'Accommodations',where:'Supplementary Aids and Services',text:iepFill(iepEntry('Accommodation: Wait Time and Partner Responsiveness').short,t)});
+    }
+    window._iepT=t;
+    const goalOpts=IEP_BANK.filter(e=>e.cat==='goals'&&e.template).map(e=>`<option value="${e.label}">${e.label.replace('Goal: ','')}</option>`).join('');
+    const out=document.getElementById('iepOut');
+    out.innerHTML=B.map((b,i)=>`<div class="iblock"><div class="iblock-h"><span>${b.title}</span><span class="where">${b.where}</span></div><textarea id="iblk${i}"></textarea><div class="iblock-f"><button type="button" onclick="iepCopy(${i},this)">Copy</button>${b.goal?`<select onchange="iepSwap(${i},this.value)"><option value="">Swap goal…</option>${goalOpts}</select>`:''}<span class="tip">Brackets [ ] still need your words.</span></div></div>`).join('');
+    B.forEach((b,i)=>{const a=document.getElementById('iblk'+i);a.value=b.text;});
+    out.querySelectorAll('textarea').forEach(a=>{const grow=()=>{a.style.height='auto';a.style.height=(a.scrollHeight+4)+'px';};a.addEventListener('input',grow);grow();});
+    const label={tier1:'classroom AAC, no individual device yet',tier2trial:'device provided after the trial',tier3pre:'formal AT/AAC evaluation recommended'}[d.pathway];
+    iepSay('Drafted for: '+label+'. Every box can be edited. Copy each one into SEIS.',true);
+  }catch(err){iepSay(err.message);}
+}
+function iepSwap(i,label){if(!label)return;const a=document.getElementById('iblk'+i);a.value=iepFill(iepEntry(label).template,window._iepT);a.style.height='auto';a.style.height=(a.scrollHeight+4)+'px';a.closest('.iblock').querySelector('.iblock-h span').textContent=label.replace('Goal: ','Goal: ');}
+function iepCopy(i,btn){navigator.clipboard.writeText(document.getElementById('iblk'+i).value).then(()=>{btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1500);});}
+
 </script>
 </body>
 </html>
