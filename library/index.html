@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resource Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* IDEA one place to find every Rialto AAC guide, handout, form and tool
+   LAYOUT search box, two rows of chips (who I am, what I need), then a short "start here" set
+          until someone searches or picks a chip, so the first view is never the whole shelf
+   VIEWS  ?view=staff adds the Rialto-only items; ?who= and ?topic= preset the chips for embeds */
+:root{--band:#1b3a5c;--maxw:1100px}
+.search{display:flex;align-items:center;gap:10px;background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:4px 6px 4px 14px;margin:0 0 16px}
+.search:focus-within{border-color:#1b3a5c}
+.search img{width:26px;opacity:.75}
+.search input{flex:1;font:inherit;font-size:19px;border:0;background:transparent;color:var(--ink);min-height:52px;outline:none}
+.search button{font:inherit;font-weight:700;border:0;background:none;color:var(--soft);cursor:pointer;min-height:44px;padding:0 10px}
+.lab{font-weight:700;font-size:15px;color:var(--soft);margin:0 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.chip{font:inherit;font-weight:700;font-size:15px;min-height:40px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:#1b3a5c}
+.chip[aria-pressed=true]{background:#1b3a5c;border-color:#1b3a5c;color:#fff}
+.chip.staff{border-style:dashed}
+@media(max-width:620px){.chips.scroll{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}.chip{flex:none}}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 14px}
+.head h2{margin:0}
+.clear{font:inherit;font-weight:700;border:0;background:none;color:#1c5fa8;cursor:pointer;min-height:44px;padding:0}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .clear{color:#8fc7ff}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.it{position:relative;display:flex;gap:14px;align-items:flex-start;background:var(--card);border-radius:18px;padding:14px;box-shadow:0 0 0 1.5px var(--line);transition:transform .12s,box-shadow .12s}
+.it:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(16,20,30,.12),0 0 0 1.5px var(--c)}
+.ic{flex:none;width:54px;height:54px;border-radius:14px;background:var(--c);display:grid;place-items:center}
+.ic img{width:38px;height:38px;background:#fff;border-radius:10px;padding:4px}
+.tx{flex:1;min-width:0}
+.tx h3{font-size:18px;line-height:1.2;margin:0 0 4px}
+.tx h3 a{color:var(--ink);text-decoration:none}
+.tx h3 a::after{content:"";position:absolute;inset:0;border-radius:18px}
+.tx p{margin:0 0 8px;color:var(--soft);font-size:15px;line-height:1.4}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:13px;font-weight:700;border-radius:8px;padding:2px 8px;background:var(--tint);color:var(--soft)}
+.tag.lock{background:var(--warnbg);color:var(--warn)}
+.tag.soon{background:transparent;border:1.5px dashed var(--line)}
+.lk{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;position:relative;z-index:1}
+.lk a,.lk span{font-size:14px;font-weight:700;border-radius:999px;padding:6px 12px;min-height:36px;display:inline-flex;align-items:center;text-decoration:none;background:var(--c);color:#fff}
+.lk span{background:transparent;color:var(--soft);border:1.5px dashed var(--line)}
+.more{margin-top:16px}
+.none{color:var(--soft);margin:0}
+.none a{color:inherit;font-weight:700}
+.note{margin:14px 0 0;font-size:14px;color:var(--soft)}
+</style>
+</head>
+<body>
+<header class="band flat"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card">
+    <div class="search"><img src="../shared/symbols/search.svg" alt=""><label class="sr" for="q" id="qLab"></label><input id="q" type="search" autocomplete="off"><button id="qx" hidden></button></div>
+    <p class="lab" id="whoLab"></p><div class="chips" id="who"></div>
+    <p class="lab" id="topLab"></p><div class="chips scroll" id="top"></div>
+  </section>
+  <section class="card" aria-live="polite">
+    <div class="head"><h2 id="rh"></h2><button class="clear" id="clr" hidden></button></div>
+    <div class="grid" id="res"></div>
+    <div class="more"><button class="btn ghost" id="all" hidden></button></div>
+    <p class="note" id="note" hidden></p>
+  </section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script><script src="../shared/catalog.js"></script><script src="../shared/library.js"></script>
+<script>
+{
+const {esc}=AAC,$=id=>document.getElementById(id),qs=new URLSearchParams(location.search);
+const STAFF=qs.get('view')==='staff',EMB=window.top!==window;
+const sym=window.AAC_LIBRARY_SYM;
+const T={
+ en:{h1:'Resource Library',sub:'Every Rialto AAC guide, handout, form and tool in one place. Search, or pick who you are.',
+  subS:'Staff view. Items marked Rialto sign-in open only when you\'re signed in with your rialtousd.org Google account.',
+  q:'Search: core words, broken iPad, trial, new para...',qx:'Clear',whoLab:'I am',topLab:'I\'m looking for',
+  start:'Good places to start',n:'{n} results',n1:'1 result',all:'See everything ({n})',clr:'Clear filters',
+  none:'Nothing matched. Try a shorter word, or ',noneA:'send a question',
+  lock:'Rialto sign-in',lockT:'Opens when you\'re signed in with your rialtousd.org Google account',soon:'Link coming',en:'English',es:'Español',both:'English and Spanish',
+  note:'Some links open your own copy to fill in, so the original stays clean.',
+  foot:'Materials by Jerry Butanda, District AAC Specialist, Rialto Unified School District. App names belong to their makers.',
+  type:{tool:'Interactive',read:'Read',print:'Print',fill:'Fill in',form:'Form',site:'Website'},
+  who:{all:'Everyone',family:'Family',teacher:'Teacher',para:'Paraeducator',slp:'SLP or SLPA',related:'Related services',admin:'Administrator'},
+  top:{any:'Anything',start:'Getting started',model:'Modeling',core:'Core words',device:'The device',behavior:'Behavior and calm',school:'Academics',data:'Goals and data',eval:'Trials and evaluation',home:'Home',funding:'Paying for a device',transition:'Transition',training:'Training',why:'Research and policy',es:'In Spanish'}},
+ es:{h1:'Biblioteca de recursos',sub:'Todas las guías, materiales, formularios y herramientas de CAA de Rialto en un solo lugar. Busque o escoja quién es usted.',
+  subS:'Vista para el personal. Lo marcado Rialto sign-in solo se abre con su cuenta de Google de rialtousd.org.',
+  q:'Busque: palabras clave, iPad roto, prueba...',qx:'Borrar',whoLab:'Soy',topLab:'Busco',
+  start:'Buenos lugares para empezar',n:'{n} resultados',n1:'1 resultado',all:'Ver todo ({n})',clr:'Quitar filtros',
+  none:'No hay resultados. Pruebe una palabra más corta, o ',noneA:'envíe una pregunta',
+  lock:'Rialto sign-in',lockT:'Se abre con su cuenta de Google de rialtousd.org',soon:'Enlace pronto',en:'En inglés',es:'Español',both:'Inglés y español',
+  note:'Algunos enlaces abren su propia copia para llenar, así el original queda limpio.',
+  foot:'Materiales de Jerry Butanda, Especialista de CAA del Distrito Escolar Unificado de Rialto. Los nombres de las aplicaciones pertenecen a sus creadores.',
+  type:{tool:'Interactivo',read:'Leer',print:'Imprimir',fill:'Para llenar',form:'Formulario',site:'Sitio web'},
+  who:{all:'Todos',family:'Familia',teacher:'Maestro(a)',para:'Paraeducador(a)',slp:'SLP o SLPA',related:'Servicios relacionados',admin:'Administrador(a)'},
+  top:{any:'Cualquier cosa',start:'Para empezar',model:'Modelar',core:'Palabras clave',device:'El dispositivo',behavior:'Conducta y calma',school:'Lo académico',data:'Metas y datos',eval:'Pruebas y evaluación',home:'En casa',funding:'Pagar un dispositivo',transition:'Transición',training:'Capacitación',why:'Investigación y política',es:'En español'}}};
+const TYPEC={read:'#1b3a5c',print:'#b35c00',fill:'#2b8a3e',form:'#7048e8',site:'#495057',tool:'#0b7285'};
+const ORDER={tool:0,read:1,print:2,fill:3,form:4,site:5};
+const WHO=['all','family','teacher','para','slp','related','admin'];
+const TOP=['any','start','model','core','device','behavior','school','data'].concat(STAFF?['eval']:[]).concat(['home','funding','transition','training','why','es']);
+
+/* tools from the shared catalog, plus the guides and forms in library.js */
+const TT=window.AAC_TOOL_TOPICS||{};
+const tools=(window.AAC_CATALOG||[]).filter(x=>TT[x.id]).map(x=>({id:x.id,type:'tool',en:x.en,es:x.es,den:x.den,des:x.des,
+  who:[...new Set(x.who.map(w=>w==='peer'?'teacher':w))],t:TT[x.id][0],k:TT[x.id][1]||'',feat:TT[x.id][2]||0,lang:'both',
+  url:'../'+x.id+'/',c:x.c,img:x.icon}));
+const ITEMS=tools.concat((window.AAC_LIBRARY||[]).filter(x=>STAFF||!x.staff).map(x=>({...x,c:TYPEC[x.type],img:sym(x.ic||'book')})));
+
+const S={lang:AAC.pageLang(),q:qs.get('q')||'',who:WHO.includes(qs.get('who'))?qs.get('who'):'all',top:TOP.includes(qs.get('topic'))?qs.get('topic'):'any',all:false};
+const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const toks=s=>' '+s.replace(/[^a-z0-9]+/g,' ')+' ';
+const hay=(x,L)=>{return {title:toks(norm(x[L]||x.en)),body:toks(norm([L==='es'?x.des:x.den,x.k,(x.links||[]).map(l=>l.l).join(' '),x.t.map(k=>T[L].top[k]).join(' '),x.who.map(w=>T[L].who[w]).join(' '),T[L].type[x.type]].join(' ')))}};
+const HAY={en:new Map(ITEMS.map(x=>[x.id,hay(x,'en')])),es:new Map(ITEMS.map(x=>[x.id,hay(x,'es')]))};
+const score=x=>{const words=norm(S.q).split(/[^a-z0-9]+/).filter(w=>w.length>1);if(!words.length)return 1;const h=HAY[S.lang].get(x.id);let s=0;
+  for(const w of words){if(h.title.includes(' '+w))s+=5;else if(h.body.includes(' '+w))s+=2;else return 0}return s+(x.feat?1:0)};
+const pass=x=>(S.who==='all'||x.who.includes(S.who))&&(S.top==='any'||(S.top==='es'?(x.lang==='es'||x.lang==='both'):x.t.includes(S.top)));
+const open=u=>!u?'':(/^https?:/.test(u)||/\.(pdf|docx)$/i.test(u)||EMB)?' target="_blank" rel="noopener"':'';
+const card=x=>{const t=T[S.lang],L=S.lang,title=x[L]||x.en,desc=(L==='es'?x.des:x.den)||x.den;
+ const tags=[`<span class="tag">${esc(t.type[x.type])}</span>`];
+ if(x.drive)tags.push(`<span class="tag lock" title="${esc(t.lockT)}">&#128274; ${esc(t.lock)}</span>`);
+ if(x.lang==='es'&&L==='en')tags.push(`<span class="tag">${t.es}</span>`);
+ if(x.lang==='en'&&L==='es')tags.push(`<span class="tag">${t.en}</span>`);
+ if(x.lang==='both'&&x.type!=='tool')tags.push(`<span class="tag">${t.both}</span>`);
+ const soon=!x.links&&!x.url;if(soon)tags.push(`<span class="tag soon">${esc(t.soon)}</span>`);
+ const h=x.links||soon?esc(title):`<a href="${esc(x.url)}"${open(x.url)}>${esc(title)}</a>`;
+ const lk=x.links?`<div class="lk">${x.links.map(l=>l.u?`<a href="${esc(l.u)}"${open(l.u)}>${esc(l.l)}</a>`:`<span>${esc(l.l)} · ${esc(t.soon)}</span>`).join('')}</div>`:'';
+ return `<article class="it" style="--c:${x.c}"><div class="ic"><img src="${esc(x.img)}" alt=""></div><div class="tx"><h3>${h}</h3><p>${esc(desc)}</p><div class="tags">${tags.join('')}</div>${lk}</div></article>`};
+const chips=(box,list,cur,lab,key)=>{box.innerHTML=list.map(k=>`<button class="chip${k==='eval'?' staff':''}" data-k="${k}" aria-pressed="${k===cur}">${esc(lab[k])}</button>`).join('');box.onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;S[key]=b.dataset.k;S.all=false;draw()}};
+const draw=()=>{const t=T[S.lang];
+ chips($('who'),WHO,S.who,t.who,'who');chips($('top'),TOP,S.top,t.top,'top');
+ $('qx').hidden=!S.q;
+ const filtered=S.q||S.who!=='all'||S.top!=='any';
+ let list=ITEMS.map(x=>[score(x),x]).filter(([s,x])=>s>0&&pass(x));
+ const fr=x=>x.feat||99;list.sort((a,b)=>b[0]-a[0]||fr(a[1])-fr(b[1])||ORDER[a[1].type]-ORDER[b[1].type]||(a[1][S.lang]||a[1].en).localeCompare(b[1][S.lang]||b[1].en));
+ const total=list.length,brief=!filtered&&!S.all;
+ if(brief)list=list.filter(([,x])=>x.feat);
+ $('rh').textContent=brief?t.start:(total===1?t.n1:t.n.replace('{n}',total));
+ $('res').innerHTML=list.map(([,x])=>card(x)).join('')||`<p class="none">${esc(t.none)}<a href="../faq/"${open('../faq/')}>${esc(t.noneA)}</a>.</p>`;
+ $('all').hidden=!brief;$('all').textContent=t.all.replace('{n}',total);
+ $('clr').hidden=!filtered;
+ $('note').hidden=!list.some(([,x])=>x.type==='fill');
+};
+const render=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;
+ $('h1').textContent=t.h1;$('sub').textContent=STAFF?t.subS:t.sub;$('q').placeholder=t.q;$('qLab').textContent=t.q;$('qx').textContent=t.qx;
+ $('whoLab').textContent=t.whoLab;$('topLab').textContent=t.topLab;$('clr').textContent=t.clr;$('note').textContent=t.note;$('foot').textContent=t.foot;draw()};
+$('q').value=S.q;
+let tm;$('q').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>{S.q=e.target.value.trim();S.all=false;draw()},120)});
+$('qx').onclick=()=>{S.q='';$('q').value='';$('q').focus();draw()};
+$('clr').onclick=()=>{S.q='';$('q').value='';S.who='all';S.top='any';S.all=false;draw()};
+$('all').onclick=()=>{S.all=true;draw()};
+AAC.page(()=>S.lang,l=>{S.lang=l},render);
+AAC.deco($('deco'),[['search',8,14,54,-8],['book',46,58,46,8],['printer',80,14,50,-6]]);
+}
+</script>
+<script src="../shared/bookmark.js"></script>
+<script src="../shared/keep-lang.js"></script>
+</body>
+</html>
