@@ -238,7 +238,7 @@ window.AAC_LIBRARY=[
  url:'https://docs.google.com/document/d/1c3PYHhffDfCku7kq3R0oyGR70E3YmIHhYqEKI4fJBfg/copy',k:'transfer summary move new school'},
 {id:'s-procure',type:'read',staff:1,drive:1,who:['slp'],t:['funding','eval'],lang:'en',ic:'key',
  en:'Private AAC Procurement: SLP Guide',es:'Compra privada de CAA: guía para SLPs',
- den:'Supporting families who pursue a personal device, and writing a report that works for funders.',des:'Cómo apoyar a familias que buscan un dispositivo personal.',
+ den:'Supporting families who pursue a personal device, and what school records can add to a funding request.',des:'Cómo apoyar a familias que buscan un dispositivo personal.',
  url:'https://docs.google.com/document/d/1PhqJE0ufem8Xg_wrEi4Tx42cEzF5FIAYnc6d24HzQkc/edit',k:'insurance medical necessity report funding personal device'},
 {id:'s-trial',type:'tool',staff:1,who:['slp'],t:['eval'],lang:'en',ic:'memo',
  en:'AAC Trial Summary',es:'Resumen de prueba de CAA',
