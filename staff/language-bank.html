@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IEP Language Bank | Rialto AAC</title>
+<title>IEP Language Bank and Annual Update | Rialto AAC</title>
 <style>
   :root {
     --blue: #1A5294;
@@ -79,6 +79,37 @@
 
   mark { background: #fff176; border-radius: 2px; }
 .snippet-cite{font-size:12px;color:#5B6673;margin-top:6px;padding-left:10px;border-left:3px solid #DCE6F2}
+  /* ── MODE SWITCH + ANNUAL UPDATE ── */
+  .modes{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+  .mode{flex:1;min-width:220px;padding:14px 18px;border-radius:8px;border:2px solid var(--blue);background:#fff;color:var(--blue);font:bold 16px Arial,sans-serif;cursor:pointer}
+  .mode.active{background:var(--blue);color:#fff}
+  .au fieldset{border:1px solid var(--border);border-radius:8px;background:#fff;padding:16px 18px 10px;margin-bottom:18px}
+  .au legend{font-size:12px;font-weight:bold;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);padding:0 6px}
+  .au label{display:block;font-size:13px;font-weight:bold;color:var(--blue);margin:0 0 4px}
+  .au input,.au select,.au textarea{width:100%;font:14px Arial,sans-serif;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;margin-bottom:10px}
+  .au textarea{min-height:64px}
+  .au-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.au-row{grid-template-columns:1fr}}
+  .au-checks{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:12px}
+  .au-checks label,.au label.au-check{font-weight:normal;color:var(--black);display:flex;gap:6px;align-items:center;margin:0}
+  .au label.au-check{margin:2px 0 12px;font-weight:bold;color:var(--blue)}
+  .au-checks input,.au-check input,.au-fn input{width:auto;margin:0}
+  .au-hint{font-size:12px;color:var(--gray);margin:0 0 8px}
+  .au-fn{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px}
+  .au-fn th,.au-fn td{padding:6px;border-bottom:1px solid var(--border);text-align:left}
+  .au-fn th{background:var(--blue-light);color:var(--blue);font-size:12px}
+  .au-actions{display:flex;gap:10px;margin:4px 0 10px}
+  .au-go{padding:12px 20px;background:var(--blue);color:#fff;border:0;border-radius:6px;font:bold 15px Arial,sans-serif;cursor:pointer}
+  .au-clear{padding:12px 16px;background:#fff;color:var(--blue);border:2px solid var(--blue);border-radius:6px;font:bold 14px Arial,sans-serif;cursor:pointer}
+  .au-status{font-size:13px;color:#9A3412;margin-bottom:14px;min-height:18px}
+  .au-status.ok{color:var(--green)}
+  .au-block{background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:16px;overflow:hidden}
+  .au-block-h{display:flex;flex-wrap:wrap;gap:4px 10px;background:var(--blue);color:#fff;padding:9px 14px;font-size:13px;font-weight:bold}
+  .au-block-h .where{margin-left:auto;font-weight:normal;opacity:.9}
+  .au-block textarea{display:block;width:100%;border:0;padding:12px 14px;font:14px/1.6 Arial,sans-serif;min-height:100px;resize:vertical}
+  .au-block-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px;background:#f8f9fc;border-top:1px solid var(--border)}
+  .au-block-f select{width:auto;max-width:60%;padding:5px 8px;font-size:13px}
+  .au-block-f .tip{font-size:12px;color:var(--gray)}
 </style>
 </head>
 <body>
@@ -89,12 +120,78 @@
     Special Education
   </div>
   <div>
-    <div class="topbar-title">IEP Language Bank</div>
+    <div class="topbar-title">IEP Language Bank and Annual Update</div>
     <div class="topbar-sub">AAC Program  |  Copy-paste ready language for IEPs, evaluations, and progress reports</div>
   </div>
 </div>
 
 <div class="page">
+
+  <div class="modes" role="tablist">
+    <button class="mode active" id="modeBrowse" role="tab" onclick="showMode('browse')">Browse passages</button>
+    <button class="mode" id="modeAnnual" role="tab" onclick="showMode('annual')">Write an annual update</button>
+  </div>
+
+  <div id="annualView" class="hidden">
+    <div class="intro"><strong>Annual update:</strong> for a student who already has a device. Fill in this year's picture, press <strong>Build IEP language</strong>, and copy each box into SEIS. For a new device after a trial, use section 6 of the AAC Trial Summary instead.</div>
+    <div class="au">
+      <fieldset><legend>Student</legend>
+        <div class="au-row"><div><label>Student name or initials</label><input data-au="student"></div>
+          <div><label>Pronouns</label><select data-au="pron"><option value="he">he / him / his</option><option value="she">she / her / her</option><option value="they">they / them / their</option></select></div></div>
+        <div class="au-row"><div><label>Grade</label><select data-au="grade"><option value=""></option><option>TK</option><option>K</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>Post-secondary</option></select></div>
+          <div><label>Annual review date</label><input type="date" data-au="review_date"></div></div>
+        <div class="au-row"><div><label>Home language</label><select data-au="home_lang"><option>English</option><option>Spanish</option><option>Spanish and English</option><option value="__other">Other</option></select></div><div></div></div>
+      </fieldset>
+
+      <fieldset><legend>Communication system</legend>
+        <div class="au-row"><div><label>App / system</label><input data-au="app" placeholder="Proloquo2Go"></div>
+          <div><label>Device</label><select data-au="devicekind"><option>district-managed iPad</option><option>dedicated speech-generating device</option><option>iPad with keyguard and case</option><option>shared classroom iPad</option></select></div></div>
+        <div class="au-row"><div><label>Access method</label><select data-au="access"><option>direct touch</option><option>direct touch with keyguard</option><option>direct touch with stylus</option><option>eye gaze</option><option>switch scanning</option><option>partner-assisted scanning</option></select></div>
+          <div><label>Communicates with</label><select data-au="partners"><option>familiar adults only</option><option>familiar adults and some peers</option><option>familiar and less familiar adults</option><option>a range of adults and peers</option></select></div></div>
+        <label class="au-check"><input type="checkbox" id="auPost" onchange="auPostToggle()"> This device came from a formal AT/AAC evaluation</label>
+        <div id="auPostFields" class="hidden">
+          <div class="au-row"><div><label>Evaluation date</label><input data-au="eval_date" placeholder="e.g., 4/12/2026"></div>
+            <div><label>Assessment plan signed</label><input data-au="ap_date" placeholder="e.g., 2/20/2026"></div></div>
+          <div class="au-row"><div><label>Evaluator (name, credentials, role)</label><input data-au="evaluator"></div>
+            <div><label>Access notes from the evaluation</label><input data-au="access_notes" placeholder="e.g., with the device mounted at midline"></div></div>
+        </div>
+        <label>How the student communicates now</label>
+        <div class="au-checks" data-au="modalities"><label><input type="checkbox" value="__device" checked>the AAC device</label><label><input type="checkbox" value="natural speech">natural speech</label><label><input type="checkbox" value="word approximations">word approximations</label><label><input type="checkbox" value="vocalizations">vocalizations</label><label><input type="checkbox" value="gestures and pointing">gestures and pointing</label><label><input type="checkbox" value="facial expression and body language">facial expression / body language</label><label><input type="checkbox" value="signs">signs</label><label><input type="checkbox" value="pictures or a communication book">pictures / communication book</label></div>
+        <label>Where communication is strongest</label>
+        <div class="au-checks" data-au="settings"><label><input type="checkbox" value="snack and lunch">snack and lunch</label><label><input type="checkbox" value="preferred play or leisure activities">preferred play / leisure</label><label><input type="checkbox" value="structured small-group instruction">small-group instruction</label><label><input type="checkbox" value="whole-group instruction">whole-group instruction</label><label><input type="checkbox" value="transitions">transitions</label><label><input type="checkbox" value="speech sessions">speech sessions</label><label><input type="checkbox" value="recess">recess</label></div>
+      </fieldset>
+
+      <fieldset><legend>Functions this year</legend>
+        <p class="au-hint">Goals are picked from what isn't observed yet.</p>
+        <table class="au-fn" id="auFn"><tr><th>Function</th><th>Observed</th><th>Emerging</th><th>Not yet</th></tr></table>
+      </fieldset>
+
+      <fieldset><legend>This year's data</legend>
+        <div class="au-row"><div><label>Spontaneous messages per session</label><input type="number" min="0" data-au="bl_spont"></div>
+          <div><label>Messages after a model, per session</label><input type="number" min="0" data-au="bl_prompt"></div></div>
+        <div class="au-row"><div><label>Mean utterance length (elements)</label><input type="number" min="1" step="0.5" data-au="mlu" placeholder="1"></div>
+          <div><label>Different words or symbols used</label><input type="number" min="0" data-au="words"></div></div>
+        <label>Where the data came from</label><input data-au="data_source" placeholder="e.g., SLP session data Sept to Nov, classroom data sheets and teacher report">
+      </fieldset>
+
+      <fieldset><legend>In your own words</legend>
+        <label>One strength</label><textarea data-au="strength" placeholder="e.g., M.A. now starts conversations with peers at lunch by asking WHAT YOU EAT."></textarea>
+        <label>One concern or barrier</label><textarea data-au="concern" placeholder="e.g., The device often stays in the backpack during specials."></textarea>
+      </fieldset>
+
+      <fieldset><legend>Decisions</legend>
+        <div class="au-row"><div><label>Home and community access</label><select data-au="home"><option value="yes">Necessary for FAPE; device goes home</option><option value="no">Not necessary at this time</option></select></div>
+          <div><label>Behavior plan</label><select data-au="bip"><option value="no">No behavior plan</option><option value="yes">Student has a behavior plan</option></select></div></div>
+        <div class="au-row"><div><label>Classroom AAC</label><select data-au="shared"><option value="no">No shared classroom system</option><option value="yes">Classroom uses a shared AAC system or core boards</option></select></div><div></div></div>
+      </fieldset>
+
+      <div class="au-actions"><button class="au-go" type="button" onclick="auBuild()">Build IEP language</button><button class="au-clear" type="button" onclick="auClear()">Clear</button></div>
+      <div id="auStatus" class="au-status"></div>
+      <div id="auOut"></div>
+    </div>
+  </div>
+
+  <div id="browseView">
 
   <div class="intro">
     <strong>How to use this page:</strong> Browse by category or search by keyword. Click <strong>Copy</strong> to copy any passage to your clipboard. All language is written within a <strong>total communication framework</strong>: goals and descriptions address communication functions across all modalities, not device use alone. Adjust student name, pronouns, and specific details before using. Brackets [ ] indicate fields to fill in. Every goal opens with a <b>Baseline</b> line: fill it in before you fill in the criterion. Where a passage rests on a specific statute or study, the citation appears beneath it.
@@ -121,6 +218,7 @@
 
   <div id="bank"></div>
   <div id="no-results">No matching language found. Try a different keyword.</div>
+  </div>
 
 </div>
 
@@ -241,6 +339,119 @@ function copySnippet(id, btn, rawText) {
 }
 
 // Initial render happens after language-bank.json loads
+
+// ── ANNUAL UPDATE ───────────────────────────────────────────────────────────
+// Drafts IEP language for a student who already has a device, from the passages in language-bank.json.
+const AU_FN=[
+  ['request','Requesting items, activities, help','requesting','requests preferred items by [describe]'],
+  ['protest','Protesting / refusing','protesting','[describe: e.g., crying or pushing materials away]'],
+  ['comment','Commenting / sharing information','commenting','[describe: e.g., by showing items to an adult]'],
+  ['question','Asking questions','asking questions','does not ask questions in any modality'],
+  ['social','Greetings / social closeness','greetings and social closeness','[describe: e.g., waves when greeted]'],
+  ['direct','Directing others','directing others','[describe: e.g., pulls an adult toward the desired action]'],
+  ['repair','Repairing breakdowns','repairing breakdowns','[describe: e.g., repeats the same vocalization or gives up]'],
+  ['academic','Answering / contributing in instruction','answering and contributing in instruction','[describe: e.g., responds to yes/no by nodding]'],
+  ['operational','Managing the device (finding it, moving between pages)','managing the device','[describe: e.g., uses the device only when it is placed in front of them]']
+];
+const AU_GOAL={request:'Goal: Requesting (Any Modality)',protest:'Goal: Protesting and Refusing (Any Modality)',comment:'Goal: Commenting and Sharing Information (Any Modality)',question:'Goal: Asking Questions (Any Modality)',social:'Goal: Social Communication and Greetings (Any Modality)',direct:'Goal: Directing Others (Any Modality)',repair:'Goal: Communication Repair and Persistence',academic:'Goal: Participation in Academic Instruction (Answering and Contributing)',operational:'Goal: Operational Competence and Device Management'};
+(function(){const t=document.getElementById('auFn');AU_FN.forEach(([k,l])=>t.insertAdjacentHTML('beforeend',`<tr><td>${l}</td><td><input type="radio" name="au_${k}" value="observed"></td><td><input type="radio" name="au_${k}" value="emerging"></td><td><input type="radio" name="au_${k}" value="not" checked></td></tr>`));})();
+
+function showMode(m){
+  const annual=m==='annual';
+  document.getElementById('annualView').classList.toggle('hidden',!annual);
+  document.getElementById('browseView').classList.toggle('hidden',annual);
+  document.getElementById('modeAnnual').classList.toggle('active',annual);
+  document.getElementById('modeBrowse').classList.toggle('active',!annual);
+  try{history.replaceState(null,'',annual?'#annual':location.pathname+location.search);}catch(e){}
+}
+if(location.hash==='#annual')showMode('annual');
+window.addEventListener('hashchange',()=>showMode(location.hash==='#annual'?'annual':'browse'));
+function auPostToggle(){document.getElementById('auPostFields').classList.toggle('hidden',!document.getElementById('auPost').checked);}
+function auSay(m,ok){const s=document.getElementById('auStatus');s.className='au-status'+(ok?' ok':'');s.textContent=m;}
+function auList(a){a=a.filter(Boolean);if(!a.length)return'';if(a.length===1)return a[0];if(a.length===2)return a.some(x=>/ and /.test(x))?a.join(', and '):a.join(' and ');return a.slice(0,-1).join(', ')+', and '+a[a.length-1];}
+function auSentence(v){v=(v||'').trim();return v?v.replace(/([^.!?])$/,'$1.'):'';}
+function auDate(v){const m=(v||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?`${+m[2]}/${+m[3]}/${m[1]}`:v;}
+function auRead(){
+  const d={};
+  document.querySelectorAll('[data-au]').forEach(el=>{const k=el.dataset.au;d[k]=el.classList.contains('au-checks')?[...el.querySelectorAll('input:checked')].map(i=>i.value):(el.value||'').trim();});
+  d.fn={};AU_FN.forEach(([k])=>{const r=document.querySelector(`input[name=au_${k}]:checked`);d.fn[k]=r?r.value:'not';});
+  d.post=document.getElementById('auPost').checked;
+  return d;
+}
+function auEntry(label){const e=DATA.find(x=>x.label===label);if(!e||!(e.template||e.short))throw new Error('Missing passage in language-bank.json: '+label);return e;}
+function auFill(tpl,t){let s=tpl.replace(/\{\{(\w+)\}\}/g,(m,k)=>k in t?t[k]:m);if(t.he==='they')s=s.replace(/\b(They|they) has\b/g,'$1 have').replace(/\b(They|they) uses\b/g,'$1 use');return s.split('\n').map(l=>l.replace(/\s{2,}/g,' ').replace(/\s+\./g,'.').trim()).join('\n').trim();}
+function auTokens(d){
+  const P={he:{he:'he',him:'him',his:'his',himself:'himself'},she:{he:'she',him:'her',his:'her',himself:'herself'},they:{he:'they',him:'them',his:'their',himself:'themselves'}}[d.pron];
+  const app=d.app||'[app]';
+  const obs=AU_FN.filter(([k])=>d.fn[k]==='observed'&&k!=='operational').map(x=>x[2]);
+  const gap=AU_FN.filter(([k])=>d.fn[k]!=='observed'&&k!=='operational').map(x=>x[2]);
+  const bl=[];
+  if(d.bl_spont!==''||d.bl_prompt!=='')bl.push(`${d.bl_spont||0} spontaneous and ${d.bl_prompt||0} messages after a model per session`);
+  if(d.mlu)bl.push(`a mean utterance length of ${d.mlu} element${d.mlu==1?'':'s'}`);
+  if(d.words)bl.push(`${d.words} different words or symbols in use`);
+  const hl=d.home_lang==='__other'?'':d.home_lang;
+  const t={
+    S:d.student||'[Student]',He:P.he.charAt(0).toUpperCase()+P.he.slice(1),he:P.he,him:P.him,his:P.his,himself:P.himself,
+    app,devicekind:d.devicekind,access:d.access,access_notes:d.access_notes?', '+d.access_notes:'',
+    modalities:auList(d.modalities.map(m=>m==='__device'?`${app} on a ${d.devicekind}`:m))||'[modalities]',
+    settings:auList(d.settings)||'[settings]',
+    settings_all:auList(['general education','specialized academic instruction','recess','lunch','assemblies','field trips','school transportation']),
+    partners:d.partners,functions_observed:auList(obs)||'[functions observed]',functions_gap:auList(gap)||'none identified',
+    baseline_sentence:auList(bl)||'[baseline data]',data_source:d.data_source,
+    strength_sentence:auSentence(d.strength),concern_sentence:auSentence(d.concern),
+    home_lang:hl||'[home language]',
+    home_lang_sentence:(hl&&hl!=='English')?`The family's home language is ${hl}; family communication and training are provided in ${hl}, and bilingual vocabulary has been considered for ${P.his} system.`:'',
+    home_determination:d.home==='yes'?'that access at home and in the community is necessary for FAPE; the device will go home daily under the district AT home-use agreement (EC 56040.3)':'that access outside of school is not necessary at this time; this will be revisited at the next review (EC 56040.3)',
+    family_home_clause:d.home==='yes'?' and within 30 days of the device going home':'',
+    eval_date:d.eval_date||'[date]',ap_date:d.ap_date||'[date]',evaluator:d.evaluator||'[evaluator, credentials, role]',
+    review_date:auDate(d.review_date)||'[annual review date]',
+    mlu:d.mlu||'1',mlu_target:Math.min(4,Math.max(2,Math.ceil((+d.mlu||1)+1))),words:d.words||'[number]',words_target:d.words?Math.max(10,Math.round((+d.words)*1.5)):'[target number]'
+  };
+  const BL={request:'bl_request',protest:'bl_protest',comment:'bl_comment',question:'bl_question',social:'bl_social',direct:'bl_direct',repair:'bl_repair',academic:'bl_academic',operational:'bl_operational'};
+  AU_FN.forEach(([k,,,def])=>{t[BL[k]]=d.fn[k]==='observed'?'[describe current level, this function is observed]':d.fn[k]==='emerging'?'[describe emerging use]':def;});
+  return t;
+}
+function auBuild(){
+  const d=auRead(),missing=[];
+  if(!d.student)missing.push('student');if(!d.app)missing.push('app');if(!d.data_source)missing.push('where the data came from');
+  if(!d.strength)missing.push('one strength');if(!d.concern)missing.push('one concern');
+  if(missing.length){auSay('Still needed: '+missing.join(', ')+'.');return;}
+  if(!DATA.length){auSay('The passages are still loading. Try again in a moment.');return;}
+  try{
+    const t=auTokens(d),B=[];
+    const SF=d.post?'AT Special Factors: Post Evaluation, Device Authorized':'AT Special Factors: AAC Considered and Required';
+    const PL=d.post?'Present Levels: Post Formal Evaluation':'Present Levels: Communication, Device in Place';
+    B.push({title:'AT Special Factors',where:'Special Factors page, Assistive Technology',text:auFill(auEntry(SF).template,t)});
+    B.push({title:'Present Levels: Communication',where:'Present Levels page, Communication Development',text:auFill(auEntry(PL).template,t)});
+    const ks=AU_FN.map(([k])=>k);
+    const pick=ks.filter(k=>d.fn[k]==='not').concat(ks.filter(k=>d.fn[k]==='emerging')).slice(0,3);
+    if(!pick.length)pick.push('comment','question');
+    pick.forEach((k,i)=>B.push({title:`Goal ${i+1}: ${AU_GOAL[k].replace('Goal: ','')}`,where:'Goals page',text:auFill(auEntry(AU_GOAL[k]).template,t),goal:true}));
+    const acc=['Accommodation: Device Access Across All Settings','Accommodation: Wait Time and Partner Responsiveness'];
+    if(['3','4','5','6','7','8','9','10','11','12'].includes(d.grade))acc.push('Accommodation: Testing and Assessment Access');
+    if(d.home==='yes'||d.shared==='yes')acc.push('Accommodation: Vocabulary Consistency Across Environments');
+    if(d.bip==='yes')acc.push('Accommodation: Communication Supports During Behavior Incidents and Discipline');
+    B.push({title:'Accommodations',where:'Supplementary Aids and Services',text:acc.map(l=>auFill(auEntry(l).short,t)).join('\n')});
+    B.push({title:'Other Supports',where:'FAPE page, Other Supports (not a service line)',text:auFill(auEntry('Other Supports: Assistive Technology Services (Training, Customization, Maintenance)').short,t)});
+    window._auT=t;
+    const goalOpts=DATA.filter(e=>e.cat==='goals'&&e.template).map(e=>`<option value="${escHtml(e.label)}">${escHtml(e.label.replace('Goal: ',''))}</option>`).join('');
+    const out=document.getElementById('auOut');
+    out.innerHTML=B.map((b,i)=>`<div class="au-block"><div class="au-block-h"><span>${b.title}</span><span class="where">${b.where}</span></div><textarea id="aublk${i}"></textarea><div class="au-block-f"><button type="button" class="copy-btn" onclick="auCopy(${i},this)">Copy</button>${b.goal?`<select onchange="auSwap(${i},this.value)"><option value="">Swap goal…</option>${goalOpts}</select>`:''}<span class="tip">Brackets [ ] still need your words.</span></div></div>`).join('');
+    B.forEach((b,i)=>{document.getElementById('aublk'+i).value=b.text;});
+    out.querySelectorAll('textarea').forEach(a=>{const g=()=>{a.style.height='auto';a.style.height=(a.scrollHeight+4)+'px';};a.addEventListener('input',g);g();});
+    auSay('Drafted. Every box can be edited. Copy each one into SEIS.',true);
+    out.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(err){auSay(err.message);}
+}
+function auSwap(i,label){if(!label)return;const a=document.getElementById('aublk'+i);a.value=auFill(auEntry(label).template,window._auT);a.style.height='auto';a.style.height=(a.scrollHeight+4)+'px';a.closest('.au-block').querySelector('.au-block-h span').textContent=`Goal ${i-1}: ${label.replace('Goal: ','')}`;}
+function auCopy(i,btn){navigator.clipboard.writeText(document.getElementById('aublk'+i).value).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},1500);});}
+function auClear(){
+  if(!confirm('Clear the annual update?'))return;
+  document.querySelectorAll('[data-au]').forEach(el=>{if(el.classList.contains('au-checks'))el.querySelectorAll('input').forEach(i=>i.checked=i.value==='__device');else if(el.tagName==='SELECT')el.selectedIndex=0;else el.value='';});
+  AU_FN.forEach(([k])=>document.querySelector(`input[name=au_${k}][value=not]`).checked=true);
+  document.getElementById('auPost').checked=false;auPostToggle();
+  document.getElementById('auOut').innerHTML='';auSay('');
+}
 </script>
 </body>
 </html>
