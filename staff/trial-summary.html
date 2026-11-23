@@ -552,12 +552,12 @@ function iepLoad(){
   return fetch('language-bank.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(d=>{IEP_BANK=d;return d;});
 }
 function iepSay(m,ok){const s=document.getElementById('iepStatus');s.className='status'+(ok?' ok':'');s.textContent=m;}
-function iepList(a){a=a.filter(Boolean);if(!a.length)return'';if(a.length===1)return a[0];if(a.length===2)return a.join(' and ');return a.slice(0,-1).join(', ')+', and '+a[a.length-1];}
+function iepList(a){a=a.filter(Boolean);if(!a.length)return'';if(a.length===1)return a[0];if(a.length===2)return a.some(x=>/ and /.test(x))?a.join(', and '):a.join(' and ');return a.slice(0,-1).join(', ')+', and '+a[a.length-1];}
 function iepSplit(v){return (v||'').split(', ').map(x=>x.trim()).filter(Boolean);}
 function iepCap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
 function iepSentence(v){v=(v||'').trim();return v?v.replace(/([^.!?])$/,'$1.'):'';}
 function iepEntry(label){const e=IEP_BANK.find(x=>x.label===label);if(!e||!(e.template||e.short))throw new Error('Missing passage in language-bank.json: '+label);return e;}
-function iepFill(tpl,t){return tpl.replace(/\{\{(\w+)\}\}/g,(m,k)=>k in t?t[k]:m).split('\n').map(l=>l.replace(/\s{2,}/g,' ').replace(/\s+\./g,'.').trim()).join('\n').trim();}
+function iepFill(tpl,t){let s=tpl.replace(/\{\{(\w+)\}\}/g,(m,k)=>k in t?t[k]:m);if(t.he==='they')s=s.replace(/\b(They|they) has\b/g,'$1 have').replace(/\b(They|they) uses\b/g,'$1 use');return s.split('\n').map(l=>l.replace(/\s{2,}/g,' ').replace(/\s+\./g,'.').trim()).join('\n').trim();}
 
 // Turns the Trial Summary into what the IEP passages need.
 function iepFromTrial(d){
@@ -658,7 +658,7 @@ async function buildIEP(){
     iepSay('Drafted for: '+label+'. Every box can be edited. Copy each one into SEIS.',true);
   }catch(err){iepSay(err.message);}
 }
-function iepSwap(i,label){if(!label)return;const a=document.getElementById('iblk'+i);a.value=iepFill(iepEntry(label).template,window._iepT);a.style.height='auto';a.style.height=(a.scrollHeight+4)+'px';a.closest('.iblock').querySelector('.iblock-h span').textContent=label.replace('Goal: ','Goal: ');}
+function iepSwap(i,label){if(!label)return;const a=document.getElementById('iblk'+i);a.value=iepFill(iepEntry(label).template,window._iepT);a.style.height='auto';a.style.height=(a.scrollHeight+4)+'px';a.closest('.iblock').querySelector('.iblock-h span').textContent=`Goal ${i-1}: ${label.replace('Goal: ','')}`;}
 function iepCopy(i,btn){navigator.clipboard.writeText(document.getElementById('iblk'+i).value).then(()=>{btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1500);});}
 
 </script>
