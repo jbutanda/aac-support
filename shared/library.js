@@ -8,7 +8,7 @@
    url:'' on a drive item = link not added yet (card shows "Link coming")
    k = extra search words (synonyms, abbreviations) */
 (function(){
-const D='../docs/',P='../printables/',HUB='https://jbutanda.github.io/RUSD-AAC-HUB/',QR='https://jbutanda.github.io/rusd_aac_staff/';
+const D='../docs/',P='../printables/',QR='https://jbutanda.github.io/rusd_aac_staff/';
 const F='https://docs.google.com/forms/d/e/';
 const sym=n=>'../shared/symbols/'+n+'.svg';
 
@@ -243,19 +243,19 @@ window.AAC_LIBRARY=[
 {id:'s-trial',type:'tool',staff:1,who:['slp'],t:['eval'],lang:'en',ic:'memo',
  en:'AAC Trial Summary',es:'Resumen de prueba de CAA',
  den:'Fill in, preview and save as PDF. Sends to the IEP generator.',des:'Llene, revise y guarde como PDF.',
- url:HUB+'aac-trial-summary.html',k:'trial review of existing data special factors tier 2'},
+ url:'../staff/trial-summary.html',k:'trial review of existing data special factors tier 2'},
 {id:'s-iepgen',type:'tool',staff:1,who:['slp'],t:['data'],lang:'en',ic:'gear',
  en:'AAC IEP Language Generator',es:'Generador de lenguaje para el IEP',
  den:'Special Factors, present levels, goals and accommodations from your answers.',des:'Special Factors, niveles actuales y metas.',
- url:HUB+'aac-iep-generator.html',k:'iep goals present levels special factors accommodations'},
+ url:'../staff/iep-generator.html',k:'iep goals present levels special factors accommodations'},
 {id:'s-iepbank',type:'tool',staff:1,who:['slp'],t:['data'],lang:'en',ic:'book',
  en:'IEP Language Bank',es:'Banco de lenguaje para el IEP',
  den:'Searchable goals, present levels and service wording.',des:'Metas y lenguaje para el IEP.',
- url:HUB+'RUSD_AAC_IEP_Language_Bank.html',k:'iep goals wording'},
+ url:'../staff/language-bank.html',k:'iep goals wording'},
 {id:'s-devinfo',type:'tool',staff:1,who:['slp','teacher'],t:['device'],lang:'en',ic:'phone',
  en:'AAC Device Information Sheet',es:'Hoja de información del dispositivo',
  den:'Serial, app settings, backup and contacts on one printed page.',des:'Número de serie, ajustes y respaldo en una página.',
- url:HUB+'aac-device-info.html',k:'serial asset tag backup settings'}
+ url:'../staff/device-info.html',k:'serial asset tag backup settings'}
 ];
 window.AAC_LIBRARY_SYM=sym;
 })();

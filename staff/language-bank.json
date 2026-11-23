@@ -1,0 +1,705 @@
+[
+  {
+    "cat": "profile",
+    "label": "Total Communication Profile: Overview",
+    "tags": [
+      "profile",
+      "total-comm"
+    ],
+    "text": "[Student] communicates through a total communication approach, using a combination of [list all modes observed: e.g., natural speech, vocalizations, gestures, facial expression, body language, American Sign Language signs, and a speech-generating device (iPad with [app])]. All of [his/her/their] communication forms are recognized and responded to by [his/her/their] educational team as valid, meaningful, and intentional. The team presumes competence: [Student] is provided access to robust vocabulary and age-respectful language models regardless of current expressive output. No single modality is prioritized over others; the goal is for [Student] to have access to the full range of communication tools that allow [he/she/they] to express [himself/herself/themselves] most effectively in any context.",
+    "note": "Replace the app placeholder with the student's actual system. Keep the presumption-of-competence sentence; it frames every goal that follows."
+  },
+  {
+    "cat": "profile",
+    "label": "Describing Natural Speech in a Multimodal Communicator",
+    "tags": [
+      "profile",
+      "total-comm"
+    ],
+    "text": "[Student] uses natural speech as part of [his/her/their] communication repertoire. [his/her/their] speech is [describe intelligibility and consistency: e.g., most intelligible to familiar communication partners in structured contexts and less consistent in novel or high-demand situations]. [Student]'s verbal output includes [describe: e.g., single words, word approximations, scripted phrases, and echolalic speech that is often communicative in context]. Natural speech is one of several communication tools available to [Student], and the educational team responds to and builds upon all communicative attempts regardless of modality."
+  },
+  {
+    "cat": "profile",
+    "label": "Describing AAC Device Use in a Multimodal Communicator",
+    "tags": [
+      "profile",
+      "total-comm",
+      "tier2"
+    ],
+    "text": "[Student] has access to [device and app: e.g., an iPad with Proloquo2Go] as part of [his/her/their] total communication system. [he/she/they] uses the device [describe current level of use: e.g., across familiar routines with partner support, or independently to initiate communication in preferred contexts], selecting by [access method: e.g., direct touch]. Current operational skills include [describe: e.g., navigating to two folders, clearing the message bar, and locating core vocabulary on the home page]. The device supports [Student]'s language expression by providing a consistent, robust vocabulary that complements [his/her/their] other communication forms. Device use is not treated as a replacement for any other modality; it is one option within a flexible, multimodal system.",
+    "note": "Name the access method and at least two operational skills. Reviewers look for both when a device is on the IEP."
+  },
+  {
+    "cat": "profile",
+    "label": "Describing Sign Language or Gestural Communication",
+    "tags": [
+      "profile",
+      "total-comm"
+    ],
+    "text": "[Student] uses [American Sign Language signs / Signed English / key word signing / idiosyncratic gestures] as part of [his/her/their] expressive communication system. [he/she/they] demonstrates a functional sign vocabulary of approximately [number] signs used consistently across settings, including [examples: e.g., MORE, FINISHED, EAT, HELP, NO]. Signs are recognized and responded to by [familiar staff and family / all classroom staff]. The educational team supports [Student]'s continued use and expansion of signing as a valued part of [his/her/their] communication repertoire."
+  },
+  {
+    "cat": "profile",
+    "label": "Communication Partner Dependency and Familiarity",
+    "tags": [
+      "profile",
+      "total-comm"
+    ],
+    "text": "[Student]'s communicative effectiveness varies with partner familiarity. [he/she/they] communicates most reliably and spontaneously with [familiar communication partners such as primary classroom staff and family members]. With less familiar partners, [Student] may require [describe: e.g., additional wait time, environmental cues, or partner-initiated communication opportunities] to communicate successfully. A core goal of [Student]'s communication program is to expand the range of partners and contexts in which [he/she/they] can communicate effectively using any available modality."
+  },
+  {
+    "cat": "profile",
+    "label": "Receptive Communication Profile",
+    "tags": [
+      "profile"
+    ],
+    "text": "[Student]'s receptive language skills are an important component of [his/her/their] overall communication profile. [he/she/they] demonstrates [describe: e.g., consistent response to [his/her/their] name, comprehension of routine directives with gestural cues, and emerging understanding of two-step instructions in familiar contexts]. [Student] benefits from [describe supports: e.g., slow rate of speech, visual supports paired with verbal directions, reduced linguistic complexity, and consistent vocabulary across environments]. Receptive and expressive communication are addressed together within [his/her/their] communication program."
+  },
+  {
+    "cat": "profile",
+    "label": "Communication Functions Currently Used (Functions Inventory)",
+    "tags": [
+      "profile",
+      "total-comm",
+      "tier2",
+      "tier3"
+    ],
+    "text": "Across settings and modalities, [Student] currently communicates for the following purposes: requesting [items/activities/help: describe frequency and modality], protesting or refusing [describe], greeting and social closeness [describe], commenting or sharing information [describe], asking questions [describe or note not yet observed], and directing the actions of others [describe]. Functions observed most often are [list]; functions that are emerging or not yet observed are [list]. This functions inventory forms the basis for goal selection so that intervention expands beyond requesting into commenting, questioning, and social participation.",
+    "note": "List every function, including ones not yet observed. Goal selection should come from the gaps here, not from requesting alone."
+  },
+  {
+    "cat": "plaafp",
+    "label": "Present Levels: Communication, Classroom AAC",
+    "tags": [
+      "tier1",
+      "plaafp",
+      "total-comm"
+    ],
+    "text": "[Student] currently receives communication support through the RUSD AAC Program. [he/she/they] has access to a classroom AAC system ([app] on a shared classroom iPad and core vocabulary boards) throughout the school day as one component of [his/her/their] broader communication system. [Student] currently uses [describe all modes: e.g., vocalizations, reaching and pointing, and emerging use of the classroom device] to communicate wants, needs, and preferences. Staff provide aided language input by modeling vocabulary on the classroom device during routines and respond to all of [Student]'s communication attempts across modalities. Communication has been observed most consistently during [describe contexts]. Data from the classroom weekly data sheet show [summarize: e.g., an average of X spontaneous device selections per day over the past Y weeks].",
+    "note": "Pull the number from the classroom weekly data sheet. A present level with a number is much harder to dispute than a description.",
+    "template": "{{S}} currently receives communication support through the RUSD AAC Program. {{He}} has access to a classroom AAC system ({{app}} on a shared classroom iPad and core vocabulary boards) throughout the school day as one component of {{his}} broader communication system. {{S}} currently uses {{modalities}} to communicate {{functions_observed}}. Staff provide aided language input by modeling vocabulary on the classroom device during routines and respond to all of {{S}}'s communication attempts across modalities. Communication has been observed most consistently during {{settings}} and with {{partners}}. {{strength_sentence}} Data from {{data_source}} show {{baseline_sentence}}. {{concern_sentence}}"
+  },
+  {
+    "cat": "plaafp",
+    "label": "Present Levels: Communication, Device in Place",
+    "tags": [
+      "tier2",
+      "plaafp",
+      "total-comm"
+    ],
+    "text": "[Student] currently communicates through a multimodal system that includes [list all modalities: e.g., natural speech, vocalizations, gestures, and an iPad with [app]]. [he/she/they] uses [his/her/their] communication system most effectively during [describe contexts] and with [familiar partners / all communication partners]. Observed communication functions include [list: e.g., requesting preferred items, protesting non-preferred activities, greeting familiar adults, and commenting during shared activities]. Baseline data collected [dates] show [e.g., X spontaneous and Y prompted messages per session, average utterance length of Z symbols]. The classroom team responds to all communicative acts regardless of modality. [Student]'s individualized communication plan supports vocabulary expansion, partner training, and increased communication across all settings and partners.",
+    "note": "Fill the baseline sentence with real counts. Every goal below assumes this starting point exists.",
+    "template": "{{S}} currently communicates through a multimodal system that includes {{modalities}}. {{He}} uses {{his}} communication system most effectively during {{settings}} and with {{partners}}. Observed communication functions include {{functions_observed}}; functions that are emerging or not yet observed include {{functions_gap}}. {{strength_sentence}} Baseline data from {{data_source}} show {{baseline_sentence}}. {{concern_sentence}} The classroom team responds to all communicative acts regardless of modality. {{S}}'s individualized communication plan supports vocabulary expansion, partner training, and increased communication across all settings and partners. {{home_lang_sentence}}"
+  },
+  {
+    "cat": "plaafp",
+    "label": "Present Levels: Device Provided Following Review of Existing Data and Trial",
+    "tags": [
+      "tier2",
+      "plaafp",
+      "total-comm"
+    ],
+    "text": "[Student] has an identified expressive communication need documented in the [date] speech-language report and [date] psychoeducational report. Between [dates], the site SLP conducted a review of existing data and a feature-matching trial of [apps/systems] in [Student]'s natural school environment, documented in the attached AAC Trial Summary. During the trial, [Student] demonstrated [independent direct selection, spontaneous use of core vocabulary for X functions, a preference for the X layout]. Vision, hearing, and direct-selection access were screened and found intact, and no cross-disciplinary referral was indicated. Based on these data, the IEP team provided [app/system] on a district-managed device as an instructional accommodation, and [Student] has used it [describe current use] since [date].",
+    "cite": "34 CFR 300.302 (screening to determine instructional strategies is not an evaluation); 34 CFR 300.305(a) (review of existing data)",
+    "note": "Use with the AAC Trial Summary attached. The words 'review of existing data,' 'screened,' and 'instructional accommodation' are deliberate; do not swap in 'assessment.'",
+    "template": "{{S}} has an identified expressive communication need documented in the {{slp_date}} speech-language report and {{psych_date}} psychoeducational report. Between {{trial_dates}}, the site SLP conducted a review of existing data and a feature-matching trial of {{trial_apps}} in {{S}}'s natural school environment, documented in the attached AAC Trial Summary. During the trial, {{S}} demonstrated {{access}} selection and used the system for {{functions_observed}}. Vision, hearing, and direct-selection access were screened and found intact, and no cross-disciplinary referral was indicated. Based on these data, the IEP team provided {{app}} on a district-managed device as an instructional accommodation. {{S}} currently communicates through {{modalities}}, most effectively during {{settings}} and with {{partners}}. {{strength_sentence}} Baseline data show {{baseline_sentence}}. Functions emerging or not yet observed include {{functions_gap}}. {{concern_sentence}} {{home_lang_sentence}}"
+  },
+  {
+    "cat": "plaafp",
+    "label": "Present Levels: Post Formal Evaluation",
+    "tags": [
+      "tier3",
+      "plaafp",
+      "total-comm"
+    ],
+    "text": "A formal AT/AAC evaluation was completed on [date] by [evaluator name], [credentials], [role], under an assessment plan signed [date]. Assessment included [describe methods: e.g., dynamic assessment, structured observation in the classroom and other customary environments, feature-matching trials, caregiver and teacher interview, and standardized measures where appropriate]. Results characterize [Student] as a multimodal communicator who uses [list modalities] to express [list functions]. Access assessment identified [access method and any positioning, mounting, or sensory considerations]. [Student]'s language development is supported most effectively through a total communication approach that honors all expressive modalities. Results support provision of [describe recommended system, access method, and vocabulary configuration] as an additional communication tool to complement [his/her/their] existing communication repertoire.",
+    "cite": "34 CFR 300.6(a) (functional evaluation in the child's customary environment); EC 56320, 56321, 56344",
+    "note": "Include the assessment plan date and the access findings. Both are expected in a formal AT/AAC evaluation report.",
+    "template": "A formal AT/AAC evaluation was completed on {{eval_date}} by {{evaluator}} under an assessment plan signed {{ap_date}}. Assessment included dynamic assessment, structured observation in the classroom and other customary environments, feature-matching trials, and caregiver and teacher interview. Results characterize {{S}} as a multimodal communicator who uses {{modalities}} to express {{functions_observed}}. Access assessment identified {{access}} selection{{access_notes}}. {{strength_sentence}} Baseline data show {{baseline_sentence}}. Functions emerging or not yet observed include {{functions_gap}}. {{concern_sentence}} Results support provision of {{app}} on a {{devicekind}} as an additional communication tool to complement {{his}} existing communication repertoire. {{home_lang_sentence}}"
+  },
+  {
+    "cat": "plaafp",
+    "label": "Impact on Educational Performance",
+    "tags": [
+      "plaafp",
+      "tier2",
+      "tier3"
+    ],
+    "text": "[Student]'s communication profile directly affects [his/her/their] ability to access the academic curriculum, demonstrate knowledge, participate in classroom routines, and engage with peers and adults across the school day. Without a reliable means of expression, [Student] [describe observed impact: e.g., is unable to answer content questions, request a break, or participate in peer interaction]. When [Student]'s full communication system is recognized and supported, including [list modalities], [he/she/they] demonstrates increased engagement, reduced frustration, and greater participation. The educational team's consistent recognition of and response to all communication forms is essential to [Student]'s educational progress. Communication supports documented in this IEP are designed to ensure [Student] has the tools, partners, and environment needed to communicate effectively throughout the school day.",
+    "note": "Keep the 'without' sentence. The AT determination rests on what happens when the support is absent."
+  },
+  {
+    "cat": "plaafp",
+    "label": "Family Communication and Home Generalization",
+    "tags": [
+      "plaafp",
+      "family",
+      "total-comm"
+    ],
+    "text": "[Parent/Guardian] report that [Student] communicates at home using [describe home communication: e.g., natural speech, gestures, and vocalizations], and that [he/she/they] is [describe: e.g., most communicative during mealtimes and preferred play activities]. The family's home language is [language], and [Student] is exposed to [languages] at home. The family [has/has not] been introduced to [Student]'s AAC system and [is/is not] currently using it at home. Family members have been invited to observe [Student]'s communication in the classroom and have received information about [his/her/their] total communication system in [language]. Family communication preferences, home language, and cultural considerations have been incorporated into [Student]'s communication program planning, including [describe: e.g., bilingual vocabulary on the device].",
+    "cite": "EC 56345(b)(2) (linguistically appropriate goals, objectives, programs and services)",
+    "note": "Home language is a required consideration in California and is often missing from AAC sections. State it even when the home language is English."
+  },
+  {
+    "cat": "plaafp",
+    "label": "Present Levels: Operational Competence and Device Independence",
+    "tags": [
+      "plaafp",
+      "tier2",
+      "tier3"
+    ],
+    "text": "[Student] currently demonstrates the following operational skills with [his/her/their] AAC system: [describe: e.g., turns the device on, navigates between the home page and two category folders, clears the message bar, and requests the device when it is out of reach]. Skills not yet observed include [describe: e.g., using the keyboard page, adjusting volume, or independently retrieving the device from its charging location]. Classroom staff currently [describe support: e.g., keep the device within reach and charged, and prompt [Student] to bring it during transitions]. Increasing [Student]'s independence with the physical management of [his/her/their] system is addressed through [goal / accommodation / staff training].",
+    "note": "Use this whenever a device-management accommodation or self-advocacy goal is on the IEP; it is the data those items rest on."
+  },
+  {
+    "cat": "at-factors",
+    "label": "AT Special Factors: AAC Considered and Required",
+    "tags": [
+      "at-factors",
+      "tier1",
+      "tier2"
+    ],
+    "text": "The IEP team considered whether [Student] requires assistive technology devices or services in order to receive a free appropriate public education (IDEA 34 CFR 300.324(a)(2)(v); EC 56341.1(b)(5)). The team determined that [Student] requires access to augmentative and alternative communication as part of [his/her/their] total communication system. [Student] will have access to [app] on a [classroom / district-managed] iPad throughout the school day, including [list settings: e.g., general education, specialized academic instruction, recess, lunch, and transportation]. This technology supports [Student]'s ability to express language across a broader range of contexts and partners and is intended to complement, not replace, [his/her/their] other communication modalities. Assistive technology services provided include staff training in aided language input and partner responsiveness, vocabulary customization, and device maintenance. The team also considered whether [Student] requires access to the device outside of school and determined [that home access is necessary for FAPE / that home access is not necessary at this time; this will be revisited at the next review].",
+    "cite": "34 CFR 300.324(a)(2)(v); 34 CFR 300.105; EC 56341.1(b)(5) and (c); EC 56040.3(a)",
+    "note": "Use 'requires,' not 'benefits from.' EC 56341.1(c) directs the team to state that the student needs the device for FAPE. Always complete the home-access sentence; EC 56040.3 requires a case-by-case decision.",
+    "template": "The IEP team considered whether {{S}} requires assistive technology devices or services in order to receive a free appropriate public education (IDEA 34 CFR 300.324(a)(2)(v); EC 56341.1(b)(5)). The team determined that {{S}} requires access to augmentative and alternative communication as part of {{his}} total communication system. {{S}} will have access to {{app}} on a {{devicekind}} throughout the school day, including {{settings}}. This technology supports {{S}}'s ability to express language across a broader range of contexts and partners and is intended to complement, not replace, {{his}} other communication modalities. Assistive technology services provided include staff training in aided language input and partner responsiveness, vocabulary customization, and device maintenance (see Other Supports). The team also considered whether {{S}} requires access to the device outside of school and determined {{home_determination}}."
+  },
+  {
+    "cat": "at-factors",
+    "label": "AT Special Factors: Device Provided Following Review of Existing Data and Trial (No Assessment Plan)",
+    "tags": [
+      "at-factors",
+      "tier2"
+    ],
+    "text": "The IEP team considered whether [Student] requires assistive technology devices or services (34 CFR 300.324(a)(2)(v); EC 56341.1(b)(5)). [Student] has an expressive communication need documented in the [date] speech-language report and [date] psychoeducational report. The site SLP reviewed existing data and conducted a feature-matching trial of [apps/systems] between [dates] in [Student]'s natural school environment (see attached AAC Trial Summary). Vision, hearing, and direct-selection access were screened and found intact. Based on this review and trial performance, the team determined that [Student] requires [app/system] on a district-managed device as an instructional accommodation across educational settings in order to receive FAPE. The SLP will continue data collection and customization and will report progress to the team. Should access, motor, sensory, or multidisciplinary needs be identified, the team will initiate an assessment plan for a formal AT/AAC evaluation.",
+    "cite": "34 CFR 300.302; 34 CFR 300.305(a); EC 56341.1(c)",
+    "note": "Attach the AAC Trial Summary. If any screening item raised a concern, use the Formal Evaluation Recommended passage instead.",
+    "template": "The IEP team considered whether {{S}} requires assistive technology devices or services (34 CFR 300.324(a)(2)(v); EC 56341.1(b)(5)). {{S}} has an expressive communication need documented in the {{slp_date}} speech-language report and {{psych_date}} psychoeducational report. The site SLP reviewed existing data and conducted a feature-matching trial of {{trial_apps}} between {{trial_dates}} in {{S}}'s natural school environment (see attached AAC Trial Summary). Vision, hearing, and direct-selection access were screened and found intact. Based on this review and trial performance, the team determined that {{S}} requires {{app}} on a district-managed device as an instructional accommodation across educational settings, including {{settings}}, in order to receive FAPE. The SLP will continue data collection and customization and will report progress to the team. The team also considered access outside of school and determined {{home_determination}}. Should access, motor, sensory, or multidisciplinary needs be identified, the team will initiate an assessment plan for a formal AT/AAC evaluation."
+  },
+  {
+    "cat": "at-factors",
+    "label": "AT Special Factors: Formal Evaluation Recommended",
+    "tags": [
+      "at-factors",
+      "tier3"
+    ],
+    "text": "The IEP team considered whether [Student] requires assistive technology devices or services. The team determined that [Student]'s communication and access needs warrant a formal AT/AAC evaluation to identify the communication tools, access methods, vocabulary frameworks, positioning, and environmental supports that best complement [his/her/their] existing communication abilities. An assessment plan will be provided to the parent within 15 days of this meeting, and the evaluation and resulting IEP meeting will be completed within 60 days of receipt of signed consent. The evaluation will assess [Student]'s full communication system, including natural speech, alternative modalities, access and motor considerations, and potential AAC technology, in [his/her/their] customary environments. While the evaluation is pending, [Student] will continue to have access to [describe interim supports: e.g., the classroom AAC system, core boards, and the trial device] so that communication access is not delayed.",
+    "cite": "EC 56321(a) (assessment plan within 15 days); EC 56344(a) (60 days to IEP); 34 CFR 300.6(a)",
+    "note": "Do not delete the interim-supports sentence. A pending evaluation is never a reason to leave a student without communication access.",
+    "template": "The IEP team considered whether {{S}} requires assistive technology devices or services. The team determined that {{S}}'s communication and access needs warrant a formal AT/AAC evaluation to identify the communication tools, access methods, vocabulary frameworks, positioning, and environmental supports that best complement {{his}} existing communication abilities. An assessment plan will be provided to the parent within 15 days of this meeting, and the evaluation and resulting IEP meeting will be completed within 60 days of receipt of signed consent. The evaluation will assess {{S}}'s full communication system, including natural speech, alternative modalities, access and motor considerations, and potential AAC technology, in {{his}} customary environments. While the evaluation is pending, {{S}} will continue to have access to {{interim}} so that communication access is not delayed."
+  },
+  {
+    "cat": "at-factors",
+    "label": "AT Special Factors: Post Evaluation, Device Authorized",
+    "tags": [
+      "at-factors",
+      "tier3"
+    ],
+    "text": "Based on the results of a formal AT/AAC evaluation completed on [date], the IEP team determined that [Student] requires [describe device, app, access method, and any mounting or positioning equipment] as an assistive technology device in order to receive FAPE. The device is one component of [Student]'s total communication system and is intended to complement [his/her/their] existing communication modalities. The device shall be available to [Student] throughout the school day and in all educational settings, including [list]. The team determined that [Student] [requires / does not require] access to the device at home and in the community in order to receive FAPE; [if required: the device will go home daily under the district's AT home-use agreement]. Assistive technology services include [training for staff, student, and family; programming and vocabulary customization; maintenance and repair; and a replacement plan if the device is lost or damaged].",
+    "cite": "34 CFR 300.105; 34 CFR 300.6; EC 56040.3(a)",
+    "note": "Complete the home/community determination either way, and list the AT services; the district is committing to those, not only the hardware.",
+    "template": "Based on the results of a formal AT/AAC evaluation completed on {{eval_date}}, the IEP team determined that {{S}} requires {{app}} on a {{devicekind}} with {{access}} access as an assistive technology device in order to receive FAPE. The device is one component of {{S}}'s total communication system and is intended to complement {{his}} existing communication modalities. The device shall be available to {{S}} throughout the school day and in all educational settings, including {{settings}}. The team determined {{home_determination}}. Assistive technology services (staff, student, and family training; programming and vocabulary customization; maintenance and repair; and a replacement plan) are documented under Other Supports."
+  },
+  {
+    "cat": "at-factors",
+    "label": "AT Special Factors: Multimodal System, No New Device Warranted",
+    "tags": [
+      "at-factors"
+    ],
+    "text": "The IEP team considered whether [Student] requires assistive technology devices or services. The team reviewed [Student]'s current communication system, which includes [list modalities], and current data showing [summarize]. The team determined that [Student]'s current communication tools and supports are appropriate at this time and that no new assistive technology device is warranted for this IEP period. [Student] will continue to have access to the classroom AAC system and core vocabulary boards as part of the RUSD AAC Program's classroom AAC system. This determination will be revisited at the next annual IEP review or sooner if [Student]'s communication needs change or if the parent or any team member requests reconsideration.",
+    "note": "A 'no' on AT should always show what data the team reviewed and how the parent can reopen the question.",
+    "template": "The IEP team considered whether {{S}} requires assistive technology devices or services. The team reviewed {{S}}'s current communication system, which includes {{modalities}}, and current data showing {{data_source}}. The team determined that {{S}}'s current communication tools and supports are appropriate at this time and that no new assistive technology device is warranted for this IEP period. {{S}} will continue to have access to the classroom AAC system and core vocabulary boards as part of the RUSD AAC Program's classroom AAC system. This determination will be revisited at the next annual IEP review or sooner if {{S}}'s communication needs change or if the parent or any team member requests reconsideration."
+  },
+  {
+    "cat": "at-factors",
+    "label": "AT Special Factors: Home and Community Access Determination",
+    "tags": [
+      "at-factors",
+      "tier2",
+      "tier3",
+      "family"
+    ],
+    "text": "The IEP team considered whether [Student] requires access to [his/her/their] school-provided AAC device outside of the school setting in order to receive FAPE (EC 56040.3; 34 CFR 300.105). Based on [describe: e.g., parent report that [Student] has no reliable means of communication at home, the need to generalize newly acquired vocabulary across environments, and the SLP's recommendation], the team determined that home access is necessary. The device will be sent home [daily / on the following schedule] under the district's AT home-use agreement, which addresses charging, care, and the process if the device is lost or damaged. Family training on the device and on responding to all communication forms will be provided in [language] as documented in the services section.",
+    "cite": "EC 56040.3(a); 34 CFR 300.105(b)",
+    "note": "Written for a 'yes.' For a 'no,' change the determination sentence and state the reason; a bare 'no' is not defensible."
+  },
+  {
+    "cat": "at-factors",
+    "label": "AT Special Factors: Interim Communication Access During Assessment or Transition",
+    "tags": [
+      "at-factors",
+      "tier2",
+      "tier3"
+    ],
+    "text": "While [a formal AT/AAC evaluation is pending / a permanent device is being procured / [Student] transitions to a new site], the IEP team is providing [describe interim system: e.g., a district-managed iPad with [app], core vocabulary boards, and a personal communication book] so that [Student] has continuous access to a means of communication. Interim access is provided based on [Student]'s documented expressive communication need and is not contingent on completion of the evaluation. The SLP will collect data during the interim period, and those data will inform the final feature-matching decision.",
+    "note": "Use whenever there is a gap between need and permanent provision. Timelines do not pause the obligation to provide a means of communication."
+  },
+  {
+    "cat": "at-factors",
+    "label": "AAC Supports Speech: Statement for Families",
+    "tags": [
+      "at-factors",
+      "family"
+    ],
+    "text": "Access to AAC does not reduce or replace natural speech development. Systematic reviews spanning more than two decades, including Millar, Light, and Schlosser (2006), Schlosser and Wendt (2008), and more recent reviews such as Pope, Light, and Laubscher (2024), have found that AAC intervention does not hinder speech production; most studies report either no change or an increase in spoken words, and no study has reported a decrease. ASHA's evidence summaries reach the same conclusion. [Student]'s total communication approach is designed to build on all of [his/her/their] communication strengths, including natural speech, and all modalities are actively encouraged and responded to throughout the school day.",
+    "cite": "Millar, Light & Schlosser (2006), JSLHR; Schlosser & Wendt (2008), AJSLP; Pope, Light & Laubscher (2024), J Autism Dev Disord; ASHA Evidence Maps",
+    "note": "The three reviews are named so a family or advocate can look them up. Keep them; the claim without a source is weaker."
+  },
+  {
+    "cat": "other-supports",
+    "label": "Other Supports: Assistive Technology Services (Training, Customization, Maintenance)",
+    "tags": [
+      "tier1",
+      "tier2",
+      "tier3",
+      "other-supports"
+    ],
+    "text": "In addition to the AAC device, the IEP team identifies the following assistive technology services as necessary for [Student] to benefit from the device: (1) training for classroom staff in aided language input, partner responsiveness, and device management, provided by [site SLP / District AAC Specialist] at the start of the year and as staff change; (2) training for [Student] in operational use of the device as part of direct or consultative SLP services; (3) family training in [language]; (4) vocabulary customization and programming by the SLP [frequency]; and (5) device maintenance, charging, and a replacement plan if the device is lost or damaged, coordinated by [site contact].",
+    "cite": "34 CFR 300.6(a)-(f); 20 USC 1401(2)",
+    "note": "Enter on the FAPE page under Other Supports, not as a service line (there is no AAC service code) and not under accommodations. IDEA defines AT services separately from devices; a device with no documented services is the most common gap in AAC sections.",
+    "template": "Assistive technology services necessary for {{S}} to benefit from {{his}} AAC system: (1) training for classroom staff in aided language input, partner responsiveness, and device management, provided by the site SLP or District AAC Specialist at the start of the year and within two weeks of any staffing change; (2) training for {{S}} in operational use of the device within SLP services; (3) family training in {{home_lang}}, at least once during the IEP year{{family_home_clause}}; (4) vocabulary customization and programming by the SLP; and (5) device maintenance, charging, backup of the vocabulary file, and a replacement plan if the device is lost or damaged, coordinated by the site SLP.",
+    "short": "AAC staff and parent training in {{home_lang}}.\nSLP collaboration with staff about AAC implementation and data.\nAAC vocabulary customization, programming, and device maintenance by SLP."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Requesting (Any Modality)",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student] currently requests [describe: e.g., preferred items by reaching or leading an adult, with device use in 1 of 5 opportunities with a partner model]. Goal: Given natural communication opportunities across classroom settings and access to [his/her/their] full communication system, [Student] will independently communicate a request for a preferred item, activity, or assistance using any available and intentional communication form (e.g., speech, sign, gesture, device, or vocalization) in [4 out of 5] observed opportunities across [2] settings by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "cite": "34 CFR 300.320(a)(2); Endrew F. v. Douglas County (2017)",
+    "note": "Fill the Baseline line first, then set the criterion. A criterion with no baseline is an arbitrary number.",
+    "template": "Baseline: {{S}} currently requests {{bl_request}}. Goal: Given natural communication opportunities across classroom settings and access to {{his}} full communication system, {{S}} will independently communicate a request for a preferred item, activity, or assistance using any available and intentional communication form (e.g., speech, sign, gesture, device, or vocalization) in 4 out of 5 observed opportunities across 2 settings by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Protesting and Refusing (Any Modality)",
+    "tags": [
+      "goal",
+      "tier2",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student] currently protests by [describe: e.g., crying, pushing materials away, or leaving the area; no symbolic protest observed]. Goal: Given a non-preferred activity, item, or transition, [Student] will communicate protest, refusal, or a desire to stop using a recognized symbolic communication form (e.g., spoken word, sign, or device selection such as STOP, NO, or ALL DONE) in [4 out of 5] observed opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "Name the symbolic forms so growth from non-symbolic to symbolic protest is measurable.",
+    "template": "Baseline: {{S}} currently protests by {{bl_protest}}. Goal: Given a non-preferred activity, item, or transition, {{S}} will communicate protest, refusal, or a desire to stop using a recognized symbolic communication form (e.g., spoken word, sign, or device selection such as STOP, NO, or ALL DONE) in 4 out of 5 observed opportunities by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Commenting and Sharing Information (Any Modality)",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student] currently comments [describe: e.g., by showing an item to an adult; device use for commenting not yet observed]. Goal: Given a shared activity, preferred context, or conversational opportunity, [Student] will use any available communication form to comment, share information, or respond to a topic (e.g., labeling an item, describing an event, or sharing a preference) in [3 out of 5] opportunities across [2] different classroom settings by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "template": "Baseline: {{S}} currently comments {{bl_comment}}. Goal: Given a shared activity, preferred context, or conversational opportunity, {{S}} will use any available communication form to comment, share information, or respond to a topic (e.g., labeling an item, describing an event, or sharing a preference) in 3 out of 5 opportunities across 2 different classroom settings by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Asking Questions (Any Modality)",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student] currently [describe: e.g., does not ask questions in any modality; indicates curiosity by pointing]. Goal: Given a novel item, a missing object, or a structured question opportunity and access to [his/her/their] full communication system, [Student] will ask a question (e.g., WHAT, WHERE, WHO, or a device question phrase) using any available communication form in [3 out of 5] opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "Questions are the least-taught function. Pair with a functions inventory that shows questions are not yet observed.",
+    "template": "Baseline: {{S}} currently {{bl_question}}. Goal: Given a novel item, a missing object, or a structured question opportunity and access to {{his}} full communication system, {{S}} will ask a question (e.g., WHAT, WHERE, WHO, or a device question phrase) using any available communication form in 3 out of 5 opportunities by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Social Communication and Greetings (Any Modality)",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student] currently [describe: e.g., waves when prompted; does not initiate greetings]. Goal: Given natural social opportunities across the school day (e.g., arrival, departure, transitions, shared meals), [Student] will initiate or respond to a social communication exchange, including greetings, farewells, or brief social comments, using any recognized communication form in [4 out of 5] observed opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "template": "Baseline: {{S}} currently {{bl_social}}. Goal: Given natural social opportunities across the school day (e.g., arrival, departure, transitions, shared meals), {{S}} will initiate or respond to a social communication exchange, including greetings, farewells, or brief social comments, using any recognized communication form in 4 out of 5 observed opportunities by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Expanding Utterance Length / Language Complexity",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student]'s current mean length of utterance across modalities is [X] elements (e.g., single symbol or single word). Goal: Given a communication opportunity and access to [his/her/their] full communication system, [Student] will produce a [2- or 3-element] communicative message combining symbols, words, signs, or modalities (e.g., WANT + item, sign + vocalization, spoken word + gesture) in [3 out of 5] opportunities during naturalistic and structured contexts by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "template": "Baseline: {{S}}'s current mean length of utterance across modalities is {{mlu}} element(s). Goal: Given a communication opportunity and access to {{his}} full communication system, {{S}} will produce a {{mlu_target}}-element communicative message combining symbols, words, signs, or modalities (e.g., WANT + item, sign + vocalization, spoken word + gesture) in 3 out of 5 opportunities during naturalistic and structured contexts by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Core Vocabulary Use for Multiple Functions",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3"
+    ],
+    "text": "Baseline: [Student] currently uses [number] core words on [his/her/their] device ([list]) primarily for [function]. Goal: Given aided language input and natural opportunities, [Student] will use [target number] core vocabulary words (e.g., GO, STOP, MORE, HELP, DIFFERENT, LIKE) for at least [3] different communication functions (requesting, commenting, protesting, directing others, asking) across [2] settings by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "Targets breadth of use, not vocabulary count. Strong choice for a student stuck at requesting.",
+    "template": "Baseline: {{S}} currently uses {{words}} words on {{his}} system, primarily for {{functions_observed}}. Goal: Given aided language input and natural opportunities, {{S}} will use {{words_target}} core vocabulary words (e.g., GO, STOP, MORE, HELP, DIFFERENT, LIKE) for at least 3 different communication functions across 2 settings by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Communicating Across Partners and Settings",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student] currently communicates [describe] with [familiar partners only / in one setting]. Goal: Given communication opportunities with [familiar and less familiar] communication partners across [2 or more] settings, [Student] will use any available communication form to successfully convey a want, need, or comment in [3 out of 5] opportunities, as measured by SLP observation and staff report from at least [2] different partners by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "template": "Baseline: {{S}} currently communicates most effectively with {{partners}} during {{settings}}. Goal: Given communication opportunities with familiar and less familiar communication partners across 2 or more settings, {{S}} will use any available communication form to successfully convey a want, need, or comment in 3 out of 5 opportunities, as measured by SLP observation and staff report from at least 2 different partners by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Communication Repair and Persistence",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Baseline: When not understood, [Student] currently [describe: e.g., repeats the same vocalization, gives up, or becomes dysregulated]. Goal: When a communication partner indicates they did not understand (e.g., 'I'm not sure what you mean'), [Student] will repair the breakdown by repeating, adding a modality, or selecting an alternative message on [his/her/their] device in [3 out of 4] opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "Strategic competence goal. Good evidence of independence for a student moving toward consultation.",
+    "template": "Baseline: When not understood, {{S}} currently {{bl_repair}}. Goal: When a communication partner indicates they did not understand, {{S}} will repair the breakdown by repeating, adding a modality, or selecting an alternative message on {{his}} device in 3 out of 4 opportunities by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Operational Competence and Device Management",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3"
+    ],
+    "text": "Baseline: [Student] currently [describe: e.g., uses the device when it is placed in front of [he/she/they]; does not retrieve it or navigate beyond the home page]. Goal: Across the school day, [Student] will independently [target: e.g., retrieve or request [his/her/their] device during transitions, navigate to a target word within two folders, and clear the message bar] in [4 out of 5] observed opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "Pairs with the operational competence present-levels entry.",
+    "template": "Baseline: {{S}} currently {{bl_operational}}. Goal: Across the school day, {{S}} will independently retrieve or request {{his}} device during transitions, navigate to a target word within two folders, and clear the message bar in 4 out of 5 observed opportunities by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Participation in Academic Instruction (Answering and Contributing)",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3"
+    ],
+    "text": "Baseline: During academic instruction, [Student] currently [describe: e.g., responds to yes/no questions by nodding; does not contribute content answers]. Goal: Given a content question or discussion prompt during [subject] instruction, pre-programmed or core vocabulary on [his/her/their] device, and a wait time of at least [10] seconds, [Student] will provide a relevant answer or contribution using any available communication form in [4 out of 5] opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "Ties the device directly to curriculum access, which is the FAPE link reviewers want to see.",
+    "template": "Baseline: During academic instruction, {{S}} currently {{bl_academic}}. Goal: Given a content question or discussion prompt during instruction, pre-programmed or core vocabulary on {{his}} device, and a wait time of at least 10 seconds, {{S}} will provide a relevant answer or contribution using any available communication form in 4 out of 5 opportunities by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Literacy Access Through the Device (Older Students)",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3"
+    ],
+    "text": "Baseline: [Student] currently [describe: e.g., selects symbols only; does not use the keyboard page or word prediction]. Goal: Given a writing or spelling task and access to the keyboard page with word prediction on [his/her/their] device, [Student] will compose [target: e.g., a 3-word message / [his/her/their] first name and one content word] in [3 out of 4] opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "For secondary students, literacy through the device is often the most important long-term skill."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Staff Responsiveness to All Communication Forms",
+    "tags": [
+      "goal",
+      "tier1",
+      "tier2",
+      "total-comm"
+    ],
+    "text": "Following training in total communication and aided language input, classroom staff will respond to [Student]'s communication attempts across all modalities, including natural speech, vocalizations, gestures, signs, and device use, in [4 out of 5] observed opportunities, as documented by SLP observation using the Classroom AAC Implementation Observation Checklist across [2] observation periods by [date].",
+    "note": "Many SELPAs place staff goals under supports for school personnel rather than as student goals. Check your SEIS layout."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Expanding Sign Vocabulary",
+    "tags": [
+      "goal",
+      "tier2",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student] currently uses [number] signs ([list]) with [partners]. Goal: Given natural communication opportunities and partner modeling of key vocabulary in sign, [Student] will use [target number] functional signs consistently across [2 or more] settings and communication partners by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods. Signs may supplement or accompany other communication forms."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Self-Advocacy: Requesting Device Access and Communication Supports",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3"
+    ],
+    "text": "Baseline: [Student] currently [describe: e.g., does not indicate when [his/her/their] device is missing or not charged]. Goal: When [his/her/their] device is out of reach, not charged, or a partner has not provided wait time, [Student] will advocate for access (e.g., request the device, indicate 'I need my talker,' or signal for more time) using any available modality in [3 out of 4] opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "Appropriate from upper elementary on and supports transition planning."
+  },
+  {
+    "cat": "progress",
+    "label": "Baseline: Full Communication Profile",
+    "tags": [
+      "progress",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "At baseline, [Student] communicates using [list all observed modalities and their contexts: e.g., consistent use of vocalizations and reaching to request preferred items, emerging use of the classroom device in highly structured contexts, and 3-5 functional signs used with familiar partners]. Quantitative baseline: [e.g., X spontaneous and Y prompted messages per 30-minute session; Z different words used; functions observed: requesting, protesting]. [he/she/they] demonstrates the most robust communication during [describe] and with [familiar partners / all partners]. Baseline was established through [describe method: e.g., structured observation across three sessions, classroom staff interview, and family input] and reflects [Student]'s current communicative competence across all modes.",
+    "note": "The quantitative sentence is the one that matters. Descriptions alone do not establish a baseline."
+  },
+  {
+    "cat": "progress",
+    "label": "Data Collection Method Statement",
+    "tags": [
+      "progress",
+      "tier1",
+      "tier2",
+      "tier3"
+    ],
+    "text": "Progress toward [Student]'s communication goals will be measured using [describe: e.g., the RUSD classroom weekly data sheet completed by classroom staff, SLP session data recorded per opportunity, and device-based language sample logs collected [frequency]]. A communicative act is counted when it is [define: e.g., directed to a partner, intentional, and interpretable, regardless of modality]. Spontaneous and prompted responses are recorded separately. Data are reviewed by the SLP [frequency] and shared with the family at each progress reporting period.",
+    "note": "Define what counts before you count it. This is the single biggest protection against a progress dispute."
+  },
+  {
+    "cat": "progress",
+    "label": "Progress Monitoring: Making Progress",
+    "tags": [
+      "progress",
+      "total-comm"
+    ],
+    "text": "[Student] is making [adequate/good] progress toward [his/her/their] communication goals. Since the previous reporting period, [he/she/they] has demonstrated [describe growth across modalities with numbers: e.g., an increase from 2 to 7 spontaneous device messages per session, expanded sign vocabulary from 4 to 9 signs, and more consistent communication attempts with less familiar partners]. Communication growth is being measured across all modalities as part of [Student]'s total communication approach. Continued implementation of current supports, including partner training and consistent access to [his/her/their] full communication system, is recommended."
+  },
+  {
+    "cat": "progress",
+    "label": "Progress Monitoring: Limited Progress, Review Needed",
+    "tags": [
+      "progress",
+      "tier2",
+      "tier3"
+    ],
+    "text": "[Student] has demonstrated limited progress toward [his/her/their] communication goals during this reporting period. Data across [describe modalities monitored] indicate [describe with numbers]. Contributing factors under consideration include [describe: e.g., changes in classroom staffing, reduced implementation fidelity documented on [date] observation, device unavailable on X of Y observed days, or limited opportunities for spontaneous communication during structured instruction]. The following adjustments are being made now: [describe]. The IEP team will convene by [date] to review current goals, communication supports, and environmental factors and to determine whether program modifications are warranted.",
+    "note": "State what you are changing now, not only when you will meet. Limited-progress language that shows immediate action is far more defensible."
+  },
+  {
+    "cat": "progress",
+    "label": "Progress Monitoring: Goal Met, Updated Goal",
+    "tags": [
+      "progress"
+    ],
+    "text": "[Student] has met [his/her/their] current communication goal as evidenced by data collected across [number] consecutive periods ([summarize numbers]). [he/she/they] now [describe the skill that has been mastered and the modality/ies used]. A revised goal targeting the next level of communicative competence, [describe new target: e.g., expanding to commenting and multi-element messages], has been developed and is included in the updated IEP."
+  },
+  {
+    "cat": "progress",
+    "label": "Progress Monitoring: Move to Consultation / Reduction in Direct Services",
+    "tags": [
+      "progress",
+      "tier2"
+    ],
+    "text": "Based on [number] reporting periods of data showing [summarize: e.g., independent, spontaneous communication for X functions across Y settings and partners, and classroom staff implementing aided language input with fidelity on the [date] observation], the IEP team recommends a change from direct SLP services to a consultation model. Consultation will include [describe frequency and content]. [Student]'s AAC device and all AT services remain in place; this change affects the delivery model of speech-language services only. The team will review data at [date] and will reinstate direct services if progress data indicate the need.",
+    "note": "Pairs with the Dismissal Criteria document. Reducing minutes never means removing the device; say so."
+  },
+  {
+    "cat": "services",
+    "label": "Service: Consultation (Total Communication Support)",
+    "tags": [
+      "services",
+      "tier1",
+      "tier2",
+      "total-comm"
+    ],
+    "text": "Speech-language pathology consultation services will be provided [frequency and duration, e.g., 30 minutes monthly] to support implementation of [Student]'s total communication program. Services include: consultation with classroom staff on responding to and building upon all communication forms, aided language input modeling, vocabulary customization and device programming, review of communication data, participation in IEP meetings, and coordination with the District AAC Specialist. Consultation services are provided in addition to, not in lieu of, any direct SLP services documented in this IEP.",
+    "note": "A service without frequency and duration is not implementable. Fill both."
+  },
+  {
+    "cat": "services",
+    "label": "Service: Consultation Only (Device Provided, No Direct Minutes)",
+    "tags": [
+      "services",
+      "tier2"
+    ],
+    "text": "[Student] has access to [app/system] as documented in the AT Special Factors section. Speech-language pathology services will be delivered through consultation [frequency and duration] rather than direct instruction, because [Student]'s data show [summarize: e.g., independent device use for X functions with classroom staff modeling with fidelity]. Consultation includes vocabulary customization, staff coaching, data review, and family communication. Direct services will be considered if [describe trigger: e.g., two consecutive reporting periods without progress or a change in access needs].",
+    "note": "For the common case where the classroom is carrying implementation. Name the trigger that would bring back direct services."
+  },
+  {
+    "cat": "services",
+    "label": "Service: Direct SLP (Communication, Total Communication Focus)",
+    "tags": [
+      "services",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Direct speech-language pathology services will be provided [individually / in a small group] [frequency and duration] in [setting] to support [Student]'s communication development within a total communication framework. Services will include: building communicative competence across all modalities, structured and naturalistic communication opportunities, instruction in expanding language functions and utterance complexity, operational training on [his/her/their] device, collaboration with classroom staff on generalization strategies, and ongoing dynamic assessment of [Student]'s full communication system."
+  },
+  {
+    "cat": "services",
+    "label": "Service: Staff Training (Total Communication and Partner Responsiveness)",
+    "tags": [
+      "services",
+      "tier1",
+      "tier2",
+      "total-comm"
+    ],
+    "text": "Staff training will be provided to classroom staff supporting [Student], including [teacher, paraeducators, and BSAs], as a support for school personnel. Training will include: recognizing and responding to all communication forms (speech, vocalization, gesture, sign, and device), strategies for aided language input and modeling across modalities, implementation of wait time and communication opportunities throughout the school day, device management and charging, and use of the classroom data collection tool. Training will be provided by the [site SLP and/or District AAC Specialist] at the start of the school year, within [two weeks] of any staffing change, and as needed.",
+    "cite": "34 CFR 300.320(a)(4) (supports for school personnel)",
+    "note": "Keep the staffing-change trigger. Turnover is the most common reason fidelity drops mid-year."
+  },
+  {
+    "cat": "services",
+    "label": "Service: Family Training (Total Communication)",
+    "tags": [
+      "services",
+      "family",
+      "total-comm"
+    ],
+    "text": "Family training will be offered to support [Student]'s communication across home and community environments. Training will include: an overview of [Student]'s total communication system, strategies for recognizing and responding to all communication forms, guidance on supporting communication during daily routines, and an orientation to the AAC device and app as one component of [his/her/their] communication tools. Training will be offered in [Spanish/English] as preferred by the family, [in person / virtually], at least [once] during the IEP year, and within [30 days] of any home-use authorization.",
+    "note": "Family training should follow the device home; the 30-day trigger makes that automatic."
+  },
+  {
+    "cat": "other-supports",
+    "label": "Other Supports: AAC Device Programming and Maintenance",
+    "tags": [
+      "tier2",
+      "tier3",
+      "other-supports"
+    ],
+    "text": "The site SLP, with support from the District AAC Specialist, will maintain [Student]'s AAC system as an assistive technology service. This includes: adding vocabulary aligned to classroom units and [Student]'s interests [frequency]; backing up the vocabulary file to the RUSD AAC shared drive [frequency]; confirming device functioning and charging routines with classroom staff; and coordinating repair or replacement through the Device Replacement Request process so that [Student] is without a functioning device for no more than [X school days].",
+    "cite": "34 CFR 300.6(c)",
+    "note": "Enter under Other Supports on the FAPE page. Set a maximum downtime; this is the practical protection against a broken device sitting for a month."
+  },
+  {
+    "cat": "accommodations",
+    "label": "Accommodation: Device Access Across All Settings",
+    "tags": [
+      "accommodations",
+      "tier1",
+      "tier2",
+      "tier3"
+    ],
+    "text": "[Student]'s AAC system ([app] on [device]) will be available and within reach in all school settings, including general education, specialized academic instruction, recess, lunch, assemblies, field trips, and school transportation. The device will be charged daily and transported with [Student] during transitions. Staff will not remove the device as a consequence for behavior.",
+    "note": "Keep the last sentence. Removing a device as a consequence for behavior is a recurring complaint in due process filings.",
+    "template": "{{S}}'s AAC system ({{app}} on {{devicekind}}) will be available and within reach in all school settings, including {{settings_all}}. The device will be charged daily and transported with {{S}} during transitions. Staff will not remove the device as a consequence for behavior.",
+    "short": "Access to AAC device ({{app}}) in all school settings, including recess, lunch, and transportation; device charged daily and never removed as a consequence."
+  },
+  {
+    "cat": "accommodations",
+    "label": "Accommodation: Wait Time and Partner Responsiveness",
+    "tags": [
+      "accommodations",
+      "total-comm"
+    ],
+    "text": "Communication partners will provide a wait time of at least [10] seconds after asking a question or offering a choice before prompting, and will respond to any communicative attempt in any modality. Staff will model vocabulary on [Student]'s system or a classroom device during instruction and routines (aided language input) at a rate of at least [X] models per activity.",
+    "template": "Communication partners will provide a wait time of at least 10 seconds after asking a question or offering a choice before prompting, and will respond to any communicative attempt in any modality. Staff will model vocabulary on {{S}}'s system or a classroom device during instruction and routines (aided language input) throughout each activity.",
+    "short": "Wait time of at least 10 seconds; staff respond to all communication modalities and model on the AAC system (aided language input)."
+  },
+  {
+    "cat": "accommodations",
+    "label": "Accommodation: Testing and Assessment Access",
+    "tags": [
+      "accommodations",
+      "tier2",
+      "tier3"
+    ],
+    "text": "[Student] will use [his/her/their] AAC system to respond during classroom assessments, district benchmarks, and statewide assessments to the extent permitted by the applicable accessibility guidelines. Responses generated on the device are accepted as [Student]'s own responses. Where an assessment platform does not permit the device, [Student] will be provided [describe alternative: e.g., a scribe recording [his/her/their] device output, or an alternate response format], and the team will document the accommodation in the state testing system.",
+    "note": "Check the current CAASPP accessibility matrix for the specific codes; they change year to year.",
+    "template": "{{S}} will use {{his}} AAC system to respond during classroom assessments, district benchmarks, and statewide assessments to the extent permitted by the applicable accessibility guidelines. Responses generated on the device are accepted as {{S}}'s own responses. Where an assessment platform does not permit the device, {{S}} will be provided an alternate response format, and the team will document the accommodation in the state testing system.",
+    "short": "Access to AAC device for all classroom, district, and state testing; device responses accepted as {{S}}'s own."
+  },
+  {
+    "cat": "accommodations",
+    "label": "Accommodation: Vocabulary Consistency Across Environments",
+    "tags": [
+      "accommodations",
+      "family",
+      "tier2",
+      "tier3"
+    ],
+    "text": "To support generalization, [Student]'s core vocabulary and page layout will remain consistent across the school device, any classroom AAC system, and [if applicable] the home device. Changes to vocabulary organization will be made by the SLP and communicated to classroom staff and family before implementation. Classroom core boards and visual supports will use the same symbol set as [Student]'s device.",
+    "template": "To support generalization, {{S}}'s core vocabulary and page layout will remain consistent across the school device, any classroom AAC system, and the home device. Changes to vocabulary organization will be made by the SLP and communicated to classroom staff and family before implementation. Classroom core boards and visual supports will use the same symbol set as {{S}}'s device.",
+    "short": "Consistent core vocabulary and layout across school device, classroom boards, and home device."
+  },
+  {
+    "cat": "accommodations",
+    "label": "Accommodation: Communication Supports During Behavior Incidents and Discipline",
+    "tags": [
+      "accommodations",
+      "tier2",
+      "tier3"
+    ],
+    "text": "Staff will ensure that [Student] has access to [his/her/their] communication system before, during, and after any behavior intervention, and will offer communication opportunities (e.g., BREAK, HELP, ALL DONE) as a first response to signs of dysregulation. Any behavior plan for [Student] will identify the communicative function of the behavior and the replacement communication that staff will model and reinforce. Communication access will be maintained during any disciplinary process, and [Student] will be provided a means to give [his/her/their] account.",
+    "note": "Align with the behavior plan. A student cannot be denied a voice during discipline.",
+    "template": "Staff will ensure that {{S}} has access to {{his}} communication system before, during, and after any behavior intervention, and will offer communication opportunities (e.g., BREAK, HELP, ALL DONE) as a first response to signs of dysregulation. {{S}}'s behavior plan will identify the communicative function of the behavior and the replacement communication that staff will model and reinforce. Communication access will be maintained during any disciplinary process, and {{S}} will be provided a means to give {{his}} account.",
+    "short": "Access to AAC device maintained during behavior interventions and discipline; communication offered as first response to dysregulation."
+  },
+  {
+    "cat": "transition",
+    "label": "Transition: School-to-School Within RUSD (Communication Continuity)",
+    "tags": [
+      "transition",
+      "total-comm"
+    ],
+    "text": "[Student] will be transitioning to [receiving school site] for the [year] school year. An AAC Communication Transfer Summary has been completed by the sending SLP documenting [Student]'s full communication profile, including all modalities, vocabulary customization, IEP goals, access method, and partner training notes. This summary will be shared with the receiving site SLP prior to or at the matriculation meeting so that [Student]'s total communication supports continue without interruption. [Student]'s device and vocabulary file will travel with [he/she/they]; the receiving classroom team will be oriented to [Student]'s full communication system, not only the AAC device, prior to or during the first week of enrollment."
+  },
+  {
+    "cat": "transition",
+    "label": "Transition: Device and Vocabulary Continuity",
+    "tags": [
+      "transition",
+      "tier2",
+      "tier3"
+    ],
+    "text": "To support continuity of [Student]'s communication tools during the school transition, [his/her/their] AAC vocabulary has been backed up to Google Drive, and the backup has been shared with the receiving site SLP. The transition plan includes a coaching visit to the receiving classroom within the first [two] weeks of the new school year to confirm device setup, orient classroom staff to [Student]'s full communication system, and ensure that all modalities are being recognized and supported."
+  },
+  {
+    "cat": "transition",
+    "label": "Transition: Transfer Into RUSD From Another District",
+    "tags": [
+      "transition",
+      "tier2",
+      "tier3"
+    ],
+    "text": "[Student] enrolled in RUSD on [date] with an IEP from [sending district] that documents [describe AAC device and services]. In accordance with EC 56325 as amended by AB 1412, RUSD accepted the IEP upon enrollment and is providing comparable services, including access to [describe comparable AAC system], without interruption. The sending district remains responsible for continued access to [Student]'s device or a comparable device until alternative arrangements are made or two months have elapsed, whichever comes first (EC 56040.3(b)). RUSD will adopt the existing IEP or develop a new IEP within 30 days of enrollment. The site SLP will [review the vocabulary file, confirm access method, and complete a AAC Trial Summary if a change of system is being considered].",
+    "cite": "EC 56325 (as amended by AB 1412, 2025); EC 56040.3(b); 34 CFR 300.323(e)-(f)",
+    "note": "AB 1412 (2025): immediate acceptance of unofficial IEP records, no lapse in services, 30-day IEP adoption deadline."
+  },
+  {
+    "cat": "transition",
+    "label": "Transition: Transfer Out of RUSD (Device Continuity Obligation)",
+    "tags": [
+      "transition",
+      "tier2",
+      "tier3"
+    ],
+    "text": "[Student] will be disenrolling from RUSD on [date] to enroll in [receiving district]. Under EC 56040.3(b), RUSD will provide [Student] with continued access to [his/her/their] AAC device, or a comparable device, until the receiving district makes alternative arrangements or two months have elapsed from the date of disenrollment, whichever occurs first. [Student]'s vocabulary file, the AAC Communication Transfer Summary, and the current IEP will be provided to the receiving district upon request. [Describe the device return or transfer arrangement.]",
+    "cite": "EC 56040.3(b)",
+    "note": "Do not reclaim the device on the last day. EC 56040.3(b) requires continued access for up to two months."
+  },
+  {
+    "cat": "transition",
+    "label": "Transition: Age 18–22 / Adult Transition Program",
+    "tags": [
+      "transition",
+      "tier3"
+    ],
+    "text": "As [Student] approaches transition to post-secondary settings, [his/her/their] communication supports will be reviewed to ensure alignment with [his/her/their] goals for employment, independent living, and community participation, as documented in the Individual Transition Plan. Transition planning will include assessment of [Student]'s full communication system across post-secondary environments, including the utility of each current modality, partner training needs in adult settings, [Student]'s ability to advocate for [his/her/their] own communication access, and consideration of whether a personally owned dedicated communication device is warranted. The team will begin coordination with [Regional Center / Department of Rehabilitation / adult provider] regarding device funding and ownership at least [12 months] before exit, since the school-owned device does not transfer at graduation.",
+    "cite": "EC 56345(a)(8); 34 CFR 300.320(b)",
+    "note": "Start funding coordination at least a year before exit. The school-owned device does not transfer at graduation."
+  },
+  {
+    "cat": "goals",
+    "label": "Goal: Directing Others (Any Modality)",
+    "tags": [
+      "goal",
+      "tier2",
+      "tier3",
+      "total-comm"
+    ],
+    "text": "Baseline: [Student] currently [describe: e.g., pulls an adult's hand toward a desired action; no symbolic directing observed]. Goal: Given a routine that requires a partner's action (e.g., opening a container, starting a video, moving materials), [Student] will direct the partner using any available communication form (e.g., YOU DO, OPEN, GO, TURN ON) in [4 out of 5] opportunities by [annual review date], as measured by [classroom staff data and SLP observation] across [3] consecutive data collection periods.",
+    "note": "Directing others is a distinct function from requesting and is a natural early target for core words like GO, OPEN, and TURN.",
+    "template": "Baseline: {{S}} currently {{bl_direct}}. Goal: Given a routine that requires a partner's action (e.g., opening a container, starting a video, moving materials), {{S}} will direct the partner using any available communication form (e.g., YOU DO, OPEN, GO, TURN ON) in 4 out of 5 opportunities by {{review_date}}, as measured by classroom staff data and SLP observation across 3 consecutive data collection periods."
+  }
+]
