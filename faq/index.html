@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AAC FAQ for Families | Rialto AAC</title>
+<style>
+  :root{--blue:#1A5294;--blue-light:#E8EFF8;--border:#d0d8e4;--white:#fff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Arial,sans-serif;font-size:15px;color:#1a1a1a;background:#f0f4f9;}
+  .topbar{background:var(--blue);color:#fff;padding:18px 32px;}
+  .topbar strong{font-size:20px;display:block;margin-bottom:4px;}
+  .topbar span{font-size:13px;opacity:0.8;}
+  .page{max-width:860px;margin:0 auto;padding:36px 24px 80px;}
+  .intro{background:var(--blue-light);border-left:5px solid var(--blue);padding:16px 20px;margin-bottom:28px;border-radius:0 6px 6px 0;font-size:14px;line-height:1.75;}
+  .search-bar{margin-bottom:28px;}
+  .search-bar input{width:100%;padding:11px 16px;border:2px solid var(--border);border-radius:6px;font-size:15px;font-family:Arial,sans-serif;outline:none;}
+  .search-bar input:focus{border-color:var(--blue);}
+  .faq{border:1px solid var(--border);border-radius:8px;margin-bottom:14px;overflow:hidden;background:var(--white);}
+  .faq.hidden{display:none;}
+  .faq-q{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px;font-weight:bold;color:var(--blue);line-height:1.5;user-select:none;}
+  .faq-q:hover{background:var(--blue-light);}
+  .arrow{transition:transform 0.2s;flex-shrink:0;font-style:normal;}
+  .faq-q.open .arrow{transform:rotate(180deg);}
+  .faq-a{display:none;padding:16px 20px 20px;background:#fafbfd;border-top:1px solid var(--border);font-size:14px;line-height:1.8;}
+  .faq-a.open{display:block;}
+  .faq-a strong{color:var(--blue);}
+  .faq-a ul{margin:10px 0 0 20px;}
+  .faq-a li{margin-bottom:6px;}
+  .contact-box{background:var(--blue);color:white;border-radius:8px;padding:24px 28px;margin-top:40px;font-size:14px;line-height:2;}
+  .contact-box a{color:#fde68a;font-weight:bold;text-decoration:none;}
+  .footer{text-align:center;font-size:12px;color:#aaa;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <strong>AAC: Questions Families Ask</strong>
+  <span>Rialto Unified School District &nbsp;&middot;&nbsp; Special Education Department</span>
+</div>
+
+<div class="page">
+
+  <div class="intro">
+    <strong>Have questions about AAC?</strong> You are not alone. These are the questions families ask most often. Click any question to read the answer. Use the search box to find a specific topic.
+  </div>
+
+  <p style="text-align:right;margin:0 0 8px"><a href="es/">En espa&ntilde;ol</a></p>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search questions..." oninput="doSearch()">
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">What is AAC? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a"><strong>AAC stands for Augmentative and Alternative Communication.</strong> It refers to all the ways people communicate besides spoken words, including gestures, facial expressions, sign language, picture symbols, and speech-generating apps on tablets. Many people use a combination of these tools alongside speech. AAC is not one thing. It is a whole toolkit that supports communication in whatever way works best for each person.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Will AAC replace my child's speech? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a"><strong>No. AAC does not replace speech, and research consistently shows it does not slow speech development.</strong> In fact, many studies show that access to AAC tools supports the growth of natural speech over time. The goal is to give your child more ways to communicate, not fewer.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">My child already uses some words. Why do they need a device? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Many students who use some words also benefit from an AAC device. Speech can be inconsistent. It may work well in some situations and not others. A device gives your child a reliable way to communicate even on days when speech is harder. There is no minimum or maximum amount of speech that determines whether AAC is helpful.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">What is Proloquo2Go? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Proloquo2Go is the AAC app used in RUSD classrooms. It runs on an iPad and contains thousands of picture-symbol buttons that speak words and phrases out loud when tapped. It can be customized to match a student's vocabulary, language level, and communication needs. It is one of the most widely used AAC apps in schools.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">What is the RUSD AAC Program? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">The RUSD AAC Program gives 12 Extensive Support Needs (ESN) classrooms a set of classroom iPads loaded with Proloquo2Go. The teacher has one to model communication throughout the day, and the student iPads are there for any student who needs them. No IEP goal or paperwork is needed to use one.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Who can use the classroom device? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Any student in the classroom can use a device. The program is designed so that communication support is available to everyone, not just students with specific IEP goals. No student has to wait, qualify, or ask permission to use a device.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Why doesn't the classroom iPad come home? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Classroom iPads are shared by the students in the room. They go everywhere with your child during the school day, then stay at school overnight so they are charged and ready the next morning. To keep the same words going at home, ask your child's teacher or SLP for the paper Proloquo2Go core word board. It matches the layout on the classroom iPad.<br><br>A student's own <strong>1:1 device</strong> is different. It belongs to that student, it is their voice, and it goes home every day.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Can my child get their own personal device? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Yes, this is possible. Talk with your child's SLP or IEP team. The team looks at how your child is communicating across the school day and decides together with you whether a personal device is the right next step. A personal device goes home with your child every day.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">How can I support my child's communication at home? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">
+      You do not need a device at home to support your child. Here is what helps most:
+      <ul>
+        <li><strong>Respond to every communication attempt</strong>, whether it is a reach, a sound, a gesture or a word. Let your child know their communication works.</li>
+        <li><strong>Give your child time to respond</strong> before jumping in. Many AAC users need more processing time than speaking peers.</li>
+        <li><strong>Share what works at home</strong> with your child's SLP: their interests, favorite words and how they communicate with you.</li>
+        <li><strong>Ask to see the device</strong> at a school visit or IEP meeting so you know what your child is working with.</li>
+        <li><strong>If your child has a 1:1 device,</strong> keep it charged and out at home too. Touch the words as you talk, the same way staff do at school.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">My child uses signs at home. Should I tell the school? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a"><strong>Yes, absolutely.</strong> Signs, gestures, and any other communication forms your child uses at home are valuable and important. Please share this with your child's SLP so the school can recognize and respond to those forms too.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Who adds words to the device? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Everyone who works with your child. Each person adds the words their setting needs: the teacher for lessons, the SLP for speech sessions, OT or APE for theirs. You can add words for home, like family names and favorite foods. The one rule is that words your child already uses stay where they are, because your child finds them by memory of where they live. If you add something, let the teacher or SLP know so everyone uses it.</div>
+  </div>
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">What if my child refuses to use the device? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">This is very common, especially at first. The classroom team is trained to offer the device without pressure and to respond to all communication attempts regardless of whether the device is used. If you have concerns, talk to your child's SLP. There are many strategies for building comfort and motivation with a device.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Can I observe my child using the device in the classroom? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Yes. You are welcome to request a classroom observation. Contact your child's teacher or SLP to schedule a time. Seeing the program in action is one of the best ways to understand how your child communicates at school.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">I have more questions. Who should I contact? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Start with your child's site SLP or classroom teacher. For program-level questions, contact the District AAC Specialist at jbutanda@rialtousd.org, or <a href="https://docs.google.com/forms/d/e/1FAIpQLScHTMt_Zo2oq1x-jS3AmG8CcvsWxTjbI1qhtCEMPO1UnWY0ag/viewform">send a question through the family form</a>.</div>
+  </div>
+
+  <div class="contact-box">
+    <strong>Still have questions? We want to hear from you.</strong><br>
+    Jerry Butanda, M.S.-SLP, ATAC, AAC<br>
+    District AAC Specialist &nbsp;&middot;&nbsp; Rialto Unified School District<br>
+    <a href="mailto:jbutanda@rialtousd.org">jbutanda@rialtousd.org</a>
+  </div>
+
+  <div class="footer">RUSD AAC Program &nbsp;&middot;&nbsp; Rialto Unified School District &nbsp;&middot;&nbsp; Special Education Department</div>
+
+</div>
+
+<script>
+function toggle(el) {
+  var answer = el.nextElementSibling;
+  el.classList.toggle('open');
+  answer.classList.toggle('open');
+}
+
+function doSearch() {
+  var q = document.getElementById('search').value.trim().toLowerCase();
+  document.querySelectorAll('.faq').forEach(function(f) {
+    if (!q) {
+      f.classList.remove('hidden');
+    } else {
+      f.classList.toggle('hidden', !f.textContent.toLowerCase().includes(q));
+    }
+  });
+}
+</script>
+</body>
+</html>
