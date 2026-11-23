@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IEP Language Bank | Rialto AAC</title>
+<style>
+  :root {
+    --blue: #1A5294;
+    --blue-light: #E8EFF8;
+    --blue-mid: #2E6DB8;
+    --black: #1a1a1a;
+    --gray: #555;
+    --gray-light: #f4f4f4;
+    --border: #d0d8e4;
+    --green: #2D6A2D;
+    --green-light: #EAF4EA;
+    --amber: #7A5000;
+    --amber-light: #FFF8E1;
+    --white: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 15px; color: var(--black); background: #f0f4f9; }
+
+  /* ── TOP BAR ── */
+  .topbar { background: var(--blue); color: #fff; padding: 18px 32px; display: flex; align-items: center; gap: 20px; }
+  .topbar-logo { font-size: 13px; line-height: 1.4; border-right: 1px solid rgba(255,255,255,0.3); padding-right: 20px; }
+  .topbar-logo strong { font-size: 17px; display: block; }
+  .topbar-title { font-size: 22px; font-weight: bold; }
+  .topbar-sub { font-size: 13px; opacity: 0.8; margin-top: 3px; }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* ── INTRO BOX ── */
+  .intro { background: var(--blue-light); border-left: 5px solid var(--blue); padding: 16px 20px; margin-bottom: 32px; border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.7; color: #333; }
+  .intro strong { color: var(--blue); }
+
+  /* ── SEARCH BAR ── */
+  .search-bar { display: flex; gap: 10px; margin-bottom: 28px; align-items: center; }
+  .search-bar input { flex: 1; padding: 10px 16px; border: 2px solid var(--border); border-radius: 6px; font-size: 15px; font-family: Arial, sans-serif; }
+  .search-bar input:focus { outline: none; border-color: var(--blue); }
+  #search-count { font-size: 13px; color: var(--gray); white-space: nowrap; }
+
+  /* ── CATEGORY TABS ── */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .tab { padding: 7px 16px; border-radius: 20px; border: 2px solid var(--blue); background: var(--white); color: var(--blue); font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.15s; }
+  .tab:hover, .tab.active { background: var(--blue); color: #fff; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 40px; }
+  .section-title { background: var(--blue); color: #fff; padding: 10px 18px; border-radius: 6px 6px 0 0; font-size: 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+  .section-body { border: 1px solid var(--border); border-top: none; border-radius: 0 0 6px 6px; overflow: hidden; }
+
+  /* ── SNIPPET CARD ── */
+  .snippet { padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--white); transition: background 0.1s; }
+  .snippet:last-child { border-bottom: none; }
+  .snippet:nth-child(even) { background: #fafbfd; }
+  .snippet-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .snippet-label { font-size: 13px; font-weight: bold; color: var(--blue); text-transform: uppercase; letter-spacing: 0.04em; }
+  .snippet-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 12px; background: var(--blue-light); color: var(--blue); font-weight: bold; }
+  .tag.tier2 { background: #e8f5e9; color: #2D6A2D; }
+  .tag.tier3 { background: #fff3e0; color: #7A5000; }
+  .tag.goal { background: #f3e8ff; color: #6A1B9A; }
+  .tag.total-comm { background: #e0f4f4; color: #005f5f; }
+  .snippet-text { font-size: 14px; line-height: 1.75; color: var(--black); background: #f8f9fc; border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; margin-bottom: 10px; white-space: pre-wrap; font-family: Arial, sans-serif; }
+  .snippet-note { font-size: 12px; color: var(--gray); font-style: italic; margin-bottom: 10px; }
+  .copy-btn { padding: 6px 14px; background: var(--blue); color: #fff; border: none; border-radius: 4px; font-size: 13px; font-family: Arial, sans-serif; cursor: pointer; transition: background 0.15s; }
+  .copy-btn:hover { background: var(--blue-mid); }
+  .copy-btn.copied { background: var(--green); }
+
+  /* ── NO RESULTS ── */
+  #no-results { display: none; text-align: center; padding: 48px; color: var(--gray); font-size: 15px; }
+
+  /* ── HIDDEN ── */
+  .hidden { display: none !important; }
+
+  mark { background: #fff176; border-radius: 2px; }
+.snippet-cite{font-size:12px;color:#5B6673;margin-top:6px;padding-left:10px;border-left:3px solid #DCE6F2}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">
+    <strong>RUSD</strong>
+    Special Education
+  </div>
+  <div>
+    <div class="topbar-title">IEP Language Bank</div>
+    <div class="topbar-sub">AAC Program  |  Copy-paste ready language for IEPs, evaluations, and progress reports</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="intro">
+    <strong>How to use this page:</strong> Browse by category or search by keyword. Click <strong>Copy</strong> to copy any passage to your clipboard. All language is written within a <strong>total communication framework</strong>: goals and descriptions address communication functions across all modalities, not device use alone. Adjust student name, pronouns, and specific details before using. Brackets [ ] indicate fields to fill in. Every goal opens with a <b>Baseline</b> line: fill it in before you fill in the criterion. Where a passage rests on a specific statute or study, the citation appears beneath it.
+    <br><br>Language marked <span style="background:#e0f4f4;color:#005f5f;font-weight:bold;padding:1px 6px;border-radius:3px;font-size:12px;">TOTAL COMM</span> is explicitly multimodal in framing. Language marked <span style="background:#e8f5e9;color:#2D6A2D;font-weight:bold;padding:1px 6px;border-radius:3px;font-size:12px;">DEVICE IN PLACE</span> is for students with an individual device or a device trial. Language marked <span style="background:#fff3e0;color:#7A5000;font-weight:bold;padding:1px 6px;border-radius:3px;font-size:12px;">FORMAL EVAL</span> is for students referred for, or following, a formal AT/AAC evaluation (motor, sensory or multidisciplinary needs).
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search by keyword (e.g. requesting, modeling, Proloquo2Go, present levels...)" oninput="doSearch()">
+    <span id="search-count"></span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="filterCat('all', this)">All</button>
+    <button class="tab" onclick="filterCat('profile', this)">Communication Profile</button>
+    <button class="tab" onclick="filterCat('plaafp', this)">Present Levels</button>
+    <button class="tab" onclick="filterCat('at-factors', this)">AT Special Factors</button>
+    <button class="tab" onclick="filterCat('goals', this)">Goals</button>
+    <button class="tab" onclick="filterCat('progress', this)">Progress Monitoring</button>
+    <button class="tab" onclick="filterCat('services', this)">Service Delivery</button>
+    <button class="tab" onclick="filterCat('accommodations', this)">Accommodations</button>
+    <button class="tab" onclick="filterCat('other-supports', this)">Other Supports</button>
+    <button class="tab" onclick="filterCat('transition', this)">Transitions</button>
+  </div>
+
+  <div id="bank"></div>
+  <div id="no-results">No matching language found. Try a different keyword.</div>
+
+</div>
+
+<script>
+let DATA = [];
+fetch('language-bank.json').then(r=>r.json()).then(d=>{DATA=d;renderAll(DATA);}).catch(()=>{document.getElementById('no-results').textContent='Could not load language-bank.json. Make sure it is uploaded next to this page.';document.getElementById('no-results').style.display='block';});
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+
+function renderAll(items, query = "") {
+  const bank = document.getElementById('bank');
+  const noRes = document.getElementById('no-results');
+
+  // Group by category
+  const catOrder = ['profile','plaafp','at-factors','goals','progress','services','accommodations','other-supports','transition'];
+  const catLabels = {
+    profile: 'Communication Profile',
+    plaafp: 'Present Levels (PLAAFP)',
+    'at-factors': 'AT Special Factors',
+    goals: 'Goals',
+    progress: 'Progress Monitoring',
+    services: 'Service Delivery',
+    accommodations: 'Accommodations',
+    'other-supports': 'Other Supports (FAPE page)',
+    transition: 'Transitions'
+  };
+
+  const grouped = {};
+  catOrder.forEach(c => grouped[c] = []);
+  items.forEach(item => { if (grouped[item.cat]) grouped[item.cat].push(item); });
+
+  let html = '';
+  let totalVisible = 0;
+
+  catOrder.forEach(cat => {
+    const catItems = grouped[cat];
+    if (!catItems.length) return;
+    totalVisible += catItems.length;
+
+    html += `<div class="section" data-cat="${cat}">
+      <div class="section-title">${catLabels[cat]}<span style="font-size:13px;font-weight:normal;opacity:0.8;">${catItems.length} passage${catItems.length !== 1 ? 's' : ''}</span></div>
+      <div class="section-body">`;
+
+    catItems.forEach((item, idx) => {
+      const displayText = query ? highlight(item.text, query) : escHtml(item.text);
+      const displayLabel = query ? highlight(item.label, query) : escHtml(item.label);
+      const tagHtml = item.tags.map(t => {
+        const cls = t === 'tier2' ? 'tag tier2' : t === 'tier3' ? 'tag tier3' : t === 'goal' ? 'tag goal' : t === 'total-comm' ? 'tag total-comm' : 'tag';
+        const label = t === 'tier2' ? 'DEVICE IN PLACE' : t === 'tier3' ? 'FORMAL EVAL' : t === 'goal' ? 'GOAL' : t === 'total-comm' ? 'TOTAL COMM' : t === 'plaafp' ? 'PLAAFP' : t === 'at-factors' ? 'AT FACTORS' : t === 'profile' ? 'PROFILE' : t === 'family' ? 'FAMILY' : t === 'tier1' ? 'CLASSROOM AAC' : t === 'accommodations' ? 'ACCOMMODATION' : t === 'other-supports' ? 'OTHER SUPPORTS' : t.toUpperCase();
+        return `<span class="${cls}">${label}</span>`;
+      }).join('');
+
+      html += `<div class="snippet">
+        <div class="snippet-header">
+          <span class="snippet-label">${displayLabel}</span>
+          <div class="snippet-tags">${tagHtml}</div>
+        </div>
+        <div class="snippet-text" id="text-${cat}-${idx}">${displayText}</div>
+        ${item.note ? `<div class="snippet-note">\u2139\uFE0F ${item.note}</div>` : ''}
+        ${item.cite ? `<div class="snippet-cite">Legal / research basis: ${escHtml(item.cite)}</div>` : ''}
+        <button class="copy-btn" onclick="copySnippet('text-${cat}-${idx}', this, ${JSON.stringify(item.text)})">Copy</button>
+      </div>`;
+    });
+
+    html += '</div></div>';
+  });
+
+  bank.innerHTML = html;
+  noRes.style.display = totalVisible === 0 ? 'block' : 'none';
+  if (query) document.getElementById('search-count').textContent = `${totalVisible} result${totalVisible !== 1 ? 's' : ''}`;
+  else document.getElementById('search-count').textContent = '';
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function highlight(text, query) {
+  const escaped = escHtml(text);
+  if (!query) return escaped;
+  const re = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+  return escaped.replace(re, m => `<mark>${m}</mark>`);
+}
+
+let currentCat = 'all';
+let currentQuery = '';
+
+function doSearch() {
+  currentQuery = document.getElementById('search').value.trim().toLowerCase();
+  applyFilters();
+}
+function filterCat(cat, el) {
+  currentCat = cat;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+function applyFilters() {
+  let items = DATA;
+  if (currentCat !== 'all') items = items.filter(i => i.cat === currentCat);
+  if (currentQuery) {
+    items = items.filter(i =>
+      i.label.toLowerCase().includes(currentQuery) ||
+      i.text.toLowerCase().includes(currentQuery) ||
+      (i.note && i.note.toLowerCase().includes(currentQuery)) ||
+      (i.cite && i.cite.toLowerCase().includes(currentQuery)) ||
+      i.tags.some(t => t.includes(currentQuery))
+    );
+  }
+  renderAll(items, currentQuery);
+}
+
+function copySnippet(id, btn, rawText) {
+  navigator.clipboard.writeText(rawText).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Initial render happens after language-bank.json loads
+</script>
+</body>
+</html>

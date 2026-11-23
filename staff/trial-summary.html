@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAC Trial Summary | Rialto AAC</title>
+<style>
+  :root{
+    --blue:#064997; --blue-ink:#0A3A75; --tint:#DCE6F2; --tint-2:#EEF3F9;
+    --ink:#1C2430; --mute:#5B6673; --line:#C9D3DF; --paper:#FFFFFF; --bg:#F3F6FA;
+    --ok:#1F7A4D;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+  h1,h2,h3{margin:0;font-weight:700}
+  button{font:inherit;cursor:pointer}
+  input,select,textarea{font:inherit;color:var(--ink);width:100%;border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:#fff}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:var(--blue)}
+  textarea{min-height:56px;resize:vertical}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--blue-ink);margin:0 0 4px;letter-spacing:.01em}
+  label .opt{font-weight:400;color:var(--mute)}
+
+  /* app frame */
+  .top{position:sticky;top:0;z-index:5;height:72px;background:var(--blue);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px}
+  .top img{width:44px;height:44px;background:#fff;border-radius:50%}
+  .top h1{font-size:17px}
+  .top small{display:block;font-weight:400;opacity:.85;font-size:12.5px}
+  .top .actions{margin-left:auto;display:flex;gap:8px}
+  .top button{background:#fff;color:var(--blue);border:0;border-radius:6px;padding:9px 14px;font-weight:600}
+  .top button.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55)}
+
+  .wrap{display:grid;grid-template-columns:minmax(380px,560px) 1fr;gap:0;height:calc(100vh - 72px);overflow:hidden}
+  .entry{padding:20px 22px 60px;overflow:auto;background:#fff;border-right:1px solid var(--line)}
+  .previewpane{padding:24px;overflow:auto;background:var(--bg)}
+  #sheetScaler{width:8.5in;margin:0 auto;transform-origin:top left}
+  @media (max-width:980px){.wrap{grid-template-columns:1fr;height:auto;overflow:visible}.previewpane{display:none}.previewpane.show{display:block}}
+
+  fieldset{border:0;padding:0;margin:0 0 22px}
+  legend{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--blue);font-weight:700;padding:0;margin-bottom:10px;border-bottom:2px solid var(--blue);width:100%;padding-bottom:4px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  .row.one{grid-template-columns:1fr}
+  .row.three{grid-template-columns:1fr 1fr 1fr}
+  .checks{display:flex;flex-wrap:wrap;gap:5px 14px;margin:2px 0 10px}
+  .checks.col{flex-direction:column;gap:4px}
+  .checks label{font-weight:400;color:var(--ink);font-size:13.5px;display:flex;align-items:flex-start;gap:6px;margin:0;line-height:1.3}
+  .checks input{width:auto;margin:3px 0 0}
+  input[type=checkbox],input[type=radio]{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:17px;height:17px;padding:0;margin:2px 0 0;background:#fff;border:1.5px solid #8A97A8;border-radius:4px;cursor:pointer;position:relative;color-scheme:light}
+  input[type=radio]{border-radius:50%}
+  input[type=checkbox]:checked,input[type=radio]:checked{background:var(--blue);border-color:var(--blue)}
+  input[type=checkbox]:checked::after{content:"";position:absolute;left:5px;top:1.5px;width:4px;height:9px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+  input[type=radio]:checked::after{content:"";position:absolute;left:4.5px;top:4.5px;width:6px;height:6px;border-radius:50%;background:#fff}
+  input[type=checkbox]:focus-visible,input[type=radio]:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .trial{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px;background:var(--tint-2)}
+  .trial h3{font-size:13px;color:var(--blue);margin-bottom:8px}
+  .hint{font-size:12px;color:var(--mute);margin:-4px 0 10px}
+  .status{font-size:12.5px;color:var(--mute);padding:8px 0}
+  .status.ok{color:var(--ok)}
+
+  /* ---------- report (screen + print) ---------- */
+  .sheet{width:8.5in;height:11in;overflow:hidden;margin:0 auto;background:var(--paper);padding:.4in;box-shadow:0 2px 14px rgba(0,0,0,.12);font:9.5pt/1.28 Calibri,Carlito,"Segoe UI",Arial,sans-serif;color:#000}
+  #sheetInner{width:100%}
+  .r-head{display:flex;align-items:center;gap:12px;border-bottom:2pt solid var(--blue);padding-bottom:6pt;margin-bottom:6pt}
+  .r-head img{width:62px;height:62px}
+  .r-head h2{font-size:15pt;color:var(--blue)}
+  .r-head .sub{font-size:9pt;color:#444}
+  .r-head .org{font-size:8.5pt;color:var(--blue);font-weight:700}
+  table.r{width:100%;border-collapse:collapse;margin-bottom:2pt}
+  table.r td,table.r th{border:.5pt solid #999;padding:2pt 4pt;vertical-align:top;text-align:left;font-size:9pt}
+  table.r th{background:var(--tint);font-size:8.5pt}
+  .r-sec{background:var(--blue);color:#fff;font-size:8.5pt;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:1.5pt 4pt;margin:5pt 0 2pt;break-after:avoid}
+  .r-box{border:.5pt solid #999;padding:3pt 6pt}
+  .r-box p{margin:0 0 2pt}
+  .r-box b{color:#000}
+  .r-note{font-size:7.5pt;font-style:italic;color:#333;margin:6pt 0 5pt}
+  .r-sig td{height:30pt;font-size:8pt;color:#333}
+  .empty{color:#999}
+  tr.trow{break-inside:avoid}
+
+  @media print{
+    @page{size:letter;margin:0}
+    body{background:#fff}
+    .top,.entry{display:none!important}
+    .wrap{display:block;min-height:0}
+    .previewpane{display:block!important;padding:0;background:#fff;overflow:visible}
+    #sheetScaler{transform:none!important;height:auto!important;margin:0;width:100%}
+    .sheet{box-shadow:none;margin:0;width:100%;height:11in}
+    .r-sec,table.r th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ app ============ -->
+<header class="top">
+  <img src="data:image/png;base64,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" alt="">
+  <div><h1>AAC Trial Summary</h1><small>Rialto USD Speech-Language Services. Check what applies on the left; the report on the right updates as you go.</small></div>
+  <div class="actions">
+    <button class="ghost" type="button" onclick="togglePreview()" id="pvBtn">Preview</button>
+    <button class="ghost" type="button" onclick="clearForm()">Clear</button>
+    <button class="ghost" type="button" onclick="sendToIEP()">Send to IEP Generator</button>
+<button type="button" onclick="generate()">Save as PDF</button>
+  </div>
+</header>
+
+<datalist id="appList">
+  <option value="Proloquo2Go"><option value="TD Snap (Core First)"><option value="TouchChat with WordPower"><option value="LAMP Words for Life"><option value="GoTalk NOW"><option value="CoughDrop"><option value="Low-tech core board">
+</datalist>
+
+<div class="wrap">
+<section class="entry" id="entry">
+
+  <fieldset>
+    <legend>Student information</legend>
+    <div class="row"><div><label>Student name</label><input data-k="student"></div><div><label>Date of birth</label><input type="date" data-k="dob"></div></div>
+    <div class="row"><div><label>Grade</label><select data-k="grade"><option value=""></option><option>TK</option><option>K</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>Post-secondary</option></select></div>
+      <div><label>School</label><select data-k="school" id="school"><option value=""></option></select></div></div>
+    <div class="row"><div><label>Program / classroom</label><select data-k="program"><option value=""></option><option>ESN (Extensive Support Needs)</option><option>MMSN (Mild/Moderate Support Needs)</option><option>General education with RSP</option><option>Preschool special education</option><option>Other</option></select></div><div><label>Home language</label><select data-k="language"><option value=""></option><option>English</option><option>Spanish</option><option>English and Spanish</option><option>Other</option></select></div></div>
+    <div class="row"><div><label>SLP name</label><input data-k="slp"></div><div><label>Trial dates</label><input data-k="trial_dates" placeholder="9/3/26 to 10/1/26"></div></div>
+    <div class="row"><div><label>IEP date</label><input type="date" data-k="iep_date"></div><div><label>Parent informed of trial</label><select data-k="parent_informed"><option value=""></option><option>Yes, by phone</option><option>Yes, by email/note</option><option>Yes, at IEP meeting</option><option>Not yet</option></select></div></div>
+    <label>AAC currently in place in the classroom</label>
+    <div class="checks" data-k="tier1">
+      <label><input type="radio" name="tier1" value="Classroom Proloquo2Go device available in class">Classroom Proloquo2Go device</label>
+      <label><input type="radio" name="tier1" value="Low-tech core board in use">Low-tech core board</label>
+      <label><input type="radio" name="tier1" value="Other classroom AAC system in use">Other system</label>
+      <label><input type="radio" name="tier1" value="No AAC currently in place">None in place</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>1. Existing data reviewed</legend>
+    <label>Sources reviewed</label>
+    <div class="checks" data-k="sources">
+      <label><input type="checkbox" value="Speech-language report">Speech-language report</label>
+      <label><input type="checkbox" value="Psychoeducational report">Psychoeducational report</label>
+      <label><input type="checkbox" value="OT/PT report">OT/PT report</label>
+      <label><input type="checkbox" value="Current IEP goals/present levels">Current IEP goals/present levels</label>
+      <label><input type="checkbox" value="Classroom observation">Classroom observation</label>
+      <label><input type="checkbox" value="classroom AAC data">Classroom AAC data</label>
+      <label><input type="checkbox" value="Prior AAC/AT records">Prior AAC/AT records</label>
+      <label><input type="checkbox" value="Teacher input">Teacher input</label>
+      <label><input type="checkbox" value="Parent input">Parent input</label>
+    </div>
+    <label>Documented expressive communication need</label>
+    <div class="checks col" data-k="need">
+      <label><input type="checkbox" value="Nonspeaking / minimally speaking">Nonspeaking / minimally speaking</label>
+      <label><input type="checkbox" value="Fewer than 50 functional spoken words">Fewer than 50 functional spoken words</label>
+      <label><input type="checkbox" value="Speech not intelligible to unfamiliar listeners">Speech not intelligible to unfamiliar listeners</label>
+      <label><input type="checkbox" value="Motor speech concerns (apraxia/dysarthria) limit verbal output">Motor speech concerns (apraxia/dysarthria) limit verbal output</label>
+      <label><input type="checkbox" value="Expressive language significantly below receptive">Expressive language significantly below receptive</label>
+      <label><input type="checkbox" value="Echolalic or scripted speech limits novel messages">Echolalic or scripted speech limits novel messages</label>
+      <label><input type="checkbox" value="Communication breakdowns contribute to behavior">Communication breakdowns contribute to behavior</label>
+    </div>
+    <label>Current communication modes</label>
+    <div class="checks" data-k="modes">
+      <label><input type="checkbox" value="vocalizations">Vocalizations</label>
+      <label><input type="checkbox" value="gestures/pointing/leading">Gestures / pointing / leading</label>
+      <label><input type="checkbox" value="facial expression/body language">Facial expression / body</label>
+      <label><input type="checkbox" value="signs or sign approximations">Signs / approximations</label>
+      <label><input type="checkbox" value="single words">Single words</label>
+      <label><input type="checkbox" value="2-3 word combinations">2-3 word combinations</label>
+      <label><input type="checkbox" value="sentences">Sentences</label>
+      <label><input type="checkbox" value="picture board/PECS">Picture board / PECS</label>
+      <label><input type="checkbox" value="classroom AAC device">Classroom AAC device</label>
+      <label><input type="checkbox" value="writing/typing">Writing / typing</label>
+    </div>
+    <div class="row">
+      <div><label>Functions currently used</label><div class="checks col" data-k="cur_functions" id="curFns"></div></div>
+      <div><label>Student is understood by</label><div class="checks col" data-k="partners">
+        <label><input type="checkbox" value="familiar adults">Familiar adults</label>
+        <label><input type="checkbox" value="peers">Peers</label>
+        <label><input type="checkbox" value="unfamiliar listeners">Unfamiliar listeners</label>
+        <label><input type="checkbox" value="__none">Not yet consistently understood by any partner</label>
+      </div></div>
+    </div>
+    <label>Speech intelligibility</label>
+    <div class="checks col" data-k="intellig">
+      <label><input type="radio" name="intellig" value="Nonspeaking">Nonspeaking</label>
+      <label><input type="radio" name="intellig" value="Mostly unintelligible, even with context">Mostly unintelligible, even with context</label>
+      <label><input type="radio" name="intellig" value="Intelligible to familiar listeners with context">Intelligible to familiar listeners with context</label>
+      <label><input type="radio" name="intellig" value="Intelligible to familiar and unfamiliar listeners">Intelligible to familiar and unfamiliar listeners</label>
+    </div>
+    <div class="row one"><div><label>Notes <span class="opt">(optional)</span></label><textarea data-k="current_comm" placeholder="Anything the checkboxes don't capture"></textarea></div></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>2. Sensory and motor access screening</legend>
+    <label>Vision</label>
+    <div class="checks" data-k="vision">
+      <label><input type="radio" name="vision" value="Locates and discriminates symbols on screen">Locates and discriminates symbols</label>
+      <label><input type="radio" name="vision" value="Benefits from larger symbols or high contrast">Needs larger symbols / high contrast</label>
+      <label><input type="radio" name="vision" value="Concern noted">Concern noted</label>
+    </div>
+    <label>Hearing</label>
+    <div class="checks" data-k="hearing">
+      <label><input type="radio" name="hearing" value="Responds to voice output">Responds to voice output</label>
+      <label><input type="radio" name="hearing" value="Responds to voice output with volume adjusted">Responds with volume adjusted</label>
+      <label><input type="radio" name="hearing" value="Concern noted">Concern noted</label>
+    </div>
+    <label>Motor / direct selection</label>
+    <div class="checks col" data-k="motor">
+      <label><input type="radio" name="motor" value="Isolates finger and activates targets accurately">Isolates finger and activates targets accurately</label>
+      <label><input type="radio" name="motor" value="Accuracy decreases with smaller targets">Accuracy decreases with smaller targets</label>
+      <label><input type="radio" name="motor" value="Uses whole hand or multiple activations; keyguard or spacing may help">Uses whole hand or multiple activations; keyguard or spacing may help</label>
+      <label><input type="radio" name="motor" value="Concern noted">Concern noted</label>
+    </div>
+    <div class="row">
+      <div><label>Positioning</label><div class="checks col" data-k="position">
+        <label><input type="radio" name="position" value="Seated upright; device stable on desk or stand">Seated; device stable on desk/stand</label>
+        <label><input type="radio" name="position" value="Needs mounting or positioning support">Needs mounting or positioning support</label>
+        <label><input type="radio" name="position" value="Concern noted">Concern noted</label>
+      </div></div>
+      <div><label>Attention / regulation</label><div class="checks col" data-k="attention">
+        <label><input type="radio" name="attention" value="Attends to screen and partner modeling">Attends to screen and modeling</label>
+        <label><input type="radio" name="attention" value="Attention variable; engagement supports used">Variable; engagement supports used</label>
+        <label><input type="radio" name="attention" value="Concern noted">Concern noted</label>
+      </div></div>
+    </div>
+    <label>Screening result</label>
+    <div class="checks col" data-k="screen_result">
+      <label><input type="radio" name="screen_result" value="Access channels intact; direct touch selection appropriate. No cross-disciplinary referral indicated at this time.">Access intact; direct touch appropriate. No cross-disciplinary referral at this time.</label>
+      <label><input type="radio" name="screen_result" value="Concern identified; referral to OT/PT/VI and formal AT/AAC assessment plan initiated.">Concern identified; referral to OT/PT/VI and formal AT/AAC assessment plan initiated.</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>3. Trial data</legend>
+    <p class="hint">Trial 1 is required. Leave 2 and 3 blank if unused.</p>
+    <div id="trials"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>4. Interpretation</legend>
+    <div class="row one"><div><label>Preference / best fit</label><input data-k="best_fit" list="appList" placeholder="Start typing or pick from the trialed apps"></div></div>
+    <label>Rationale (feature match)</label>
+    <div class="checks col" data-k="rationale_c">
+      <label><input type="checkbox" value="highest rate of spontaneous selections">Highest rate of spontaneous selections</label>
+      <label><input type="checkbox" value="widest range of communication functions">Widest range of communication functions</label>
+      <label><input type="checkbox" value="core vocabulary supports generative language beyond requesting">Core vocabulary supports generative language beyond requesting</label>
+      <label><input type="checkbox" value="grid size matches current motor accuracy with room to grow">Grid size matches motor accuracy with room to grow</label>
+      <label><input type="checkbox" value="navigation was manageable with modeling">Navigation manageable with modeling</label>
+      <label><input type="checkbox" value="consistent with the classroom system staff already model">Consistent with the classroom system staff already model</label>
+      <label><input type="checkbox" value="symbol set and layout match the current classroom system">Symbol set/layout match current classroom system</label>
+      <label><input type="checkbox" value="supports home language">Supports home language</label>
+      <label><input type="checkbox" value="student showed clear preference and engagement">Student showed clear preference and engagement</label>
+      <label><input type="checkbox" value="teacher and family preference">Teacher and family preference</label>
+    </div>
+    <div class="row one"><div><label>Additional rationale <span class="opt">(optional)</span></label><textarea data-k="rationale"></textarea></div></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>5. Recommendation to IEP team</legend>
+    <div class="checks col" data-k="recommendation" id="rec">
+      <label><input type="radio" name="recommendation" value="Provide the app/system above on a district-managed device as an instructional accommodation, documented in the Special Factors / AT section of the IEP.">Provide the system above on a district-managed device as an instructional accommodation, documented in Special Factors / AT.</label>
+      <label><input type="radio" name="recommendation" value="Continue trial and data collection; SLP consultation to classroom staff.">Continue trial and data collection; SLP consultation to classroom staff.</label>
+      <label><input type="radio" name="recommendation" value="Refer for formal AT/AAC assessment plan due to access or multidisciplinary needs.">Refer for formal AT/AAC assessment plan due to access or multidisciplinary needs.</label>
+      <label><input type="radio" name="recommendation" value="__other">Other (type below)</label>
+    </div>
+    <div class="row one" id="recOtherRow" style="display:none"><div><label>Other recommendation</label><textarea data-k="recommendation_other"></textarea></div></div>
+    <label>Customization / next steps</label>
+    <div class="checks col" data-k="next_c">
+      <label><input type="checkbox" value="personalize vocabulary (names, classroom, interests, home)">Personalize vocabulary (names, classroom, interests, home)</label>
+      <label><input type="checkbox" value="aided language modeling training for classroom staff">Aided language modeling training for classroom staff</label>
+      <label><input type="checkbox" value="family orientation and home use plan">Family orientation and home use plan</label>
+      <label><input type="checkbox" value="device travels between settings (class, speech, home)">Device travels between settings</label>
+      <label><input type="checkbox" value="add or revise AAC communication goal in the IEP">Add or revise AAC communication goal in the IEP</label>
+      <label><input type="checkbox" value="continue weekly data collection by classroom staff">Continue weekly data collection by classroom staff</label>
+      <label><input type="checkbox" value="OT consult on access or positioning">OT consult on access or positioning</label>
+      <label><input type="checkbox" value="SLP follow-up check-in in 4 to 6 weeks">SLP follow-up check-in in 4 to 6 weeks</label>
+    </div>
+    <div class="row one"><div><label>Other next steps <span class="opt">(optional)</span></label><textarea data-k="next_steps"></textarea></div></div>
+  </fieldset>
+
+  <div class="status" id="status"></div>
+</section>
+
+<section class="previewpane" id="previewpane">
+  <div id="sheetScaler"><div class="sheet" id="sheet"><div id="sheetInner">
+    <div class="r-head">
+      <img src="data:image/png;base64,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" alt="">
+      <div><h2>AAC Trial Summary</h2><div class="sub">Review of Existing Data and Feature-Matching Trial</div><div class="org">Rialto Unified School District &nbsp;|&nbsp; Speech-Language Services</div></div>
+    </div>
+    <table class="r">
+      <tr><th style="width:14%">Student</th><td style="width:36%" data-out="student"></td><th style="width:14%">DOB / Grade</th><td data-out="dob_grade"></td></tr>
+      <tr><th>School / Program</th><td data-out="school_program"></td><th>Home language</th><td data-out="language"></td></tr>
+      <tr><th>SLP</th><td data-out="slp"></td><th>Trial dates</th><td data-out="trial_dates"></td></tr>
+      <tr><th>IEP date</th><td data-out="iep_date_f"></td><th>Parent informed</th><td data-out="parent_informed"></td></tr>
+      <tr><th>AAC in place in the classroom</th><td colspan="3" data-out="tier1"></td></tr>
+    </table>
+    <div class="r-sec">1. Existing data reviewed</div>
+    <div class="r-box">
+      <p><b>Sources reviewed:</b> <span data-out="sources"></span></p>
+      <p><b>Documented expressive communication need:</b> <span data-out="need"></span></p>
+      <p><b>Current communication:</b> <span data-out="current_comm_f"></span></p>
+      <p data-wrap="current_comm"><b>Notes:</b> <span data-out="current_comm"></span></p>
+    </div>
+    <div class="r-sec">2. Sensory and motor access screening</div>
+    <div class="r-box">
+      <p><b>Vision:</b> <span data-out="vision"></span> &nbsp;&nbsp; <b>Hearing:</b> <span data-out="hearing"></span></p>
+      <p><b>Motor / direct selection:</b> <span data-out="motor"></span></p>
+      <p><b>Positioning:</b> <span data-out="position"></span> &nbsp;&nbsp; <b>Attention / regulation:</b> <span data-out="attention"></span></p>
+      <p><b>Result:</b> <span data-out="screen_result"></span></p>
+    </div>
+    <div class="r-sec">3. Trial data</div>
+    <table class="r" id="trialTable">
+      <tr><th style="width:7%">Trial</th><th style="width:22%">System and layout</th><th style="width:30%">Sessions and data</th><th>Observations</th></tr>
+    </table>
+    <div class="r-sec">4. Interpretation</div>
+    <div class="r-box"><p><b>Preference / best fit:</b> <span data-out="best_fit"></span></p><p><b>Rationale:</b> <span data-out="rationale_f"></span></p></div>
+    <div class="r-sec">5. Recommendation to IEP team</div>
+    <div class="r-box"><p><b>Recommendation:</b> <span data-out="recommendation_f"></span></p><p><b>Customization / next steps:</b> <span data-out="next_f"></span></p></div>
+    <p class="r-note">This summary documents a review of existing data and a dynamic, natural-environment trial conducted by the speech-language pathologist to determine appropriate instructional strategies and supports for expressive communication access. It is provided to the IEP team to inform consideration of assistive technology needs under IDEA special factors. It does not replace a formal assessment where access, motor, sensory, or multidisciplinary needs are identified.</p>
+    <table class="r r-sig"><tr><td style="width:33%"><span data-out="slp"></span><br>SLP / date generated: <span data-out="today"></span></td><td style="width:33%"><br>Case manager / date</td><td><br>Parent/guardian reviewed / date</td></tr></table>
+  </div></div></div>
+</section>
+</div>
+
+<script>
+// ================= CONFIG =================
+
+// Optional: also send each summary to the Google Form so it lands in the response Sheet.
+// Leave FORM_ACTION empty to turn this off. To fill it in:
+//   1. Open the Form editor > three-dot menu > Get pre-filled link.
+//   2. Type anything in every question, click Get link, copy it.
+//   3. The URL contains entry.123456=... pairs. Paste that URL into FORM_PREFILL_URL below.
+//      The script reads the entry IDs from it by matching the order of questions.
+const FORM_ACTION = '';   // e.g. 'https://docs.google.com/forms/d/e/1FAIpQLScGq22yVrbnL43CGUePj1EHNMq1rYmvMbg0JP4kLscrCWBMSg/formResponse'
+const FORM_ENTRY = {};    // e.g. { student:'entry.1234', dob:'entry.5678', ... }  (filled in later if you want the Sheet)
+
+const SCHOOLS = ['Bemis Elementary','Boyd Elementary','Casey Elementary','Curtis Elementary','Dollahan Elementary','Dunn Elementary','Fitzgerald Elementary','Garcia Elementary','Henry Elementary','Hughbanks Elementary','Kelley Elementary','Kordyak Elementary','Morgan Elementary','Morris Elementary','Myers Elementary','Preston Elementary','Simpson Elementary','Trapp Elementary','Werner Elementary','Frisbie Middle School','Jehue Middle School','Kolb Middle School','Kucera Middle School','Rialto Middle School','Carter High School','Eisenhower High School','Milor High School','Rialto High School','Zupanic Virtual Academy','Rialto Adult School','Preschool / Early Education','Other'];
+const FUNCTIONS = ['Request','Comment','Protest / reject','Question','Social / greeting','Direct others'];
+const GRIDS = ['','4x4','5x5','6x6','7x7','8x8','6x9','7x9','8x9','7x10','8x10','9x12','Other'];
+const VOCAB = ['Core word based','Category / folder based','Visual scene','Pre-programmed phrases','Keyboard / spelling available'];
+const SETTINGS = ['Speech session','Classroom instruction','Small group','Snack / lunch','Recess / play','Specials (PE, art, music)','Home (parent report)'];
+const SUPPORT = ['Independent','After an expectant pause','After aided language modeling'];
+const NAV = ['Navigated between pages independently','Navigated with modeling','Stayed on home page','Partner navigated for student'];
+const ENGAGE = ['Sustained engagement','Variable engagement','Minimal engagement','Rejected or avoided device'];
+// ==========================================
+
+const checks=(k,arr,type,name)=>arr.map(v=>`<label><input type="${type}" ${type==='radio'?`name="${name||k}"`:''} value="${v}">${v}</label>`).join('');
+
+// build school list, current-functions list, and trial blocks
+const sel=document.getElementById('school');SCHOOLS.forEach(s=>{const o=document.createElement('option');o.textContent=s;sel.appendChild(o);});
+document.getElementById('curFns').innerHTML=checks('cur_functions',FUNCTIONS,'checkbox');
+const trialsEl=document.getElementById('trials');
+for(let n=1;n<=3;n++){
+  trialsEl.insertAdjacentHTML('beforeend',`<div class="trial"><h3>Trial ${n}</h3>
+    <div class="row"><div><label>App / system</label><input data-k="t${n}_app" list="appList"></div><div><label>Grid size</label><select data-k="t${n}_grid">${GRIDS.map(g=>`<option>${g}</option>`).join('')}</select></div></div>
+    <label>Vocabulary organization</label><div class="checks" data-k="t${n}_vocab">${checks('',VOCAB,'checkbox')}</div>
+    <div class="row three"><div><label>Sessions</label><input type="number" min="0" data-k="t${n}_sessions"></div><div><label>Spontaneous / session</label><input type="number" min="0" data-k="t${n}_spont" placeholder="avg"></div><div><label>After a model / session</label><input type="number" min="0" data-k="t${n}_prompt" placeholder="avg"></div></div>
+    <label>Settings</label><div class="checks" data-k="t${n}_settings">${checks('',SETTINGS,'checkbox')}</div>
+    <label>Support needed most often</label><div class="checks" data-k="t${n}_support">${checks('',SUPPORT,'checkbox')}</div>
+    <label>Functions observed</label><div class="checks" data-k="t${n}_functions">${checks('',FUNCTIONS,'checkbox')}</div>
+    <div class="row"><div><label>Navigation</label><div class="checks col" data-k="t${n}_nav">${checks('',NAV,'radio',`t${n}_nav`)}</div></div>
+      <div><label>Engagement</label><div class="checks col" data-k="t${n}_engage">${checks('',ENGAGE,'radio',`t${n}_engage`)}</div></div></div>
+    <div class="row one"><div><label>Notes <span class="opt">(optional)</span></label><textarea data-k="t${n}_notes"></textarea></div></div></div>`);
+}
+
+function fmtDate(v){if(!v)return'';const [y,m,d]=v.split('-');return `${+m}/${+d}/${y}`;}
+function read(){
+  const d={};
+  document.querySelectorAll('[data-k]').forEach(el=>{
+    const k=el.dataset.k;
+    if(el.classList.contains('checks')) d[k]=[...el.querySelectorAll('input:checked')].map(i=>i.value).join(', ');
+    else d[k]=el.value.trim();
+  });
+  return d;
+}
+function setOut(k,v){document.querySelectorAll(`[data-out="${k}"]`).forEach(el=>{el.textContent=v||'';});}
+function join(parts,sep){return parts.filter(Boolean).join(sep||'; ');}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+function render(){
+  const d=read();
+  Object.keys(d).forEach(k=>setOut(k,d[k]));
+  setOut('dob_grade',join([fmtDate(d.dob),d.grade],' / '));
+  setOut('school_program',join([d.school,d.program],' / '));
+  setOut('iep_date_f',fmtDate(d.iep_date));
+  // current communication sentence
+  setOut('current_comm_f',join([
+    d.modes?`Communicates using ${d.modes}`:'',
+    d.cur_functions?`primarily to ${d.cur_functions.toLowerCase()}`:'',
+    d.partners==='__none'?'not yet consistently understood by communication partners':d.partners?`understood by ${d.partners}`:'',
+    d.intellig?`Speech: ${d.intellig.toLowerCase()}`:''
+  ],'; ')+(d.modes||d.cur_functions||d.partners||d.intellig?'.':''));
+  document.querySelector('[data-wrap="current_comm"]').style.display=d.current_comm?'':'none';
+  setOut('rationale_f',join([d.rationale_c?cap(d.rationale_c)+'.':'',d.rationale],' '));
+  setOut('next_f',join([d.next_c?cap(d.next_c)+'.':'',d.next_steps],' '));
+  setOut('recommendation_f',d.recommendation==='__other'?d.recommendation_other:d.recommendation);
+  setOut('today',new Date().toLocaleDateString('en-US'));
+  document.getElementById('recOtherRow').style.display=d.recommendation==='__other'?'':'none';
+  // trialed apps feed the best-fit suggestions
+  const dl=document.getElementById('appList');
+  [...dl.querySelectorAll('option[data-trial]')].forEach(o=>o.remove());
+  [d.t1_app,d.t2_app,d.t3_app].filter(Boolean).forEach(a=>{const o=document.createElement('option');o.value=a;o.dataset.trial='1';dl.prepend(o);});
+  // trial table
+  const t=document.getElementById('trialTable');
+  [...t.querySelectorAll('tr.trow')].forEach(r=>r.remove());
+  for(let n=1;n<=3;n++){
+    const g=k=>d[`t${n}_${k}`];
+    if(n>1&&!['app','grid','vocab','sessions','spont','prompt','settings','support','functions','nav','engage','notes'].some(k=>g(k)))continue;
+    const sys=join([g('app'),g('grid')&&g('grid')!=='Other'?`${g('grid')} grid`:g('grid'),g('vocab')?g('vocab').toLowerCase():''],'; ');
+    const sessions=join([
+      g('sessions')?`${g('sessions')} session${g('sessions')==='1'?'':'s'}`:'',
+      g('settings')?`(${g('settings').toLowerCase()})`:''
+    ],' ');
+    const sels=(g('spont')||g('prompt'))?`Avg selections per session: ${g('spont')||'0'} spontaneous / ${g('prompt')||'0'} after a model`:'';
+    const data=join([sessions,sels,g('support')?`Support: ${g('support').toLowerCase()}`:''],'. ');
+    const obs=join([g('functions')?`Functions: ${g('functions').toLowerCase()}`:'',g('nav'),g('engage'),g('notes')],'. ');
+    const tr=document.createElement('tr');tr.className='trow';
+    [String(n),sys,data?data+'.':'',obs?obs+'.':''].forEach(c=>{const td=document.createElement('td');td.textContent=c;td.style.height='22pt';tr.appendChild(td);});
+    t.appendChild(tr);
+  }
+  fitToPage();
+}
+// Shrink the report just enough to stay on one Letter page (floor 62%).
+function fitToPage(){
+  const sheet=document.getElementById('sheet'),inner=document.getElementById('sheetInner');
+  inner.style.transform='';inner.style.width='';
+  const pad=parseFloat(getComputedStyle(sheet).paddingTop)*2;
+  const avail=11*96-pad, need=inner.scrollHeight;
+  if(need<=avail)return 1;
+  let z=1;
+  for(let i=0;i<4;i++){ // widening the content reflows it shorter, so converge in a few passes
+    z=Math.max(.62,Math.min(1,Math.floor(avail/inner.scrollHeight*1000)/1000));
+    inner.style.width=(100/z)+'%';inner.style.transformOrigin='top left';inner.style.transform=`scale(${z})`;
+    if(inner.scrollHeight*z<=avail&&inner.scrollHeight*z>avail*.96)break;
+  }
+  let guard=40;
+  while(inner.scrollHeight*z>avail*.99&&z>.62&&guard--){ // never leave an overflow
+    z=Math.round((z-.005)*1000)/1000;inner.style.width=(100/z)+'%';inner.style.transform=`scale(${z})`;
+  }
+  return z;
+}
+// "Not yet understood" is exclusive with the partner boxes
+document.querySelector('[data-k="partners"]').addEventListener('change',e=>{
+  const box=e.target, all=[...e.currentTarget.querySelectorAll('input')];
+  if(!box.checked)return;
+  all.forEach(i=>{ if(i!==box && (box.value==='__none' || i.value==='__none')) i.checked=false; });
+});
+document.getElementById('entry').addEventListener('input',render);
+document.getElementById('entry').addEventListener('change',render);
+render();
+
+// Scale the on-screen preview down so the whole page is visible in whatever width the pane has
+function fitPreview(){
+  const pane=document.getElementById('previewpane'),sc=document.getElementById('sheetScaler');
+  if(!pane.offsetWidth)return;
+  const avail=pane.clientWidth-parseFloat(getComputedStyle(pane).paddingLeft)*2;
+  const z=Math.min(1,avail/816);
+  sc.style.transform=z<1?`scale(${z})`:'';sc.style.height=z<1?(1056*z)+'px':'';sc.style.marginLeft=z<1?'0':'';
+}
+function togglePreview(){const p=document.getElementById('previewpane');p.classList.toggle('show');document.getElementById('entry').style.display=p.classList.contains('show')?'none':'';document.getElementById('pvBtn').textContent=p.classList.contains('show')?'Back to form':'Preview';render();fitPreview();window.scrollTo(0,0);}
+window.addEventListener('resize',fitPreview);fitPreview();
+function clearForm(){if(!confirm('Clear everything on this page?'))return;document.querySelectorAll('[data-k]').forEach(el=>{if(el.classList.contains('checks'))el.querySelectorAll('input').forEach(i=>i.checked=false);else el.value='';});render();}
+
+// Printing is blocked inside the claude.ai artifact viewer, so the page builds the PDF itself there
+// (via the downloads capability). In any normal browser it falls back to the print dialog.
+let _dl; async function getDownloads(){ if(_dl===undefined){ try{_dl=(window.claude&&claude.use)?await Promise.race([claude.use('downloads'),new Promise(r=>setTimeout(()=>r(null),4000))]):null;}catch(e){_dl=null;} } return _dl; }
+function loadHtml2pdf(){ return new Promise((res,rej)=>{ if(window.html2pdf)return res(); const sc=document.createElement('script'); sc.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'; sc.onload=res; sc.onerror=rej; document.head.appendChild(sc); }); }
+// Hands the trial to the IEP Language Generator in a new tab. The generator reads it once and deletes it.
+function sendToIEP(){const d=read();if(!d.student||!d.t1_app){say('Student name and Trial 1 app are needed before sending.');return;}
+  try{localStorage.setItem('rusd_aac_trial',JSON.stringify(d));}catch(e){say('This browser would not hand the data over. Open the IEP Generator and type the trial details in.');return;}
+  const w=window.open('iep-generator.html?import=1','_blank');if(!w)location.href='iep-generator.html?import=1';}
+function say(msg,ok){const s=document.getElementById('status');s.className='status'+(ok?' ok':'');s.textContent=msg;s.scrollIntoView({block:'nearest'});}
+
+async function generate(){
+  const d=read();
+  if(!d.student||!d.slp||!d.t1_app){say('Student name, SLP name, and Trial 1 app are needed before saving.');alert('Student name, SLP name, and Trial 1 app are needed before saving.');return;}
+  render();
+  const fname=`AAC Trial Summary - ${d.student.replace(/[^A-Za-z0-9 ]/g,'')} - ${new Date().toLocaleDateString('en-US').replace(/\//g,'-')}`;
+  sendToForm(d);
+  const dl=await getDownloads();
+  if(dl){
+    say('Building the PDF...');
+    try{
+      await loadHtml2pdf();
+      const sheet=document.getElementById('sheet'),inner=document.getElementById('sheetInner');
+      // render at natural size, then scale the image to one Letter page
+      inner.style.transform='';inner.style.width='';
+      const natural=inner.scrollHeight+parseFloat(getComputedStyle(sheet).paddingTop)*2;
+      sheet.style.height=natural+'px';
+      let canvas;
+      try{ canvas=await html2pdf().set({html2canvas:{scale:2,useCORS:true,backgroundColor:'#fff'}}).from(sheet).toCanvas().get('canvas'); }
+      finally{ sheet.style.height=''; fitToPage(); }
+      const pdf=await html2pdf().set({jsPDF:{unit:'in',format:'letter',orientation:'portrait'}}).from(document.createElement('div')).toPdf().get('pdf');
+      const ratio=canvas.height/canvas.width;let w=8.5,h=w*ratio;
+      if(h>11){h=11;w=h/ratio;}
+      pdf.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',(8.5-w)/2,0,w,h);
+      const blob=pdf.output('blob');
+      await dl.save({filename:fname+'.pdf',data:blob});
+      say('PDF saved.',true);
+    }catch(e){ if(e&&e.code==='declined')say('Save cancelled.'); else say('Could not build the PDF here. Use Preview and your browser\'s print option instead.'); }
+    return;
+  }
+  document.title=fname;
+  fitToPage();
+  window.print();
+  document.title='AAC Trial Summary | Rialto AAC';
+}
+
+function sendToForm(d){
+  if(!FORM_ACTION||!Object.keys(FORM_ENTRY).length)return;
+  const fd=new FormData();
+  Object.keys(FORM_ENTRY).forEach(k=>{let v=d[k]||'';if(k==='recommendation'&&v==='__other')v=d.recommendation_other;fd.append(FORM_ENTRY[k],v);});
+  fetch(FORM_ACTION,{method:'POST',mode:'no-cors',body:fd}).then(()=>{const s=document.getElementById('status');s.className='status ok';s.textContent='Copy sent to the district response sheet.';}).catch(()=>{});
+}
+</script>
+</body>
+</html>
