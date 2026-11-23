@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas sobre la CAA | Rialto AAC</title>
+<style>
+  :root{--blue:#1A5294;--blue-light:#E8EFF8;--border:#d0d8e4;--white:#fff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Arial,sans-serif;font-size:15px;color:#1a1a1a;background:#f0f4f9;}
+  .topbar{background:var(--blue);color:#fff;padding:18px 32px;}
+  .topbar strong{font-size:20px;display:block;margin-bottom:4px;}
+  .topbar span{font-size:13px;opacity:0.8;}
+  .page{max-width:860px;margin:0 auto;padding:36px 24px 80px;}
+  .intro{background:var(--blue-light);border-left:5px solid var(--blue);padding:16px 20px;margin-bottom:28px;border-radius:0 6px 6px 0;font-size:14px;line-height:1.75;}
+  .search-bar{margin-bottom:28px;}
+  .search-bar input{width:100%;padding:11px 16px;border:2px solid var(--border);border-radius:6px;font-size:15px;font-family:Arial,sans-serif;outline:none;}
+  .search-bar input:focus{border-color:var(--blue);}
+  .faq{border:1px solid var(--border);border-radius:8px;margin-bottom:14px;overflow:hidden;background:var(--white);}
+  .faq.hidden{display:none;}
+  .faq-q{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px;font-weight:bold;color:var(--blue);line-height:1.5;user-select:none;}
+  .faq-q:hover{background:var(--blue-light);}
+  .arrow{transition:transform 0.2s;flex-shrink:0;}
+  .faq-q.open .arrow{transform:rotate(180deg);}
+  .faq-a{display:none;padding:16px 20px 20px;background:#fafbfd;border-top:1px solid var(--border);font-size:14px;line-height:1.8;}
+  .faq-a.open{display:block;}
+  .faq-a strong{color:var(--blue);}
+  .faq-a ul{margin:10px 0 0 20px;}
+  .faq-a li{margin-bottom:6px;}
+  .contact-box{background:var(--blue);color:white;border-radius:8px;padding:24px 28px;margin-top:40px;font-size:14px;line-height:2;}
+  .contact-box a{color:#fde68a;font-weight:bold;text-decoration:none;}
+  .footer{text-align:center;font-size:12px;color:#aaa;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <strong>CAA: Preguntas de las familias</strong>
+  <span>Rialto Unified School District &middot; Departamento de Educaci&oacute;n Especial</span>
+</div>
+
+<div class="page">
+
+  <div class="intro">
+    <strong>&iquest;Tiene preguntas sobre la CAA?</strong> No est&aacute; solo/a. Estas son las preguntas que las familias hacen con m&aacute;s frecuencia. Haga clic en cualquier pregunta para leer la respuesta.
+  </div>
+
+  <p style="text-align:right;margin:0 0 8px"><a href="../">In English</a></p>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Buscar preguntas..." oninput="doSearch()">
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Qu&eacute; es la CAA? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a"><strong>CAA significa Comunicaci&oacute;n Aumentativa y Alternativa.</strong> Se refiere a todas las formas en que las personas se comunican adem&aacute;s de las palabras habladas, incluyendo gestos, expresiones faciales, lenguaje de se&ntilde;as, s&iacute;mbolos de im&aacute;genes y aplicaciones que generan voz en tabletas. La CAA no es una sola cosa. Es un conjunto completo de herramientas que apoya la comunicaci&oacute;n de la manera que mejor funcione para cada persona.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;La CAA reemplazar&aacute; el habla de mi hijo/a? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a"><strong>No. La CAA no reemplaza el habla, y las investigaciones muestran que no retrasa el desarrollo del habla.</strong> De hecho, muchos estudios muestran que el acceso a herramientas de CAA apoya el crecimiento del habla natural con el tiempo. El objetivo es dar a su hijo/a m&aacute;s formas de comunicarse, no menos.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Mi hijo/a ya usa algunas palabras. &iquest;Por qu&eacute; necesita un dispositivo? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Muchos estudiantes que usan algunas palabras tambi&eacute;n se benefician de un dispositivo de CAA. El habla puede ser inconsistente. Puede funcionar bien en algunas situaciones y no en otras. Un dispositivo le da a su hijo/a una forma confiable de comunicarse incluso en los d&iacute;as en que el habla es m&aacute;s dif&iacute;cil.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Qu&eacute; es Proloquo2Go? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Proloquo2Go es la aplicaci&oacute;n de CAA que se usa en los salones de RUSD. Funciona en un iPad y contiene miles de botones con s&iacute;mbolos de im&aacute;genes que dicen palabras y frases en voz alta cuando se tocan. Se puede personalizar para adaptarse al vocabulario y las necesidades de comunicaci&oacute;n de cada estudiante.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Qu&eacute; es el Programa de CAA de RUSD? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">El Programa de CAA de RUSD da a 12 salones de Apoyo Extensivo (ESN) un grupo de iPads del sal&oacute;n con Proloquo2Go. El/la maestro/a tiene uno para modelar la comunicaci&oacute;n durante el d&iacute;a, y los iPads para estudiantes est&aacute;n disponibles para cualquier estudiante que los necesite. No se necesita una meta de IEP ni ning&uacute;n tr&aacute;mite para usar uno.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Qui&eacute;n puede usar el dispositivo del sal&oacute;n? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Cualquier estudiante en el sal&oacute;n puede usar un dispositivo. El programa est&aacute; dise&ntilde;ado para que el apoyo de comunicaci&oacute;n est&eacute; disponible para todos, no solo para estudiantes con metas espec&iacute;ficas de IEP. Ning&uacute;n estudiante tiene que esperar, calificar ni pedir permiso.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Por qu&eacute; el iPad del sal&oacute;n no va a casa? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Los iPads del sal&oacute;n son compartidos por los estudiantes del sal&oacute;n. Van con su hijo/a a todas partes durante el d&iacute;a escolar y se quedan en la escuela durante la noche para estar cargados y listos la ma&ntilde;ana siguiente. Para usar las mismas palabras en casa, pida al/a la maestro/a o al/a la SLP el tablero de palabras b&aacute;sicas de Proloquo2Go en papel. Tiene el mismo orden que el iPad del sal&oacute;n.<br><br>El <strong>dispositivo 1:1</strong> propio de un estudiante es diferente. Le pertenece a ese estudiante, es su voz, y va a casa todos los d&iacute;as.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Puede mi hijo/a obtener su propio dispositivo personal? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">S&iacute;, esto es posible. Hable con el/la SLP o el equipo de IEP de su hijo/a. El equipo observa c&oacute;mo se comunica su hijo/a durante el d&iacute;a escolar y decide junto con usted si un dispositivo personal es el siguiente paso adecuado. Un dispositivo personal va a casa con su hijo/a todos los d&iacute;as.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;C&oacute;mo puedo apoyar la comunicaci&oacute;n de mi hijo/a en casa? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">
+      No necesita un dispositivo en casa para apoyar a su hijo/a. Estas son las cosas m&aacute;s &uacute;tiles que puede hacer:
+      <ul>
+        <li><strong>Responda a todo intento de comunicaci&oacute;n</strong>, ya sea que su hijo/a se estire hacia algo, haga un sonido, un gesto o diga una palabra.</li>
+        <li><strong>D&eacute;le tiempo a su hijo/a para responder</strong> antes de intervenir.</li>
+        <li><strong>Comparta lo que funciona en casa</strong> con el/la SLP de su hijo/a.</li>
+        <li><strong>Pida ver el dispositivo</strong> en una visita escolar o reuni&oacute;n de IEP.</li>
+        <li><strong>Si su hijo/a tiene un dispositivo 1:1,</strong> mant&eacute;ngalo cargado y a la mano en casa tambi&eacute;n. Toque las palabras mientras habla, igual que el personal en la escuela.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Mi hijo/a usa se&ntilde;as en casa. &iquest;Debo decirle a la escuela? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a"><strong>S&iacute;, absolutamente.</strong> Las se&ntilde;as, los gestos y cualquier otra forma de comunicaci&oacute;n que su hijo/a use en casa son valiosas e importantes. Comp&aacute;rtalo con el/la SLP de su hijo/a para que la escuela tambi&eacute;n pueda reconocer y responder a esas formas.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Qui&eacute;n agrega palabras al dispositivo? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Todas las personas que trabajan con su hijo/a. Cada persona agrega las palabras que necesita en su &aacute;rea: el/la maestro/a para las lecciones, el/la SLP para las sesiones de habla, y terapia ocupacional o educaci&oacute;n f&iacute;sica adaptada para las suyas. Usted puede agregar palabras para la casa, como los nombres de la familia y las comidas favoritas. La &uacute;nica regla es que las palabras que su hijo/a ya usa se quedan en su lugar, porque su hijo/a las encuentra de memoria. Si agrega algo, av&iacute;sele al/a la maestro/a o al/a la SLP para que todos lo usen.</div>
+  </div>
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Qu&eacute; pasa si mi hijo/a se niega a usar el dispositivo? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Esto es muy com&uacute;n, especialmente al principio. El equipo del sal&oacute;n est&aacute; capacitado para ofrecer el dispositivo sin presi&oacute;n y para responder a todos los intentos de comunicaci&oacute;n. Si tiene preocupaciones, hable con el/la SLP de su hijo/a.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">&iquest;Puedo observar a mi hijo/a usando el dispositivo en el sal&oacute;n? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">S&iacute;. Usted puede solicitar una observaci&oacute;n en el sal&oacute;n. Comun&iacute;quese con el/la maestro/a o el/la SLP de su hijo/a para programar una hora.</div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q" onclick="toggle(this)">Tengo m&aacute;s preguntas. &iquest;A qui&eacute;n debo contactar? <span class="arrow">&#9660;</span></div>
+    <div class="faq-a">Comience con el/la SLP del sitio o el/la maestro/a del sal&oacute;n de su hijo/a. Para preguntas sobre el programa, comun&iacute;quese con el Especialista de CAA del Distrito en jbutanda@rialtousd.org, o <a href="https://docs.google.com/forms/d/e/1FAIpQLScHTMt_Zo2oq1x-jS3AmG8CcvsWxTjbI1qhtCEMPO1UnWY0ag/viewform">env&iacute;e su pregunta por el formulario para familias</a>.</div>
+  </div>
+
+  <div class="contact-box">
+    <strong>&iquest;Todav&iacute;a tiene preguntas? Queremos escucharle.</strong><br>
+    Jerry Butanda, M.S.-SLP, ATAC, AAC<br>
+    Especialista de CAA del Distrito &middot; Rialto Unified School District<br>
+    <a href="mailto:jbutanda@rialtousd.org">jbutanda@rialtousd.org</a>
+  </div>
+
+  <div class="footer">Programa de CAA de RUSD &middot; Rialto Unified School District &middot; Departamento de Educaci&oacute;n Especial</div>
+
+</div>
+
+<script>
+function toggle(el) {
+  var answer = el.nextElementSibling;
+  el.classList.toggle('open');
+  answer.classList.toggle('open');
+}
+
+function doSearch() {
+  var q = document.getElementById('search').value.trim().toLowerCase();
+  document.querySelectorAll('.faq').forEach(function(f) {
+    if (!q) {
+      f.classList.remove('hidden');
+    } else {
+      f.classList.toggle('hidden', !f.textContent.toLowerCase().includes(q));
+    }
+  });
+}
+</script>
+</body>
+</html>
