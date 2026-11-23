@@ -41,7 +41,7 @@
 </main>
 <script src="../shared/core.js"></script>
 <script>
-/* Deep links: apps/#p2g, apps/#tdsnap, apps/#touchchat */
+/* Deep links: apps/#p2g, apps/#tdsnap, apps/#touchchat, apps/#lamp */
 /* Hides the AACademy check-in line until launch. Change to true with pd-path's OPEN. */
 const OPEN=false;
 const CHECKIN_URL='https://docs.google.com/forms/d/e/1FAIpQLSfgV1gc7jxy3Q9dfNgkHOOE7wCR0tsZ0K7zoqmxn2dd3iWfvQ/viewform';
@@ -68,7 +68,14 @@ const A={
   map:[['https://aaclanguagelab.com/resources/wordpower-manual-communication-boards-prc-saltillo',{en:'WordPower light-tech boards',es:'Tableros de baja tecnología WordPower'},{en:'Printable boards and flipbooks for WordPower 25, 42, 60 and 108, including Spanish, on PRC-Saltillo\'s AAC Language Lab.',es:'Tableros y libritos imprimibles para WordPower 25, 42, 60 y 108, incluido español, en el AAC Language Lab de PRC-Saltillo.'}],
    [STAFF+'Basics_for_TouchChat.pdf',{en:'RUSD basics for TouchChat',es:'Lo básico de TouchChat (RUSD)'},{en:'Our one-page quick guide.',es:'Nuestra guía rápida de una página.'}]],
   try:{en:'TouchChat Discover is a free 30-day trial of the full app on an iPad. That\'s enough time to learn the layout and finish AACtivate.',es:'TouchChat Discover es una prueba gratis de 30 días de la aplicación completa en un iPad. Es tiempo suficiente para aprender la distribución y terminar AACtivate.'},
-  more:[['https://prc-saltillo.com/vocabularies/wordpower',{en:'About WordPower, from PRC-Saltillo',es:'Sobre WordPower, de PRC-Saltillo'},{en:'How the WordPower vocabularies compare, side by side.',es:'Cómo se comparan los vocabularios WordPower (en inglés).'}]]}};
+  more:[['https://prc-saltillo.com/vocabularies/wordpower',{en:'About WordPower, from PRC-Saltillo',es:'Sobre WordPower, de PRC-Saltillo'},{en:'How the WordPower vocabularies compare, side by side.',es:'Cómo se comparan los vocabularios WordPower (en inglés).'}]]},
+ lamp:{name:'LAMP Words for Life',maker:{en:'Made by PRC-Saltillo.',es:'Hecha por PRC-Saltillo.'},
+  vocab:{en:'LAMP has no topic folders. Every word has one fixed sequence of taps, from one to three. Students use the 1-Hit, Transition or Full vocabulary, and there\'s a Spanish/English version too. Check with the SLP which one your student has.',es:'LAMP no tiene carpetas por tema. Cada palabra tiene una sola secuencia fija de toques, de uno a tres. Los estudiantes usan el vocabulario 1-Hit, Transition o Full, y también hay una versión en español e inglés. Pregúntele al patólogo del habla cuál tiene su estudiante.'},
+  map:[['https://aaclanguagelab.com/resources/lamp-words-for-life-manual-boards',{en:'LAMP Words for Life manual boards',es:'Tableros manuales de LAMP Words for Life'},{en:'Printable boards, including English/Spanish, on PRC-Saltillo\'s AAC Language Lab.',es:'Tableros imprimibles, incluido español e inglés, en el AAC Language Lab de PRC-Saltillo.'}]],
+  try:{en:'LAMP Words for Life Discover is a free 30-day trial of the full app on an iPad. After the trial, it keeps a lite-tech board you can tap through without a voice, which is still a good way to learn where words are.',es:'LAMP Words for Life Discover es una prueba gratis de 30 días de la aplicación completa en un iPad. Después de la prueba, queda un tablero de baja tecnología que puede tocar sin voz, y sigue siendo una buena forma de aprender dónde están las palabras.'},
+  check2:{en:'Build "I want more," "I don\'t like it," and one word that takes three taps. Use Word Finder (Menu, then Word Finder) if you need it. Say each word out loud as you go. That\'s modeling.',es:'Forme "Quiero más", "No me gusta" y una palabra que necesite tres toques. Use Word Finder (Menu y luego Word Finder) si lo necesita. Diga cada palabra en voz alta. Eso es modelar.'},
+  more:[['https://prc-saltillo.com/apps/lamp-wfl',{en:'About LAMP Words for Life, from PRC-Saltillo',es:'Sobre LAMP Words for Life, de PRC-Saltillo'},{en:'Features, the Discover trial and support articles.',es:'Funciones, la prueba Discover y artículos de ayuda (en inglés).'}],
+   ['https://aacandautism.com/lamp/resources-and-support',{en:'The Center for AAC and Autism',es:'The Center for AAC and Autism'},{en:'Resources on the LAMP approach from the people who created it.',es:'Recursos sobre el método LAMP de quienes lo crearon (en inglés).'}]]}};
 const T={
  en:{h1:'Your Student\'s App',sub:'Learn where words live on the app your student uses, then show it with a quick check.',
   mapH:'Learn the map',mapP:'Every app has a paper version of its own layout, with words in the same spots. Look it over before you touch the real device.',
@@ -76,14 +83,14 @@ const T={
   check:['Ask your student: "Can I use your talker for a minute?"','Build "I want more," "I don\'t like it," and one word from inside a folder. Say each one out loud as you go. That\'s modeling.','Type your name on the keyboard.','Take a phone photo of the message bar, with no student in the photo. Hand the device right back.','Find the paper backup board in your room.'],
   checkP:'Email the photo to jbutanda@rialtousd.org with "App check" in the subject, then send your AACademy check-in.',send:'AACademy Check-In',
   moreH:'Go deeper',
-  foot:'Proloquo2Go, TD Snap and TouchChat belong to their makers. Links go to their own free materials. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
+  foot:'Proloquo2Go, TD Snap, TouchChat and LAMP Words for Life belong to their makers. Links go to their own free materials. Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
  es:{h1:'La aplicación de su estudiante',sub:'Aprenda dónde están las palabras en la aplicación de su estudiante y demuéstrelo con una revisión rápida.',
   mapH:'Aprenda el mapa',mapP:'Cada aplicación tiene una versión en papel de su propia distribución, con las palabras en los mismos lugares. Revísela antes de tocar el aparato real.',
   tryH:'Pruébela por su cuenta',checkH:'La revisión de la aplicación',
   check:['Pregúntele a su estudiante: "¿Puedo usar tu aparato un minuto?"','Forme "Quiero más", "No me gusta" y una palabra de adentro de una carpeta. Diga cada una en voz alta. Eso es modelar.','Escriba su nombre en el teclado.','Tome una foto con su teléfono de la barra de mensajes, sin el estudiante en la foto. Devuelva el aparato de inmediato.','Busque el tablero de papel de respaldo en su salón.'],
   checkP:'Envíe la foto a jbutanda@rialtousd.org con "App check" en el asunto y luego envíe su registro de AACademy.',send:'Registro de AACademy',
   moreH:'Para saber más',
-  foot:'Proloquo2Go, TD Snap y TouchChat pertenecen a sus creadores. Los enlaces van a sus propios materiales gratis. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
+  foot:'Proloquo2Go, TD Snap, TouchChat y LAMP Words for Life pertenecen a sus creadores. Los enlaces van a sus propios materiales gratis. Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
 const t=k=>T[L][k];
 const lk=([u,n,d])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(n[L])}<small>${esc(d[L])}</small></a>`;
 function render(){
@@ -94,7 +101,7 @@ function render(){
  <div class="blocks">
   <div class="blk"><h3><img src="${sym('map')}" alt="">${esc(t('mapH'))}</h3><p>${esc(t('mapP'))}</p><div class="warn">${esc(a.vocab[L])}</div><div class="links">${a.map.map(lk).join('')}</div></div>
   <div class="blk"><h3><img src="${sym('phone')}" alt="">${esc(t('tryH'))}</h3><p>${esc(a.try[L])}</p></div>
-  <div class="blk"><h3><img src="${sym('clipboard')}" alt="">${esc(t('checkH'))}</h3><ol>${t('check').map(s=>`<li>${esc(s)}</li>`).join('')}</ol>${OPEN?`<p>${esc(t('checkP'))}</p><div class="links"><a href="${esc(CHECKIN_URL)}" target="_blank" rel="noopener">${esc(t('send'))}</a></div>`:''}</div>
+  <div class="blk"><h3><img src="${sym('clipboard')}" alt="">${esc(t('checkH'))}</h3><ol>${t('check').map((s,i)=>`<li>${esc(i===1&&a.check2?a.check2[L]:s)}</li>`).join('')}</ol>${OPEN?`<p>${esc(t('checkP'))}</p><div class="links"><a href="${esc(CHECKIN_URL)}" target="_blank" rel="noopener">${esc(t('send'))}</a></div>`:''}</div>
   <div class="blk"><h3><img src="${sym('book')}" alt="">${esc(t('moreH'))}</h3><div class="links">${a.more.map(lk).join('')}</div></div>
  </div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-app]');if(b){cur=b.dataset.app;try{history.replaceState(null,'','#'+cur)}catch(err){}render()}});
