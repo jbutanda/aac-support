@@ -11,7 +11,8 @@
 /* IDEA one place to find every Rialto AAC guide, handout, form and tool
    LAYOUT search box, two rows of chips (who I am, what I need), then a short "start here" set
           until someone searches or picks a chip, so the first view is never the whole shelf
-   VIEWS  ?view=staff adds the Rialto-only items; ?who= and ?topic= preset the chips for embeds */
+   VIEWS  ?view=staff adds the Rialto-only items; ?who= and ?topic= preset the chips for embeds.
+   ?staff=slp (or teacher, related, admin) does both in one parameter, for site editors that mangle the &. */
 :root{--band:#1b3a5c;--maxw:1100px}
 .search{display:flex;align-items:center;gap:10px;background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:4px 6px 4px 14px;margin:0 0 16px}
 .search:focus-within{border-color:#1b3a5c}
@@ -74,7 +75,11 @@
 <script src="../shared/core.js"></script><script src="../shared/catalog.js"></script><script src="../shared/library.js"></script>
 <script>
 {
-const {esc}=AAC,$=id=>document.getElementById(id),qs=new URLSearchParams(location.search);
+const {esc}=AAC,$=id=>document.getElementById(id);
+// Presets come from the address. Accept ?a=b, #a=b, and an &amp; mangled by a site editor.
+const qs=new URLSearchParams((location.search.slice(1)+'&'+location.hash.slice(1)).replace(/&amp;/g,'&').replace(/(^|&)amp;/g,'$1'));
+// One-word staff presets with no ampersand: ?staff=slp is the same as ?view=staff&who=slp
+if(qs.get('staff')!==null){qs.set('view','staff');if(qs.get('staff')&&!qs.get('who'))qs.set('who',qs.get('staff'));}
 const STAFF=qs.get('view')==='staff',EMB=window.top!==window;
 const sym=window.AAC_LIBRARY_SYM;
 const T={
