@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printables</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* VOICE plain and useful, a shelf of handouts
+   IDEA every Rialto handout in one place, the same set for every app
+   PICTURE a grid of app cards, each listing the same four handouts so gaps are obvious
+   COLOUR navy band to match the printed handouts; each app card wears its own accent
+   TYPE Atkinson Hyperlegible
+   LAYOUT classroom handouts first, then one card per app */
+:root{--band:#1b3a5c;--maxw:1040px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.app{background:var(--tint);border-radius:20px;padding:18px;border-top:6px solid var(--c)}
+.app h3{margin:0 0 10px}
+.links{display:flex;flex-direction:column;gap:8px}
+.links a,.links .soon{display:block;background:var(--bg);color:var(--ink);border-radius:14px;padding:10px 14px;text-decoration:none;box-shadow:0 0 0 2px var(--line) inset;font-weight:700}
+.links a small,.links .soon small{display:block;font-weight:400;color:var(--soft)}
+.links a:hover{box-shadow:0 0 0 2px #1b3a5c inset}
+.links .soon{box-shadow:none;border:2px dashed var(--line);color:var(--soft);background:transparent}
+.note{margin:0 0 14px;color:var(--soft)}
+</style>
+</head>
+<body>
+<header class="band"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
+</div></header>
+<main class="wrap">
+  <section class="card"><h2 id="clH"></h2><p class="note" id="clP"></p><div class="links" id="cl"></div></section>
+  <section class="card"><h2 id="apH"></h2><p class="note" id="apP"></p><div class="grid" id="apps"></div></section>
+  <p class="foot" id="foot"></p>
+</main>
+<script src="../shared/core.js"></script>
+<script>
+{
+const {esc}=AAC,$=id=>document.getElementById(id);
+const STAFF='https://jbutanda.github.io/rusd_aac_staff/';
+const APPS=[
+ {name:'Proloquo2Go',pf:'Proloquo2Go',c:'#2b8a3e',basics:STAFF+'Basics_for_Proloquo2Go.pdf'},
+ {name:'TouchChat',pf:'TouchChat',c:'#e67700',basics:STAFF+'Basics_for_TouchChat.pdf'},
+ {name:'TD Snap',pf:'TDSnap',c:'#1c7ed6',basics:STAFF+'Basics_for_TD_Snap.pdf'},
+ {name:'LAMP Words for Life',pf:'LAMP',c:'#7048e8',basics:''}  /* LAMP basics: add the URL here when Jerry's sheet is ready */
+];
+const T={
+ en:{h1:'Printables',sub:'Every Rialto AAC handout in one place, with the same set for every app.',
+  clH:'For every classroom',clP:'These work with any app.',
+  cl:[['ESN_AAC_Academic_Access_Guide.pdf','AAC for academic access','A two-page quick guide: core words for thinking, modeling while you teach, and how the whole team builds the device.'],
+      ['ESN_Lesson_Planner.pdf','Find the core words in your lesson','A one-page planner for turning a lesson you already teach into a chance to talk.']],
+  apH:'For each app',apP:'Pick the app your student uses. Every app gets the same four handouts.',
+  basics:'Basics (how-to videos)',basicsD:'Scan a QR code to watch a short how-to video.',soonD:'Coming soon. The how-to video sheet for this app is on the way.',
+  core:'Core for Academics',coreD:'Core words for any subject, and how to find them in this app.',
+  fam:'Family Guide',famD:'One page for home: modeling, first words, and do\'s and don\'ts.',
+  team:'Team Guide',teamD:'Two pages for every adult on the team.',
+  foot:'Handouts by Jerry Butanda, District AAC Specialist, Rialto Unified School District. App names belong to their makers.'},
+ es:{h1:'Para imprimir',sub:'Todos los materiales de CAA de Rialto en un solo lugar, con el mismo juego para cada aplicación. Por ahora están en inglés.',
+  clH:'Para todos los salones',clP:'Sirven con cualquier aplicación.',
+  cl:[['ESN_AAC_Academic_Access_Guide.pdf','CAA para el acceso académico','Guía rápida de dos páginas: palabras clave para pensar, modelar mientras enseña y cómo todo el equipo construye el aparato.'],
+      ['ESN_Lesson_Planner.pdf','Encuentre las palabras clave en su lección','Un planificador de una página para convertir una lección que ya enseña en una oportunidad para hablar.']],
+  apH:'Para cada aplicación',apP:'Escoja la aplicación de su estudiante. Cada aplicación tiene los mismos cuatro materiales.',
+  basics:'Lo básico (videos)',basicsD:'Escanee un código QR para ver un video corto.',soonD:'Muy pronto. La hoja de videos para esta aplicación viene en camino.',
+  core:'Palabras clave para lo académico',coreD:'Palabras clave para cualquier materia y cómo encontrarlas en esta aplicación.',
+  fam:'Guía para familias',famD:'Una página para la casa: modelar, primeras palabras, qué hacer y qué no.',
+  team:'Guía para el equipo',teamD:'Dos páginas para todo el equipo.',
+  foot:'Materiales de Jerry Butanda, Especialista de CAA del Distrito Escolar Unificado de Rialto. Los nombres de las aplicaciones pertenecen a sus creadores.'}};
+const S={lang:AAC.pageLang()};
+const lk=(u,n,d)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}<small>${esc(d)}</small></a>`:`<span class="soon">${esc(n)}<small>${esc(d)}</small></span>`;
+const render=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;
+ ['h1','sub','clH','clP','apH','apP','foot'].forEach(k=>$(k).textContent=t[k]);
+ $('cl').innerHTML=t.cl.map(([f,n,d])=>lk(f,n,d)).join('');
+ $('apps').innerHTML=APPS.map(a=>`<div class="app" style="--c:${a.c}"><h3>${esc(a.name)}</h3><div class="links">
+  ${lk(a.basics,t.basics,a.basics?t.basicsD:t.soonD)}${lk(a.pf+'_Core_for_Academics.pdf',t.core,t.coreD)}${lk(a.pf+'_Family_Guide.pdf',t.fam,t.famD)}${lk(a.pf+'_Team_Guide.pdf',t.team,t.teamD)}</div></div>`).join('')};
+AAC.page(()=>S.lang,l=>{S.lang=l},render);
+AAC.deco($('deco'),[['printer',10,14,56,-8],['book',48,60,46,8],['clipboard',82,16,50,-6]]);
+}
+</script>
+<script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
+<script src="../shared/keep-lang.js"></script>
+</body>
+</html>
