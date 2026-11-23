@@ -115,7 +115,7 @@ const render=()=>{const t=T[S.lang],es=S.lang==='es',e=LIST[((S.wk%LIST.length)+
 
 const RT=[['',''],['arrival','la llegada'],['morning meeting','la reunión de la mañana'],['snack','la merienda'],['read-aloud','la lectura en voz alta'],['centers','los centros'],['transitions','las transiciones'],['lunch','el almuerzo'],['recess','el recreo']];
 const HN={pick:[],routine:0,from:'',cls:false};
-const CWB='https://download.assistiveware.com/aac/Proloquo2Go_CWB_EN_USA_UK_v1.pdf';
+const CWB='https://download.assistiveware.com/assistiveware/files/2024_P2G%20CWB_EN%20%28USA_UK%29_v1.pdf';
 const hnRender=()=>{const t=T[S.lang];
  $('hn').innerHTML=`<h2>${t.hn}</h2><p>${t.hnP}</p><div class="hn-chips">${LIST.map(e=>{const w=byId[e[0]];return `<button data-hw="${e[0]}" aria-pressed="${HN.pick.includes(e[0])}"><img src="${w.img}" alt="">${esc(w[S.lang])}</button>`}).join('')}</div>
  <div class="hn-f"><label>${t.hnR}<select class="in" id="hnR">${RT.map((r,i)=>`<option value="${i}"${i===HN.routine?' selected':''}>${esc(i?(S.lang==='es'?r[1]:r[0]):'—')}</option>`).join('')}</select></label><label>${t.hnN}<input class="in" id="hnN" value="${esc(HN.from)}" placeholder="${esc(t.hnNp)}"></label></div>
