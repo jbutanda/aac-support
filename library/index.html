@@ -51,11 +51,12 @@
 .none{color:var(--soft);margin:0}
 .none a{color:inherit;font-weight:700}
 .note{margin:14px 0 0;font-size:14px;color:var(--soft)}
+.full{display:inline-flex;color:var(--bandink);font-weight:700;margin-top:8px;text-decoration:underline;text-underline-offset:3px}
 </style>
 </head>
 <body>
 <header class="band flat"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
-  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p><a class="full" id="full" target="_blank" rel="noopener" hidden></a></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
 </div></header>
 <main class="wrap">
@@ -83,7 +84,7 @@ if(qs.get('staff')!==null){qs.set('view','staff');if(qs.get('staff')&&!qs.get('w
 const STAFF=qs.get('view')==='staff',EMB=window.top!==window;
 const sym=window.AAC_LIBRARY_SYM;
 const T={
- en:{h1:'Resource Library',sub:'Every Rialto AAC guide, handout, form and tool in one place. Search, or pick who you are.',
+ en:{full:'Open full page',h1:'Resource Library',sub:'Every Rialto AAC guide, handout, form and tool in one place. Search, or pick who you are.',
   subS:'Staff view. Items marked Rialto sign-in open only when you\'re signed in with your rialtousd.org Google account.',
   q:'Search: core words, broken iPad, trial, new para...',qx:'Clear',whoLab:'I am',topLab:'I\'m looking for',
   start:'Good places to start',n:'{n} results',n1:'1 result',all:'See everything ({n})',clr:'Clear filters',
@@ -94,7 +95,7 @@ const T={
   type:{tool:'Interactive',read:'Read',print:'Print',fill:'Fill in',form:'Form',site:'Website'},
   who:{all:'Everyone',family:'Family',teacher:'Teacher',para:'Paraeducator',slp:'SLP or SLPA',related:'Related services',admin:'Administrator'},
   top:{any:'Anything',start:'Getting started',model:'Modeling',core:'Core words',device:'The device',behavior:'Behavior and calm',school:'Academics',data:'Goals and data',eval:'Trials',home:'Home',funding:'Paying for a device',transition:'Transition',training:'Training',why:'Research and policy',es:'In Spanish'}},
- es:{h1:'Biblioteca de recursos',sub:'Todas las guías, materiales, formularios y herramientas de CAA de Rialto en un solo lugar. Busque o escoja quién es usted.',
+ es:{full:'Abrir en página completa',h1:'Biblioteca de recursos',sub:'Todas las guías, materiales, formularios y herramientas de CAA de Rialto en un solo lugar. Busque o escoja quién es usted.',
   subS:'Vista para el personal. Lo marcado Rialto sign-in solo se abre con su cuenta de Google de rialtousd.org.',
   q:'Busque: palabras clave, iPad roto, prueba...',qx:'Borrar',whoLab:'Soy',topLab:'Busco',
   start:'Buenos lugares para empezar',n:'{n} resultados',n1:'1 resultado',all:'Ver todo ({n})',clr:'Quitar filtros',
@@ -152,6 +153,7 @@ const draw=()=>{const t=T[S.lang];
  $('note').hidden=!list.some(([,x])=>x.type==='fill');
 };
 const render=()=>{const t=T[S.lang];document.documentElement.lang=S.lang;
+ if(EMB){const fl=$('full');fl.hidden=false;fl.href=location.href;fl.textContent=t.full+' ↗'}
  $('h1').textContent=t.h1;$('sub').textContent=STAFF?t.subS:t.sub;$('q').placeholder=t.q;$('qLab').textContent=t.q;$('qx').textContent=t.qx;
  $('whoLab').textContent=t.whoLab;$('topLab').textContent=t.topLab;$('clr').textContent=t.clr;$('note').textContent=t.note;$('foot').textContent=t.foot;draw()};
 $('q').value=S.q;
