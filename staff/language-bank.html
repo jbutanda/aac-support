@@ -114,18 +114,18 @@
 </head>
 <body>
 
-<div class="topbar">
+<div class="topbar" role="banner">
   <div class="topbar-logo">
     <strong>RUSD</strong>
     Special Education
   </div>
   <div>
-    <div class="topbar-title">IEP Language Bank and Annual Update</div>
+    <h1 class="topbar-title" style="margin:0">IEP Language Bank and Annual Update</h1>
     <div class="topbar-sub">AAC Program  |  Copy-paste ready language for IEPs, evaluations, and progress reports</div>
   </div>
 </div>
 
-<div class="page">
+<div class="page" role="main">
 
   <div class="modes" role="tablist">
     <button class="mode active" id="modeBrowse" role="tab" onclick="showMode('browse')">Browse passages</button>
@@ -452,6 +452,10 @@ function auClear(){
   document.getElementById('auPost').checked=false;auPostToggle();
   document.getElementById('auOut').innerHTML='';auSay('');
 }
+</script>
+<script>
+// Ties each label to the field after it so screen readers announce the field's name.
+(function(){let n=0;document.querySelectorAll('label:not([for])').forEach(l=>{if(l.querySelector('input,select,textarea'))return;let c=l.nextElementSibling;while(c&&!c.matches('input,select,textarea,.checks,.au-checks,[role=radiogroup]'))c=c.nextElementSibling;if(!c)return;if(c.matches('input,select,textarea')){if(!c.id)c.id='fld'+(++n);l.htmlFor=c.id;}else{if(!l.id)l.id='lbl'+(++n);c.setAttribute('role',c.getAttribute('role')||'group');c.setAttribute('aria-labelledby',l.id);}});})();
 </script>
 </body>
 </html>

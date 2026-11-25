@@ -14,7 +14,7 @@
    COLOUR white page, charcoal ink, rust red for Myth, green for Fact, AAC device key colours as accents
    TYPE Atkinson Hyperlegible throughout, same as Try an AAC Device
    LAYOUT title and controls on one row, card under it, score dots beneath; phone stacks the same */
-:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--myth:#c2410c;--fact:#2b8a3e;--mythbg:light-dark(#fff1e8,#3a1d10);--factbg:light-dark(#ebfbee,#13301b);--focus:light-dark(#1f7a3a,#6fd68e)}
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--myth:#c2410c;--fact:#28803a;--mythbg:light-dark(#fff1e8,#3a1d10);--factbg:light-dark(#ebfbee,#13301b);--focus:light-dark(#1f7a3a,#6fd68e)}
 :root[data-theme=light]{color-scheme:light}
 :root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
@@ -135,7 +135,7 @@ body{background:light-dark(#f3f5ff,#0f1222)}
     </div>
   </div>
 </header>
-<div class="wrap">
+<div class="wrap" role="main">
   <div class="hud" id="hud" aria-hidden="true"></div>
   <div id="play"></div>
   <div class="dots" id="dots" aria-hidden="true"></div>
@@ -229,13 +229,13 @@ const render=()=>{const t=T[S.lang],n=C.length;
  if(S.done){$('play').innerHTML=`<div class="end"><img class="trophy" src="symbols/trophy.svg" alt=""><div class="big">${right()}/${n}</div><h2 style="margin:0;font-size:28px">${t.endT}</h2><p>${t.endP(right(),n)}</p><p style="color:var(--soft)">${t.ask2}</p><div class="row"><button class="next" id="again" style="margin:0">${t.again}</button><a class="try" href="${TALK}" target="_blank" rel="noopener">${t.talker}</a></div></div>`;return}
  const c=C[S.i],L=c[S.lang],r=S.res[S.i],isM=c.v==='m';
  $('play').innerHTML=`<div class="stage"><div class="card${S.flip?' flip':''}" id="card">
-  <section class="face front" aria-hidden="${S.flip}">
+  <section class="face front"${S.flip?' inert aria-hidden="true"':''}>
    <div class="meta"><span>${t.of(S.i+1,n)}</span><button class="say" id="sayq">${spk}${t.read}</button></div>
    <div class="qwrap"><div class="sym"><img src="symbols/${c.s}.svg" alt=""></div><p class="q">“${esc(L.q)}”</p></div>
    <p class="ask">${t.ask}</p>
    <div class="guess"><button class="gm" data-g="m">${t.myth}</button><button class="gf" data-g="f">${t.fact}</button></div>
   </section>
-  <section class="face back ${c.v}" aria-hidden="${!S.flip}">
+  <section class="face back ${c.v}"${S.flip?'':' inert aria-hidden="true"'}>
    <div class="meta"><span>${t.of(S.i+1,n)}</span><button class="say" id="saya">${spk}${t.read}</button></div>
    <div><span class="stamp">${isM?t.MYTH:t.FACT}</span></div>
    <p class="you">${r===true?t.right:t.wrong}</p>

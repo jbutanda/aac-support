@@ -10,7 +10,7 @@
 <style>
 /* IDEA a friendly repair counter: pick what's wrong, try one fix at a time, celebrate when it works
    LAYOUT symptom tiles -> one-step-at-a-time fixer -> "still stuck" note for the team */
-:root{--band:#1c7ed6;--maxw:980px;--decol:70%}
+:root{--band:#1972c2;--maxw:980px;--decol:70%}
 .lead{font-size:19px;margin:0 0 16px}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .tile{font:inherit;text-align:left;border:0;border-radius:20px;padding:16px;cursor:pointer;display:flex;gap:12px;align-items:center;background:var(--tint);color:var(--ink);min-height:84px;transition:transform .15s,box-shadow .15s;box-shadow:inset 0 0 0 2px transparent}
@@ -75,7 +75,7 @@ const P=[
   ['Desconecte audífonos y revise Bluetooth','La voz puede estar saliendo por audífonos o una bocina. Desconecte los audífonos. Luego abra Configuración, toque Bluetooth y apáguelo para probar.'],
   ['Cierre la aplicación y ábrala otra vez','Deslice el dedo hacia arriba desde abajo y espere. Deslice la aplicación de CAA hacia arriba para cerrarla. Luego ábrala otra vez.'],
   ['Reinicie el iPad','Mantenga presionado el botón de arriba y un botón de volumen hasta ver el control para apagar, y deslícelo. En iPads con botón de inicio redondo, solo mantenga el botón de arriba. Espere 30 segundos y préndalo.']]}},
-{id:'stuck',a:'#e8590c',ic:'lock',c:'#ffd8a8',
+{id:'stuck',a:'#bf490a',ic:'lock',c:'#ffd8a8',
  en:{t:'Stuck in the app',d:'Can’t leave or switch apps',s:[
   ['This may be on purpose','Many students use Guided Access, which keeps the iPad locked in the AAC app so they don’t wander into games. That is usually a good thing.'],
   ['Unlock it with the code','Press the top button (or the Home button) three times fast. Type the Guided Access code. Ask the teacher or SLP for it. Please turn it back on when you are done.'],
@@ -106,7 +106,7 @@ const P=[
   ['No mueva cosas para arreglarlo','Mover más botones lo hace más difícil de arreglar. Déjelo así por ahora.'],
   ['Tome una captura de pantalla','Presione el botón de arriba y el de subir volumen al mismo tiempo. Envíe la foto al terapeuta para que vea qué cambió.'],
   ['Pregunte por el bloqueo de edición','Las aplicaciones de CAA pueden bloquear la edición para que nadie mueva palabras por accidente. Pida al terapeuta que lo active. Algunas palabras pueden estar escondidas a propósito.']]}},
-{id:'battery',a:'#2b8a3e',ic:'lowbattery',c:'#b2f2bb',
+{id:'battery',a:'#28803a',ic:'lowbattery',c:'#b2f2bb',
  en:{t:'Battery dies fast',d:'Or won’t charge',s:[
   ['Charge it every night','Plug it in at the same spot every night, somewhere you will see it in the morning. A full battery should last the school day.'],
   ['Check the cable and outlet','Look for bends or frayed spots on the cable. Try a different outlet. Use the charger that came with the device if you can.'],
@@ -119,7 +119,7 @@ const P=[
   ['Active el Modo de bajo consumo','Abra Configuración, toque Batería y active Modo de bajo consumo. Ayuda a que dure más.'],
   ['Baje un poco el brillo','Deslice hacia abajo desde la esquina superior derecha y baje el sol un poco.'],
   ['Avise a la escuela si sigue igual','Si una carga completa dura solo unas horas, la batería puede necesitar servicio. Avise al equipo.']]}},
-{id:'dark',a:'#e67700',ic:'brightness',c:'#ffec99',
+{id:'dark',a:'#ab5900',ic:'brightness',c:'#ffec99',
  en:{t:'Screen goes dark',d:'Locks too fast or too dim',s:[
   ['Turn the brightness up','Swipe down from the top right corner and slide the sun up.'],
   ['Check Auto-Lock','Open Settings, tap Display & Brightness, then Auto-Lock. A longer time keeps the screen on while the student is thinking. On school devices this may be set by the district.']]},

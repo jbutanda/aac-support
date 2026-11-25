@@ -45,7 +45,7 @@ details summary{cursor:pointer;font-weight:700;min-height:40px;display:flex;alig
 .lvk{border-radius:18px;padding:14px 16px;color:#fff;background:var(--lc)}
 .lvk b{display:block;font-size:clamp(30px,4vw,40px);line-height:1.05;font-variant-numeric:tabular-nums}
 .lvk span{font-weight:700;font-size:15px}
-.lvk small{display:block;font-size:13px;opacity:.9;margin-top:2px}
+.lvk small{display:block;font-size:13px;opacity:1;margin-top:2px}
 @media(max-width:640px){.lvs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
@@ -86,7 +86,7 @@ const draw=(d,sample)=>{$('flag').style.display=sample?'':'none';
  bars($('c1'),d,'staff_trained','Staff trained each month','People who attended an AAC training.','staff');
  bars($('c2'),d,'requests','AAC requests each month','New requests for AAC support from site teams.','requests');
 
- const lv=[['aactivate','AACtivate','#1c7ed6','90 minutes plus a classroom task'],['praactice','PrAACtice','#2b8a3e','two weeks of daily modeling'],['teaach','TeAACh','#7048e8','a lesson and a coaching visit'],['coaach','CoAACh','#e67700','site go-to people']];
+ const lv=[['aactivate','AACtivate','#1972c2','90 minutes plus a classroom task'],['praactice','PrAACtice','#28803a','two weeks of daily modeling'],['teaach','TeAACh','#7048e8','a lesson and a coaching visit'],['coaach','CoAACh','#ab5900','site go-to people']];
  const tot=lv.map(([k])=>sum(d,k));
  $('acad').innerHTML=`<h2 style="margin:0">AACademy</h2><p style="margin:4px 0 0">${tot[0]} staff have finished AACtivate this year${tot[1]?`, and ${tot[1]} have gone on to finish PrAACtice`:''}.</p><div class="lvs">${lv.map(([k,n,c,x],i)=>`<div class="lvk" style="--lc:${c}"><b>${tot[i]}</b><span>${n}</span><small>${x}</small></div>`).join('')}</div>`;
  const cols=['month','staff_trained','trainings','requests','median_days','classrooms_with_ipads','aactivate','praactice','teaach','coaach'],lab=['Month','Staff trained','Trainings','Requests','Median days','Classrooms with iPads','AACtivate','PrAACtice','TeAACh','CoAACh'];

@@ -47,13 +47,17 @@
 .match .tc{box-shadow:0 0 0 2px var(--c)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
 .all{margin-top:8px}
+.urgent{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;background:var(--warnbg);border-radius:14px;padding:10px 14px;margin:0 0 16px;font-weight:700}
+.urgent a{color:var(--warn);text-decoration:underline;text-underline-offset:3px}
+.more{font:inherit;font-weight:700;min-height:44px;padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.full{display:inline-flex;align-items:center;gap:6px;color:var(--bandink);font-weight:700;margin-top:10px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:760px){.opts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:460px){.opts{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="band has-hero"><div class="deco" id="deco" aria-hidden="true"></div><div class="bandin">
-  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="top"><div><h1 id="h1"></h1><p class="sub" id="sub"></p><a class="full" id="full" href="./" target="_blank" rel="noopener" hidden></a></div>
   <div class="ctrls" id="langs"><button class="pill" data-l="en">English</button><button class="pill" data-l="es">Español</button></div></div>
 
   <img class="hero" id="hero" src="../shared/art/start-here.jpg" alt="People arriving along paths at an open school door, including a student who uses a wheelchair and holds a communication tablet." data-en="People arriving along paths at an open school door, including a student who uses a wheelchair and holds a communication tablet." data-es="Personas llegando por caminos a la puerta abierta de una escuela, entre ellas un estudiante en silla de ruedas con una tableta de comunicación." width="960" height="540">
@@ -67,16 +71,16 @@
 <script src="../shared/core.js"></script><script src="../shared/catalog.js"></script><script src="../shared/bookmark.js"></script>
 <script>
 const {esc,sym}=AAC,$=id=>document.getElementById(id),CAT=window.AAC_CATALOG.filter(x=>x.id!=='start-here'),MY=window.AAC_MYTOOLS;
-let L=AAC.pageLang(),step=0,ans={},filt='all';
+let L=AAC.pageLang(),step=0,ans={},filt='all',showAll=false;
 const T={en:{h1:'Welcome! Start here.',sub:'Answer three quick questions and we’ll point you to the AAC tools that fit you best.',my:'My Tools',myEmpty:'Tap the star on any tool to save it here. Saved tools stay in this browser.',
- q:['Who are you?','What do you need today?','How much time do you have?'],back:'← Back',matches:'Your best matches',redo:'Start over',all:'Every tool',everyone:'Everyone',open:'Open',min:'About {m} min',save:'Save to My Tools',unsave:'Remove from My Tools',
- who:[['family','A parent or family member','At home with a child who uses AAC'],['teacher','A teacher','Classroom, any grade'],['para','A para or aide','Supporting students all day'],['slp','An SLP or related service','Speech, OT, behavior, nursing'],['admin','An administrator','Principal, coordinator, director'],['peer','A student or classmate','Friend of an AAC user']],
+ q:['Who are you?','What do you need today?','How much time do you have?'],back:'← Back',matches:'Your best matches',redo:'Start over',all:'Every tool',showAll:'Show every tool ({n})',hideAll:'Hide the list',urgent:'Device not working right now?',urgentGo:'Go straight to the Help Desk',full:'Open full page',everyone:'Everyone',open:'Open',min:'About {m} min',save:'Save to My Tools',unsave:'Remove from My Tools',
+ who:[['family','A parent or family member','At home with a child who uses AAC'],['teacher','A teacher','Classroom, any grade'],['para','A para or aide','Supporting students all day'],['slp','An SLP, OT or other related service','Speech, OT, PT, APE, vision, hearing, behavior, nursing'],['admin','An administrator','Principal, coordinator, director'],['peer','A student or classmate','Friend of an AAC user']],
  want:[['basics','Learn the basics','New to AAC or want a refresher'],['help','Help with a problem now','Something isn’t working'],['practice','Practice modeling','Build the habit'],['print','Something to print','Boards, cards, handouts'],['fun','Something fun','Games and activities'],['plan','Plan or check progress','Data, checklists, next steps']],
  time:[[3,'A couple of minutes',''],[10,'About ten minutes',''],[60,'I have more time','']],
  foot:'Symbols: OpenMoji (openmoji.org), CC BY-SA 4.0.'},
 es:{h1:'¡Bienvenidos! Empiecen aquí.',sub:'Contesten tres preguntas rápidas y les mostraremos las herramientas de CAA que mejor les sirven.',my:'Mis herramientas',myEmpty:'Toque la estrella en cualquier herramienta para guardarla aquí. Se guardan en este navegador.',
- q:['¿Quién es usted?','¿Qué necesita hoy?','¿Cuánto tiempo tiene?'],back:'← Atrás',matches:'Sus mejores opciones',redo:'Empezar de nuevo',all:'Todas las herramientas',everyone:'Todos',open:'Abrir',min:'Unos {m} min',save:'Guardar en Mis herramientas',unsave:'Quitar de Mis herramientas',
- who:[['family','Padre o familiar','En casa con un niño que usa CAA'],['teacher','Maestro','En el salón, cualquier grado'],['para','Asistente','Apoya a estudiantes todo el día'],['slp','Terapeuta o servicio relacionado','Habla, TO, conducta, enfermería'],['admin','Administrador','Director, coordinador'],['peer','Estudiante o compañero','Amigo de un usuario de CAA']],
+ q:['¿Quién es usted?','¿Qué necesita hoy?','¿Cuánto tiempo tiene?'],back:'← Atrás',matches:'Sus mejores opciones',redo:'Empezar de nuevo',all:'Todas las herramientas',showAll:'Ver todas las herramientas ({n})',hideAll:'Ocultar la lista',urgent:'¿El dispositivo no funciona ahora?',urgentGo:'Vaya directo a Ayuda con el dispositivo',full:'Abrir en página completa',everyone:'Todos',open:'Abrir',min:'Unos {m} min',save:'Guardar en Mis herramientas',unsave:'Quitar de Mis herramientas',
+ who:[['family','Padre o familiar','En casa con un niño que usa CAA'],['teacher','Maestro','En el salón, cualquier grado'],['para','Asistente','Apoya a estudiantes todo el día'],['slp','Terapeuta del habla, TO u otro servicio','Habla, TO, TF, educación física adaptada, visión, audición, conducta, enfermería'],['admin','Administrador','Director, coordinador'],['peer','Estudiante o compañero','Amigo de un usuario de CAA']],
  want:[['basics','Aprender lo básico','Nuevo en la CAA o quiere repasar'],['help','Ayuda con un problema ahora','Algo no funciona'],['practice','Practicar el modelado','Crear el hábito'],['print','Algo para imprimir','Tableros, tarjetas, folletos'],['fun','Algo divertido','Juegos y actividades'],['plan','Planear o revisar progreso','Datos, listas, próximos pasos']],
  time:[[3,'Un par de minutos',''],[10,'Unos diez minutos',''],[60,'Tengo más tiempo','']],
  foot:'Símbolos: OpenMoji (openmoji.org), CC BY-SA 4.0.'}};
@@ -90,23 +94,27 @@ function card(x){const on=MY.has(x.id);return `<article class="tc" style="${cv(x
  <button class="st" data-star="${x.id}" aria-pressed="${on}" aria-label="${on?t('unsave'):t('save')}">${star(on)}</button>
  <div class="bd"><p>${esc(L==='es'?x.des:x.den)}</p><div class="meta"><span class="min">${t('min').replace('{m}',x.min)}</span><a class="open" href="../${x.id}/"${tgt}>${t('open')} →</a></div></div></article>`}
 function shelf(){const ids=MY.read().filter(id=>CAT.some(x=>x.id===id));
+ $('shelf').hidden=!ids.length;if(!ids.length){$('shelf').innerHTML='';return}
  $('shelf').innerHTML=`<h2><img src="${sym('star')}" alt="">${t('my')}</h2>${ids.length?`<div class="mini">${ids.map(id=>{const x=CAT.find(c=>c.id===id);return `<a href="../${x.id}/" style="${cv(x)}"${tgt}><img src="${x.icon}" alt="">${esc(x[L])}</a>`}).join('')}</div>`:`<p class="empty">${t('myEmpty')}</p>`}`}
 function wiz(){
  if(step>=3){const scored=CAT.map(x=>{let s=0;if(x.who.includes(ans.who))s+=3;if(x.want.includes(ans.want))s+=3;if(x.min<=ans.time)s+=1;else if(ans.time<10&&x.min>10)s-=2;return [s,x]}).filter(([s])=>s>=4).sort((a,b)=>b[0]-a[0]).slice(0,4).map(([,x])=>x);
   const lab=(k,v)=>t(k).find(o=>String(o[0])===String(v))[1];
   $('wiz').innerHTML=`<h2 class="qh">${t('matches')}</h2><div class="picked"><span>${esc(lab('who',ans.who))}</span><span>${esc(lab('want',ans.want))}</span><span>${esc(lab('time',ans.time))}</span></div><div class="cards match">${scored.map(card).join('')}</div><button class="back" data-a="redo">${t('redo')}</button>`;return}
  const key=['who','want','time'][step],opts=t(key);
- $('wiz').innerHTML=`<div class="steps">${[0,1,2].map(i=>`<i class="${i<=step?'on':''}"></i>`).join('')}</div><h2 class="qh">${t('q')[step]}</h2>
+ const urgent=step===0?`<p class="urgent">${t('urgent')} <a href="../help-desk/"${tgt}>${t('urgentGo')} →</a></p>`:'';
+ $('wiz').innerHTML=urgent+`<div class="steps">${[0,1,2].map(i=>`<i class="${i<=step?'on':''}"></i>`).join('')}</div><h2 class="qh">${t('q')[step]}</h2>
  <div class="opts">${opts.map(([v,a,b])=>`<button class="opt" data-k="${key}" data-v="${v}"><img src="${sym(IC[v])}" alt=""><span>${esc(a)}${b?`<small>${esc(b)}</small>`:''}</span></button>`).join('')}</div>${step?`<button class="back" data-a="back">${t('back')}</button>`:''}`}
 function all(){const who=t('who');
  const list=CAT.filter(x=>filt==='all'||x.who.includes(filt));
- $('all').innerHTML=`<h2><img src="${sym('compass')}" alt="">${t('all')}</h2><div class="chips"><button class="pill" data-f="all" aria-pressed="${filt==='all'}">${t('everyone')}</button>${who.map(([v,a])=>`<button class="pill" data-f="${v}" aria-pressed="${filt===v}">${esc(a)}</button>`).join('')}</div><div class="cards">${list.map(card).join('')}</div>`}
+ if(!showAll){$('all').innerHTML=`<h2><img src="${sym('compass')}" alt="">${t('all')}</h2><button class="more" data-more="1" aria-expanded="false">${t('showAll').replace('{n}',CAT.length)}</button>`;return}
+ $('all').innerHTML=`<h2><img src="${sym('compass')}" alt="">${t('all')}</h2><button class="more" data-more="0" aria-expanded="true" style="margin-bottom:14px">${t('hideAll')}</button><div class="chips"><button class="pill" data-f="all" aria-pressed="${filt==='all'}">${t('everyone')}</button>${who.map(([v,a])=>`<button class="pill" data-f="${v}" aria-pressed="${filt===v}">${esc(a)}</button>`).join('')}</div><div class="cards">${list.map(card).join('')}</div>`}
 document.addEventListener('click',e=>{
  const o=e.target.closest('[data-k]');if(o){ans[o.dataset.k]=o.dataset.k==='time'?+o.dataset.v:o.dataset.v;step++;wiz();return}
  const a=e.target.closest('[data-a]');if(a){if(a.dataset.a==='back'){step=Math.max(0,step-1)}if(a.dataset.a==='redo'){step=0;ans={}}wiz();return}
+ const m=e.target.closest('[data-more]');if(m){showAll=m.dataset.more==='1';all();if(showAll)$('all').querySelector('.chips button').focus();return}
  const f=e.target.closest('[data-f]');if(f){filt=f.dataset.f;all();return}
  const s=e.target.closest('[data-star]');if(s){MY.toggle(s.dataset.star);shelf();wiz();all()}});
-function render(){$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('foot').textContent=t('foot');document.title=t('h1');shelf();wiz();all()}
+function render(){const fl=$('full');if(window.top!==window.self){fl.hidden=false;fl.textContent=t('full')+' ↗'}$('h1').textContent=t('h1');$('sub').textContent=t('sub');$('foot').textContent=t('foot');document.title=t('h1');shelf();wiz();all()}
 AAC.deco($('deco'),[['compass',8,10,64,-8],['star',46,56,44,8],['map',80,12,56,6],['sparkles',28,60,40,0]]);
 (function(){const h=document.getElementById('hero');const sync=()=>{if(h)h.alt=h.dataset[document.documentElement.lang==='es'?'es':'en']};new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});sync()})();
 AAC.page(()=>L,l=>L=l,render);

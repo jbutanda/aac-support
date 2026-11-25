@@ -14,7 +14,7 @@
    COLOUR white page, charcoal ink, green best, amber close, rust try again
    TYPE Atkinson Hyperlegible, same family as the other tools
    LAYOUT filters row, card, choices stacked full width so long text reads well on a phone */
-:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--best:#2b8a3e;--bestbg:light-dark(#ebfbee,#13301b);--close:#9a6700;--closebg:light-dark(#fff8e1,#30260b);--no:#c2410c;--nobg:light-dark(#fff1e8,#3a1d10);--focus:light-dark(#1f7a3a,#6fd68e)}
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121317);--ink:light-dark(#16181d,#eceef2);--soft:light-dark(#5b6170,#a7adbb);--line:light-dark(#e3e5ea,#2c2f38);--card:light-dark(#ffffff,#1b1d23);--tint:light-dark(#f5f6f8,#22252c);--best:#28803a;--bestbg:light-dark(#ebfbee,#13301b);--close:#9a6700;--closebg:light-dark(#fff8e1,#30260b);--no:#c2410c;--nobg:light-dark(#fff1e8,#3a1d10);--focus:light-dark(#1f7a3a,#6fd68e)}
 :root[data-theme=light]{color-scheme:light}
 :root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
@@ -122,7 +122,7 @@ body{background:light-dark(#fffbea,#14120a)}
   </div>
   <div class="filters" id="filters"></div>
 </div></header>
-<div class="wrap">
+<div class="wrap" role="main">
   <div class="meter" id="meter" aria-hidden="true"></div>
   <div class="card" id="card" aria-live="polite"></div>
   <p class="foot" id="foot"></p>
@@ -239,7 +239,7 @@ const T={
 const QL=()=>{try{const q=new URLSearchParams(location.search).get('lang');return q==='es'||q==='en'?q:''}catch(e){return ''}};const S={lang:QL()||'en',f:'all',i:0,pick:{},done:false};
 const $=id=>document.getElementById(id);
 const list=()=>SC.map((s,k)=>({s,k})).filter(x=>S.f==='all'||x.s.who.includes(S.f));
-const confetti=(el,n=60)=>{try{if(matchMedia('(prefers-reduced-motion: reduce)').matches||!el)return;const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+Math.min(r.height/2,120);const cols=['#ffe066','#8ce99a','#8fc7ff','#d0b3ff','#ffb3d1','#2b8a3e'];for(let i=0;i<n;i++){const p=document.createElement('i');p.className='cf';p.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[i%cols.length]};width:${6+Math.random()*6}px;height:${8+Math.random()*9}px`;document.body.appendChild(p);const a=Math.random()*Math.PI*2,v=100+Math.random()*260,dx=Math.cos(a)*v,dy=Math.sin(a)*v-180;p.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},{transform:`translate(${dx}px,${dy+400}px) rotate(${Math.random()*720-360}deg)`,opacity:0}],{duration:1100+Math.random()*800,easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish=()=>p.remove()}}catch(e){}};
+const confetti=(el,n=60)=>{try{if(matchMedia('(prefers-reduced-motion: reduce)').matches||!el)return;const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+Math.min(r.height/2,120);const cols=['#ffe066','#8ce99a','#8fc7ff','#d0b3ff','#ffb3d1','#28803a'];for(let i=0;i<n;i++){const p=document.createElement('i');p.className='cf';p.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[i%cols.length]};width:${6+Math.random()*6}px;height:${8+Math.random()*9}px`;document.body.appendChild(p);const a=Math.random()*Math.PI*2,v=100+Math.random()*260,dx=Math.cos(a)*v,dy=Math.sin(a)*v-180;p.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},{transform:`translate(${dx}px,${dy+400}px) rotate(${Math.random()*720-360}deg)`,opacity:0}],{duration:1100+Math.random()*800,easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish=()=>p.remove()}}catch(e){}};
 document.getElementById('sdeco').innerHTML=[['class',8,14,64,-8],['recess',40,8,56,8],['cafe',72,18,52,-6],['home',20,56,58,6],['peers',58,52,54,-10],['lunch',86,60,46,10]].map(([n,x,y,z,r],i)=>`<img src="symbols/${n}.svg" alt="" style="left:${x}%;top:${y}%;width:${z}px;transform:rotate(${r}deg);animation-delay:${-i*0.9}s">`).join('');
 const render=()=>{const t=T[S.lang],L=list(),n=L.length;$('meter').innerHTML=L.map((x,j)=>{const p=S.pick[x.k];return `<i class="${p!=null?x.s.o[p][0]:''}${j===S.i&&!S.done?' cur':''}"></i>`}).join('');document.documentElement.lang=S.lang;$('h1').textContent=t.h1;$('sub').textContent=t.sub;$('foot').textContent=t.foot;
  document.querySelectorAll('[data-l]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===S.lang));
