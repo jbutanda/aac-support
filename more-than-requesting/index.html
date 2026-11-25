@@ -10,7 +10,7 @@
 <style>
 /* IDEA a mail sorter: AAC messages drop in one at a time, you sort them into six bins by what they DO
    LAYOUT message bubble (phrase + device chips) on top, six bins below that fill up; end screen shows all six full */
-:root{--band:#d6336c;--maxw:980px;--decol:72%}
+:root{--band:#d02a64;--maxw:980px;--decol:72%}
 .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
 .hud b{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
 .streak{display:flex;gap:8px;align-items:center;font-weight:700}
@@ -20,7 +20,7 @@
 .bubble::after{content:'';position:absolute;left:50%;bottom:-16px;margin-left:-14px;border:14px solid transparent;border-top-color:#fff;border-bottom:0}
 @keyframes fall{from{transform:translateY(-40px) scale(.8);opacity:0}}
 .bubble .say{font-size:clamp(26px,4.4vw,38px);font-weight:700;margin:0 0 10px;line-height:1.1}
-.bubble .on{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#868e96;margin:0 0 6px}
+.bubble .on{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#5f666e;margin:0 0 6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:9px;font-weight:700;font-size:16px}
 .chip img{width:24px}
@@ -35,7 +35,7 @@
 .bin .fill{position:absolute;left:0;bottom:0;height:7px;background:rgba(0,0,0,.25);transition:width .4s}
 .bin.right{animation:yes .6s}
 .bin.wrong{animation:shake .45s}
-@keyframes yes{30%{transform:scale(1.06);box-shadow:0 0 0 5px #2b8a3e}}
+@keyframes yes{30%{transform:scale(1.06);box-shadow:0 0 0 5px #28803a}}
 .fb{min-height:64px;margin:16px 0 0;border-radius:18px;padding:12px 16px;display:none;font-size:17px}
 .fb.on{display:block;animation:pop .3s}
 .fb.good{background:#ebfbee;color:#0b3d16}

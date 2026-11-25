@@ -23,7 +23,7 @@ const css=`.aacbm{display:inline-flex;align-items:center;gap:6px;font:inherit;fo
 .bmtoast p{margin:6px 0 12px;color:#5b6170;font-size:15px}
 .bmtoast .bmrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .bmtoast .bmb{font:inherit;font-weight:700;font-size:15px;min-height:42px;padding:8px 16px;border-radius:999px;border:1.5px solid #d6d9e0;background:#fff;color:#16181d;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center}
-.bmtoast .bmb.go{background:#2b8a3e;border-color:#2b8a3e;color:#fff}
+.bmtoast .bmb.go{background:#28803a;border-color:#28803a;color:#fff}
 .bmtoast .x{margin-left:auto;font:inherit;font-size:26px;line-height:1;background:none;border:0;color:#5b6170;cursor:pointer;min-width:44px;min-height:44px}
 @keyframes bmin{from{transform:translate(-50%,40px);opacity:0}}
 @media(prefers-color-scheme:dark){.bmtoast{background:#1b1d23;color:#eceef2}.bmtoast p{color:#a7adbb}.bmtoast .bmb{background:#22252c;color:#eceef2;border-color:#2c2f38}}

@@ -16,12 +16,12 @@
 .lv{position:relative;border-radius:24px;padding:18px 16px 16px;background:var(--lc);color:#fff;display:flex;flex-direction:column;gap:6px;min-height:280px}
 .lv .ic{width:58px;height:58px;border-radius:18px;background:rgba(255,255,255,.18);display:grid;place-items:center}
 .lv .ic img{width:40px}
-.lv .n{font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;opacity:.85}
+.lv .n{font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;opacity:1}
 .lv h2{margin:0;font-size:26px;line-height:1.05}
 .lv .time{font-weight:700;font-size:15px;background:rgba(0,0,0,.18);border-radius:999px;padding:3px 10px;align-self:flex-start}
 .lv p{margin:4px 0 0;font-size:15.5px;line-height:1.4}
 .lv .done{margin-top:auto;padding-top:10px;border-top:1px solid rgba(255,255,255,.35);font-size:14px}
-.lv .done b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.lv .done b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:1}
 .lv:not(:last-child)::after{content:'';position:absolute;right:-12px;top:44px;width:10px;height:10px;border-top:3px solid var(--soft);border-right:3px solid var(--soft);transform:rotate(45deg);opacity:.5}
 .asks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:10px}
 .ask{background:var(--tint);border-radius:18px;padding:14px 16px}
@@ -61,13 +61,13 @@ const CHECKIN_URL='https://docs.google.com/forms/d/e/1FAIpQLSfgV1gc7jxy3Q9dfNgkH
 const {esc,sym}=AAC,$=id=>document.getElementById(id);
 let L=AAC.pageLang();
 const LV=[
- {c:'#1c7ed6',ic:sym('rocket'),en:{h:'AACtivate',t:'About 90 minutes, over 1 to 2 weeks',p:'Five short modules on why AAC matters and how devices work. Run the VOICE Check in your room, try your student\'s app, and pass a ten-question scenario check.',d:'All ten right, and your classroom task is in.'},
+ {c:'#1972c2',ic:sym('rocket'),en:{h:'AACtivate',t:'About 90 minutes, over 1 to 2 weeks',p:'Five short modules on why AAC matters and how devices work. Run the VOICE Check in your room, try your student\'s app, and pass a ten-question scenario check.',d:'All ten right, and your classroom task is in.'},
   es:{h:'AACtivate',t:'Unos 90 minutos, en 1 a 2 semanas',p:'Cinco módulos cortos sobre por qué importa la CAA y cómo funcionan los dispositivos. Haga la revisión VOICE en su salón, practique en la aplicación de su estudiante y apruebe una prueba de diez situaciones.',d:'Las diez correctas y su tarea del salón entregada.'}},
- {c:'#2b8a3e',ic:sym('speaking'),en:{h:'PrAACtice',t:'About 45 minutes, then 2 minutes a day for 2 weeks',p:'Learn to model, wait and ask real questions. Pick one daily routine and two or three core words, model them on at least 8 of 10 school days, and log each day.',d:'Eight days logged and a short reflection.'},
+ {c:'#28803a',ic:sym('speaking'),en:{h:'PrAACtice',t:'About 45 minutes, then 2 minutes a day for 2 weeks',p:'Learn to model, wait and ask real questions. Pick one daily routine and two or three core words, model them on at least 8 of 10 school days, and log each day.',d:'Eight days logged and a short reflection.'},
   es:{h:'PrAACtice',t:'Unos 45 minutos, y luego 2 minutos al día por 2 semanas',p:'Aprenda a modelar, esperar y hacer preguntas reales. Escoja una rutina diaria y dos o tres palabras clave, modélelas al menos 8 de 10 días de clase y regístrelo cada día.',d:'Ocho días registrados y una reflexión corta.'}},
  {c:'#7048e8',ic:sym('book'),en:{h:'TeAACh',t:'About 90 minutes, plus one lesson',p:'Go beyond requesting with shared reading, spelling, peers, behavior and safety words. Build AAC into a lesson you already teach, then host a short coaching visit.',d:'Your lesson plan, a photo and one visit.'},
   es:{h:'TeAACh',t:'Unos 90 minutos, más una lección',p:'Vaya más allá de pedir con lectura compartida, deletreo, compañeros, conducta y palabras para estar seguro. Incluya la CAA en una lección que ya enseña y reciba una visita corta de apoyo.',d:'Su plan de lección, una foto y una visita.'}},
- {c:'#e67700',ic:sym('trophy'),en:{h:'CoAACh',t:'A few hours across the year',p:'By invitation, about one per school. Be the go-to person for AAC at your site: support one colleague, lead one short refresher and join three meetups.',d:'Invited after TeAACh.'},
+ {c:'#ab5900',ic:sym('trophy'),en:{h:'CoAACh',t:'A few hours across the year',p:'By invitation, about one per school. Be the go-to person for AAC at your site: support one colleague, lead one short refresher and join three meetups.',d:'Invited after TeAACh.'},
   es:{h:'CoAACh',t:'Unas horas durante el año',p:'Por invitación, más o menos uno por escuela. Sea la persona de referencia para la CAA en su escuela: apoye a un colega, dirija un repaso corto y participe en tres reuniones.',d:'Por invitación después de TeAACh.'}}];
 const T={
  en:{h1:'AACademy',sub:'Rialto\'s AAC training path for classroom staff. Four levels, real practice with your students.',

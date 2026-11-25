@@ -22,7 +22,7 @@
   label .opt{font-weight:400;color:var(--mute)}
 
   /* app frame */
-  .top{position:sticky;top:0;z-index:5;height:72px;background:var(--blue);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px}
+  .top{position:sticky;top:0;z-index:5;min-height:72px;flex-wrap:wrap;background:var(--blue);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px}
   .top img{width:44px;height:44px;background:#fff;border-radius:50%}
   .top h1{font-size:17px}
   .top small{display:block;font-weight:400;opacity:.85;font-size:12.5px}
@@ -117,7 +117,7 @@
   <option value="Proloquo2Go"><option value="TD Snap (Core First)"><option value="TouchChat with WordPower"><option value="LAMP Words for Life"><option value="GoTalk NOW"><option value="CoughDrop"><option value="Low-tech core board">
 </datalist>
 
-<div class="wrap">
+<div class="wrap" role="main">
 <section class="entry" id="entry">
 
   <fieldset>
@@ -661,6 +661,10 @@ async function buildIEP(){
 function iepSwap(i,label){if(!label)return;const a=document.getElementById('iblk'+i);a.value=iepFill(iepEntry(label).template,window._iepT);a.style.height='auto';a.style.height=(a.scrollHeight+4)+'px';a.closest('.iblock').querySelector('.iblock-h span').textContent=`Goal ${i-1}: ${label.replace('Goal: ','')}`;}
 function iepCopy(i,btn){navigator.clipboard.writeText(document.getElementById('iblk'+i).value).then(()=>{btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1500);});}
 
+</script>
+<script>
+// Ties each label to the field after it so screen readers announce the field's name.
+(function(){let n=0;document.querySelectorAll('label:not([for])').forEach(l=>{if(l.querySelector('input,select,textarea'))return;let c=l.nextElementSibling;while(c&&!c.matches('input,select,textarea,.checks,.au-checks,[role=radiogroup]'))c=c.nextElementSibling;if(!c)return;if(c.matches('input,select,textarea')){if(!c.id)c.id='fld'+(++n);l.htmlFor=c.id;}else{if(!l.id)l.id='lbl'+(++n);c.setAttribute('role',c.getAttribute('role')||'group');c.setAttribute('aria-labelledby',l.id);}});})();
 </script>
 </body>
 </html>
